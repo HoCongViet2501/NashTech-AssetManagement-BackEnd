@@ -9,9 +9,9 @@ import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.query.spi.QueryImplementor;
 
 public class StringGeneratorId implements IdentifierGenerator {
-
+	
 	private final String prefix = "SD";
-
+	
 	@Override
 	public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
 		QueryImplementor<String> query = session.createQuery("SELECT u.id FROM User u", String.class);
@@ -22,7 +22,7 @@ public class StringGeneratorId implements IdentifierGenerator {
 					.orElse(0L);
 			return prefix + String.format("%04d", max + 1);
 		}
-
+		
 	}
-
+	
 }

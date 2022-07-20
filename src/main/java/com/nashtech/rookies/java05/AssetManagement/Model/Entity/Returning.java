@@ -2,13 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
@@ -21,24 +15,24 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "returning")
 public class Returning {
 	@Id
-	@NotBlank(message = "ID.is.not.null")
 	private Long returningId;
-
+	
 	private Date returnedDate;
-
+	
 	private String state;
-
+	
 	@OneToOne
-	@JoinColumn(name = "returning_id",referencedColumnName = "assignment_id")
+	@JoinColumn(name = "returning_id", referencedColumnName = "assignment_id")
 	private Assignment assignment;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "users_id")
-	private Users users;
+	private User user;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "creator_id")
-	private Users creator;
+	private User creator;
 }

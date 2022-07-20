@@ -21,7 +21,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="asset")
+@Table(name = "assets")
 @Entity
 public class Asset {
 	
@@ -31,10 +31,13 @@ public class Asset {
 	
 	@Column
 	private String name;
+	
 	@Column
 	private String specification;
+	
 	@Column(name = "installed_date")
 	private Date installedDate;
+	
 	@Column
 	private String state;
 	
@@ -42,6 +45,6 @@ public class Asset {
 	@JoinColumn(name = "category_id")
 	private Category category;
 	
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "returning")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "asset")
 	private Collection<Assignment> assignment;
 }
