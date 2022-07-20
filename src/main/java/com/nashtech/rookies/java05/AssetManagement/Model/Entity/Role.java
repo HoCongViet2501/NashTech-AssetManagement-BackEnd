@@ -1,6 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,17 +26,16 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "roles")
 public class Role {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "role_id")
-    private long id;
+    private long roleId;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(50)", nullable = false)
     private URole name;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
-    private Collection<User> users;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "role")
+    private Set<Users> users;
 }

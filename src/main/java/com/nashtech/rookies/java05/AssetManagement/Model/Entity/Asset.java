@@ -2,6 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,27 +23,22 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="asset")
+//@Table(name="asset")
 @Entity
 public class Asset {
 	
 	@Id
-	@Column(name = "asset_id")
-	private String id;
-	
-	@Column
+	private String AssetId;
 	private String name;
-	@Column
 	private String specification;
-	@Column(name = "installed_date")
 	private Date installedDate;
-	@Column
 	private String state;
 	
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
-	
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "returning")
-	private Collection<Assignment> assignment;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "asset")
+	private Set<Assignment> assignment;
 }

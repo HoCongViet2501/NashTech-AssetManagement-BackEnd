@@ -2,6 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,15 +23,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "categories")
 public class Category {
 	@Id
-	@Column(name = "category_id")
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long categoryId;
 	private String name;
 	
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "category")
-	private Collection<Asset> assets;
-
+	private Set<Asset> asset;
 }
