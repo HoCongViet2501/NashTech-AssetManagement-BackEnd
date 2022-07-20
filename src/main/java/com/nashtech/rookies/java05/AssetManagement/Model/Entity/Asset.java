@@ -21,7 +21,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="asset")
+@Table(name="assets")
 @Entity
 public class Asset {
 	
