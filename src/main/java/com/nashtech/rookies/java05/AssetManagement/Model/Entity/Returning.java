@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -22,30 +21,24 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "returnings")
 public class Returning {
 	@Id
 	@NotBlank(message = "ID.is.not.null")
-	private Long id;
-	
-	@Id
-	@Column(name = "returned_date")
+	private Long returningId;
+
 	private Date returnedDate;
-	
-	@Column
+
 	private String state;
-	
-	
+
 	@OneToOne
-	@JoinColumn(name = "assignment_id",referencedColumnName = "id")
+	@JoinColumn(name = "returning_id",referencedColumnName = "assignment_id")
 	private Assignment assignment;
 	
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@ManyToOne(optional=false)
+	@JoinColumn(name = "users_id")
+	private Users users;
 	
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User creator;
-
+	@ManyToOne(optional=false)
+	@JoinColumn(name = "creator_id")
+	private Users creator;
 }
