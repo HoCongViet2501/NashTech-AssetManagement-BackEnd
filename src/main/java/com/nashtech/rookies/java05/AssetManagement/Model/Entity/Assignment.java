@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
+package com.nashtech.rookies.java05.AssetManagement.model.entity;
 
 import java.util.Date;
 

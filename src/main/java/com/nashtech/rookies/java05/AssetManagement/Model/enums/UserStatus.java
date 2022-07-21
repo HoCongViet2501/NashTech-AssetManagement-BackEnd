@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.Model.enums;
+package com.nashtech.rookies.java05.AssetManagement.model.enums;
 
 public enum UserStatus {
     ACTIVE,

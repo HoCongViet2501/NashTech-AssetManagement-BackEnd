@@ -1,11 +1,12 @@
-package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
+package com.nashtech.rookies.java05.AssetManagement.model.entity;
 
 import java.util.Set;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nashtech.rookies.java05.AssetManagement.Model.enums.UserRole;
+import com.nashtech.rookies.java05.AssetManagement.model.enums.UserRole;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
