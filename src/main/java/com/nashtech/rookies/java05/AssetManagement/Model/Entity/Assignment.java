@@ -25,7 +25,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Assignment {
 	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long assignmentId;
 
 	@ManyToOne
@@ -36,7 +36,7 @@ public class Assignment {
 	@JoinColumn(name = "users_id")
 	private Users users;
 
-	@ManyToOne(optional=false)
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "creator_id")
 	private Users creator;
 
@@ -46,6 +46,6 @@ public class Assignment {
 
 	private String state;
 
-	@OneToOne(mappedBy = "assignment")
+	@OneToOne(mappedBy = "assignment", cascade = CascadeType.ALL)
 	private Returning returning;
 }

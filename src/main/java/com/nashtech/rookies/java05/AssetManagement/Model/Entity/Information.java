@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -25,15 +26,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Information {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long informationId;
 
-	@Size(min = 1, max = 15)
+	@Size(min = 2, max = 50)
 	private String firstname;
 
-	@Size(min = 1, max = 50)
+	@Size(min = 2, max = 50)
 	private String lastname;
 
 	private Date dateOfBirth;
@@ -42,7 +43,9 @@ public class Information {
 
 	private Date joinedDate;
 
+	private String location;
+
 	@OneToOne
-	@JoinColumn(name = "users_id",referencedColumnName = "users_id")
+	@JoinColumn(name = "users_id")
 	private Users users;
 }

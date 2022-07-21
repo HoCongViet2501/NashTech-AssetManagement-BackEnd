@@ -21,6 +21,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "returnings")
 public class Returning {
 	@Id
 	@NotBlank(message = "ID.is.not.null")
@@ -31,14 +32,14 @@ public class Returning {
 	private String state;
 
 	@OneToOne
-	@JoinColumn(name = "returning_id",referencedColumnName = "assignment_id")
+	@JoinColumn(name = "returning_id")
 	private Assignment assignment;
-	
-	@ManyToOne(optional=false)
-	@JoinColumn(name = "users_id")
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "user_id")
 	private Users users;
-	
-	@ManyToOne(optional=false)
+
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "creator_id")
 	private Users creator;
 }

@@ -39,6 +39,6 @@ public class Asset {
 	private Category category;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "asset")
+	@OneToMany(mappedBy = "asset",cascade = CascadeType.ALL)
 	private Set<Assignment> assignment;
 }

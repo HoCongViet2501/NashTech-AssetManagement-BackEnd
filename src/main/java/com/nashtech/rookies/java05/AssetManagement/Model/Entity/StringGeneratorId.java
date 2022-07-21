@@ -13,13 +13,10 @@ public class StringGeneratorId implements IdentifierGenerator {
 	private String prefix = "SD";
 
 	@Override
-	public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
+	public Serializable generate(SharedSessionContractImplementor session, Object object) {
 		QueryImplementor<String> query = session.createQuery("SELECT u.id FROM Users u", String.class);
 		try (Stream<String> stream = query.stream()) {
-			Long max = stream.map(t -> t.replace(prefix, ""))
-					.mapToLong(Long::parseLong)
-					.max()
-					.orElse(0L);
+			Long max = stream.map(t -> t.replace(prefix, "")).mapToLong(Long::parseLong).max().orElse(0L);
 			return prefix + String.format("%04d", max + 1);
 		}
 

@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nashtech.rookies.java05.AssetManagement.Model.enums.URole;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,16 +28,19 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "roles")
 public class Role {
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "role_id")
     private long roleId;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar(50)", nullable = false)
+    @Column
     private URole name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role",cascade = CascadeType.ALL)
     private Set<Users> users;
 }
