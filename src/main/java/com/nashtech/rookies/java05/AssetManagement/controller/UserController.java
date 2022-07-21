@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.rookies.java05.AssetManagement.Model.DTO.SignupRequest;
+import com.nashtech.rookies.java05.AssetManagement.response.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.serviceimpl.UserServiceImpl;
 
 @RestController
@@ -19,7 +20,7 @@ public class UserController {
 	@Autowired
 	UserServiceImpl userServiceImpl;
 	@PostMapping("/register")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+	public UserResponse createUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		return userServiceImpl.createUser(signUpRequest);
 	}
 }

@@ -1,7 +1,10 @@
-package com.nashtech.rookies.java05.AssetManagement.Model.DTO;
+package com.nashtech.rookies.java05.AssetManagement.response;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
@@ -12,7 +15,11 @@ import com.nashtech.rookies.java05.AssetManagement.Model.enums.UStatus;
 import lombok.Data;
 
 @Data
-public class SignupRequest {
+public class UserResponse {
+	
+	private String staffCode;
+	
+	private String username;
 	
 	private String firstname;
 
@@ -27,8 +34,8 @@ public class SignupRequest {
 	@Temporal(TemporalType.DATE)
 	private Date joinedDate;
 	
-	private Role role;
-
-	private String status;
-
+	private Role roles;
+	
+	@Enumerated(EnumType.STRING)
+    private UStatus status;
 }

@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,6 +42,8 @@ public class Assignment {
 	@JoinColumn(name = "creator_id")
 	private Users creator;
 
+	@Temporal(TemporalType.DATE)
+    @Column(nullable = false)
 	private Date assignDate;
 
 	private String note;

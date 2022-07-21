@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -29,9 +31,15 @@ public class Asset {
 	
 	@Id
 	private String AssetId;
+	
 	private String name;
+	
 	private String specification;
+	
+	@Temporal(TemporalType.DATE)
+    @Column(nullable = false)
 	private Date installedDate;
+	
 	private String state;
 	
 	@ManyToOne

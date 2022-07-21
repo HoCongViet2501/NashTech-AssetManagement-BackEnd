@@ -28,14 +28,14 @@ public class InformationDTO {
 	private String lastname;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@NotNull(message = "Date of birth must not empty")
+//	@NotNull(message = "Date of birth must not empty")
 	private Date dateOfBirth;
 
 	@NotNull(message = "null")
 	private boolean gender;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@NotNull(message = "Join date must not empty")
+//	@NotNull(message = "Join date must not empty")
 	private Date joinedDate;
 
 	@NotBlank(message = "blank")

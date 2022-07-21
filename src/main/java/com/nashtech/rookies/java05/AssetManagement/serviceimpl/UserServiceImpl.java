@@ -17,12 +17,14 @@ import com.nashtech.rookies.java05.AssetManagement.Model.DTO.SignupRequest;
 import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Information;
 import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Role;
 import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Users;
+import com.nashtech.rookies.java05.AssetManagement.Model.enums.UStatus;
 import com.nashtech.rookies.java05.AssetManagement.exception.InvalidException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundExceptions;
 import com.nashtech.rookies.java05.AssetManagement.repository.InformationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.response.MessageResponse;
+import com.nashtech.rookies.java05.AssetManagement.response.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
 @Component
@@ -77,13 +79,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<?> createUser(SignupRequest signupRequest) {
+	public UserResponse createUser(SignupRequest signupRequest) {
 		Users users = modelMapper.map(signupRequest, Users.class);
 		Information information = modelMapper.map(signupRequest, Information.class);
 		checkDate(signupRequest);
-
-//		Optional<Users> userOptional = userRepository.findByUsername(signupRequest.getUsername());
-//		
+	
 		// auto create username
 		String template = users.getUsername();
 
@@ -108,27 +108,19 @@ public class UserServiceImpl implements UserService {
 
 		// Auto create PassWord
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyy");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyy");
 		users.setPassword(users.getUsername() + "@" + simpleDateFormat.format(information.getDateOfBirth().toString()));
-
-		Users newUser = new Users(signupRequest.getUsername(), signupRequest.getPassword());
-
-		String role = signupRequest.getRole();
-		Optional<Role> roleOptional = roleRepository.findById(Long.parseLong(role));
-
-		if (roleOptional.isPresent()) {
-			Role roles = roleOptional.get();
-			roles.setRoleId(Long.parseLong("2"));
-			newUser.setRole(roles);
-			newUser = userRepository.save(newUser);
-			information.setUsers(newUser);
-			informationRepository.save(information);
-
-			return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-
-		}
-
-		throw new ResourceNotFoundExceptions("Role not found");
+		
+		users.setStatus(UStatus.NEW_USER);
+		
+		Users saveUser = userRepository.save(users);
+		Information saveInformation = informationRepository.save(information);
+		
+		UserResponse userResponse;
+		userResponse = modelMapper.map(saveUser,UserResponse.class);
+		userResponse = modelMapper.map(saveInformation, UserResponse.class);
+		
+		return userResponse;
 	}
 
 }

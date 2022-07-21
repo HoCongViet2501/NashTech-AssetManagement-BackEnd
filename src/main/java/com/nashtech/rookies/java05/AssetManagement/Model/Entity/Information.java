@@ -10,8 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -37,10 +41,12 @@ public class Information {
 	@Size(min = 2, max = 50)
 	private String lastname;
 
+	@Temporal(TemporalType.DATE)
 	private Date dateOfBirth;
 
 	private boolean gender;
 
+	@Temporal(TemporalType.DATE)
 	private Date joinedDate;
 
 	private String location;

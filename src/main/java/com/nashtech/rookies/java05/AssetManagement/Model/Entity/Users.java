@@ -36,7 +36,10 @@ import lombok.Setter;
 public class Users {
 	@Id
 	@NotBlank(message = "ID.is.not.null")
-//	@Column(name = "users_id")
+//	@GeneratedValue(generator = "generator_id")
+//	// Khai báo generator có tên generator_id định nghĩa trong class
+//	// StringGeneratorId
+//	@GenericGenerator(name = "generator_id", strategy = "core.generator.StringGeneratorId")
 	private String userId;
 
 	@NotBlank(message = "Username.is.not.null")
@@ -68,7 +71,7 @@ public class Users {
 
 	@OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
 	private Information information;
-	
+
 	public Users(String username, String encode) {
 		this.username = username;
 		this.password = encode;
