@@ -1,9 +1,11 @@
-package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
+package com.nashtech.rookies.java05.AssetManagement.model.entity;
 
 import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +36,11 @@ public class Information {
 	private boolean gender;
 	
 	@Column(name = "joined_date")
+	@CreationTimestamp
 	private Date joinedDate;
+
+	@Column(name = "location")
+	private String location;
 	
 	@OneToOne
 	@JoinColumn(name = "user_id")
