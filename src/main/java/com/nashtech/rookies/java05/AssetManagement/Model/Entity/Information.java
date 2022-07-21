@@ -20,21 +20,23 @@ public class Information {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long informationId;
+	private Long id;
 	
-	@Size(min = 1, max = 15)
-	private String firstname;
+	@Column(name = "first_name")
+	private String firstName;
 	
-	@Size(min = 1, max = 50)
-	private String lastname;
+	@Column(name = "last_name")
+	private String lastName;
 	
+	@Column(name = "date_birth")
 	private Date dateOfBirth;
 	
 	private boolean gender;
 	
+	@Column(name = "joined_date")
 	private Date joinedDate;
 	
 	@OneToOne
-	@JoinColumn(name = "users_id", referencedColumnName = "users_id")
-	private User users;
+	@JoinColumn(name = "user_id")
+	private User user;
 }

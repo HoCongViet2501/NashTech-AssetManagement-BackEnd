@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nashtech.rookies.java05.AssetManagement.Model.enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,8 +21,8 @@ import lombok.Setter;
 @Table(name = "users")
 public class User {
 	@Id
-	@Column(name = "users_id")
-	private String usersId;
+	@Column(name = "id")
+	private String id;
 	
 	@Size(min = 3, max = 20)
 	private String username;
@@ -36,18 +37,22 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private UserStatus status;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<Returning> returningUser;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "creator")
 	private Set<Returning> returningCreator;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<Assignment> assignmentUser;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "creator")
 	private Set<Assignment> assignmentCreator;
 	
-	@OneToOne(mappedBy = "users")
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
 	private Information information;
 }

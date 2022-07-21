@@ -18,26 +18,25 @@ import lombok.Setter;
 public class Assignment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long assignmentId;
+	private Long id;
 	
 	@ManyToOne
 	@JoinColumn(name = "asset_id")
 	private Asset asset;
 	
-	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "user_id" )
 	private User user;
 	
-	@ManyToOne(optional = false)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "creator_id")
 	private User creator;
 	
-	private Date assignDate;
+	@Column(name = "assigned_date")
+	private Date assignedDate;
 	
 	private String note;
 	
 	private String state;
 	
-	@OneToOne(mappedBy = "assignment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Returning returning;
 }

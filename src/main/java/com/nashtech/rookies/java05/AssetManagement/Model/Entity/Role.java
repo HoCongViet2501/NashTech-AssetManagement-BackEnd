@@ -21,13 +21,13 @@ import lombok.Setter;
 public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long roleId;
+	private long id;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(columnDefinition = "varchar(50)", nullable = false)
 	private UserRole name;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "role")
+	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<User> users;
 }

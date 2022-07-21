@@ -10,29 +10,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "returning")
+@Entity
+@Table(name = "returnings")
 public class Returning {
 	@Id
-	private Long returningId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 	
+	@Column(name = "returned_date")
 	private Date returnedDate;
 	
 	private String state;
 	
-	@OneToOne
-	@JoinColumn(name = "returning_id", referencedColumnName = "assignment_id")
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "assignment_id")
 	private Assignment assignment;
 	
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "users_id")
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
 	private User user;
 	
-	@ManyToOne(optional = false)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "creator_id")
 	private User creator;
 }
