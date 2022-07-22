@@ -7,6 +7,4 @@ import com.nashtech.rookies.java05.AssetManagement.dto.UserResponseDto;
 
 public interface UserService {
     public List<UserResponseDto> getAllUserSameLocation(String location);
-
-    public List<UserResponseDto> searchUserByIdAndUsername(String id, String username);
 }
