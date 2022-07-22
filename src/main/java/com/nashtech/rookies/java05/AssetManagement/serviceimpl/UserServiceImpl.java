@@ -12,19 +12,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.nashtech.rookies.java05.AssetManagement.Model.DTO.InformationDTO;
-import com.nashtech.rookies.java05.AssetManagement.Model.DTO.SignupRequest;
-import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Information;
-import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Role;
-import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Users;
+import com.nashtech.rookies.java05.AssetManagement.Model.entity.Information;
+import com.nashtech.rookies.java05.AssetManagement.Model.entity.Role;
+import com.nashtech.rookies.java05.AssetManagement.Model.entity.Users;
+import com.nashtech.rookies.java05.AssetManagement.Model.enums.URole;
 import com.nashtech.rookies.java05.AssetManagement.Model.enums.UStatus;
+import com.nashtech.rookies.java05.AssetManagement.dto.InformationResponse;
+import com.nashtech.rookies.java05.AssetManagement.dto.MessageResponse;
+import com.nashtech.rookies.java05.AssetManagement.dto.SignupRequest;
+import com.nashtech.rookies.java05.AssetManagement.dto.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.exception.InvalidException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundExceptions;
 import com.nashtech.rookies.java05.AssetManagement.repository.InformationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
-import com.nashtech.rookies.java05.AssetManagement.response.MessageResponse;
-import com.nashtech.rookies.java05.AssetManagement.response.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
 @Component
@@ -80,11 +81,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponse createUser(SignupRequest signupRequest) {
-		Users users = modelMapper.map(signupRequest, Users.class);
 		Information information = modelMapper.map(signupRequest, Information.class);
+		Users users = modelMapper.map(signupRequest, Users.class);
+
 		checkDate(signupRequest);
-	
+		
+		users.setUserId(users.getUserId());
+		
+
 		// auto create username
+		users.setUsername(information.getFirstname().toLowerCase());
+		
 		String template = users.getUsername();
 
 		for (String s : information.getLastname().split(" ")) {
@@ -109,17 +116,23 @@ public class UserServiceImpl implements UserService {
 		// Auto create PassWord
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyy");
-		users.setPassword(users.getUsername() + "@" + simpleDateFormat.format(information.getDateOfBirth().toString()));
-		
+		users.setPassword(users.getUsername() + "@" + information.getDateOfBirth().toString());
+
+		Role role = roleRepository.findById(signupRequest.getRole())
+				.orElseThrow(() -> new ResourceNotFoundExceptions("Not.found.role"));
+		role.setRoleId(Long.parseLong("1"));
+		users.setRole(role);
+
 		users.setStatus(UStatus.NEW_USER);
 		
 		Users saveUser = userRepository.save(users);
+		information.setUsers(saveUser);
 		Information saveInformation = informationRepository.save(information);
-		
+		InformationResponse informationResponse = modelMapper.map(saveInformation, InformationResponse.class);
+
 		UserResponse userResponse;
-		userResponse = modelMapper.map(saveUser,UserResponse.class);
-		userResponse = modelMapper.map(saveInformation, UserResponse.class);
-		
+		userResponse = modelMapper.map(saveUser, UserResponse.class);
+		userResponse.setInformationResponse(informationResponse);
 		return userResponse;
 	}
 

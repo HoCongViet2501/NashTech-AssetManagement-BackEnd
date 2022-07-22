@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
+package com.nashtech.rookies.java05.AssetManagement.Model.entity;
 
 import java.util.Collection;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class Role {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long roleId;
+    private Long roleId;
 
     @Enumerated(EnumType.STRING)
     @Column

@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
+package com.nashtech.rookies.java05.AssetManagement.Model.entity;
 
 import java.util.Collection;
 import java.util.Set;
@@ -36,18 +36,17 @@ import lombok.Setter;
 public class Users {
 	@Id
 	@NotBlank(message = "ID.is.not.null")
-//	@GeneratedValue(generator = "generator_id")
-//	// Khai báo generator có tên generator_id định nghĩa trong class
-//	// StringGeneratorId
-//	@GenericGenerator(name = "generator_id", strategy = "core.generator.StringGeneratorId")
+	@GeneratedValue(generator = "my_generator")
+	@GenericGenerator(name = "my_generator", 
+	strategy = "com.nashtech.rookies.java05.AssetManagement.generator.MyGenerator")
 	private String userId;
 
 	@NotBlank(message = "Username.is.not.null")
-	@Size(min = 3, max = 20)
+//	@Size(min = 3, max = 20)
 	private String username;
 
 	@NotBlank(message = "Password.is.not.null")
-	@Size(min = 6, max = 20)
+//	@Size(min = 6, max = 20)
 	private String password;
 
 	@ManyToOne

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nashtech.rookies.java05.AssetManagement.Model.DTO.SignupRequest;
-import com.nashtech.rookies.java05.AssetManagement.response.UserResponse;
+import com.nashtech.rookies.java05.AssetManagement.dto.SignupRequest;
+import com.nashtech.rookies.java05.AssetManagement.dto.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.serviceimpl.UserServiceImpl;
 
 @RestController
