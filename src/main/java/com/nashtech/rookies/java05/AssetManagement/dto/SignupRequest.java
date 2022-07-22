@@ -19,11 +19,11 @@ import lombok.Data;
 public class SignupRequest {
 
 	@NotBlank(message = "Firstname must not empty")
-	@Size(min = 2, max = 50, message = "Firstname must be between {min} and {max}")
+//	@Size(min = 2, max = 50, message = "Firstname must be between {min} and {max}")
 	private String firstname;
 
-	@NotBlank(message = "Firstname must not empty")
-	@Size(min = 2, max = 50, message = "Firstname must be between {min} and {max}")
+	@NotBlank(message = "Lastname must not empty")
+//	@Size(min = 2, max = 50, message = "Lastname must be between {min} and {max}")
 	private String lastname;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -36,8 +36,20 @@ public class SignupRequest {
 
 	private Long role;
 
-	private String status;
+//	private String status;
 
-	private Users users;
+//	private Users users;
 
+
+	@Override
+	public String toString() {
+		return "SignupRequest{" +
+				"firstname='" + firstname + '\'' +
+				", lastname='" + lastname + '\'' +
+				", dateOfBirth=" + dateOfBirth +
+				", gender=" + gender +
+				", joinedDate=" + joinedDate +
+				", role=" + role +
+				'}';
+	}
 }

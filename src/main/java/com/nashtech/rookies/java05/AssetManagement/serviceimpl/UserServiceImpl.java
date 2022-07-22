@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Optional;
 
+import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateExceptions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -60,27 +61,28 @@ public class UserServiceImpl implements UserService {
 		int age = calculateAge(signupRequest.getDateOfBirth().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
 		if (age < 18) {
-			throw new InvalidException("User is under 18. Please select a different date");
+			throw new ResourceCheckDateExceptions("User is under 18. Please select a different date");
 		}
 
 		if (signupRequest.getJoinedDate().before(signupRequest.getDateOfBirth())) {
-			throw new InvalidException("Joined date is not later than Date of Birth. Please select a different date");
+			throw new ResourceCheckDateExceptions("Joined date is not later than Date of Birth. Please select a different date");
 		}
 
 		if (signupRequest.getJoinedDate().equals(signupRequest.getDateOfBirth())) {
-			throw new InvalidException("Joined date is not later than Date of Birth. Please select a different date");
+			throw new ResourceCheckDateExceptions("Joined date is not later than Date of Birth. Please select a different date");
 		}
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(signupRequest.getJoinedDate());
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 		if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-			throw new InvalidException("Joined date is Saturday or Sunday. Please select a different date");
+			throw new ResourceCheckDateExceptions("Joined date is Saturday or Sunday. Please select a different date");
 		}
 	}
 
 	@Override
 	public UserResponse createUser(SignupRequest signupRequest) {
+		System.out.println(signupRequest.toString());
 		Information information = modelMapper.map(signupRequest, Information.class);
 		Users users = modelMapper.map(signupRequest, Users.class);
 
@@ -120,7 +122,7 @@ public class UserServiceImpl implements UserService {
 
 		Role role = roleRepository.findById(signupRequest.getRole())
 				.orElseThrow(() -> new ResourceNotFoundExceptions("Not.found.role"));
-		role.setRoleId(Long.parseLong("1"));
+		//role.setRoleId(Long.parseLong("1"));
 		users.setRole(role);
 
 		users.setStatus(UStatus.NEW_USER);
