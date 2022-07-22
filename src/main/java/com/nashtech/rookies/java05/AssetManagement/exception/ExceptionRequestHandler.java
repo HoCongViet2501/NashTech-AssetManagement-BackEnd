@@ -11,17 +11,17 @@ import com.nashtech.rookies.java05.AssetManagement.dto.ErrorResponse;
 @ControllerAdvice
 public class ExceptionRequestHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(ResourceNotFoundException ex) {
         String mess = ex.getMessage();
-        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), mess, ex.getCause().toString());
+        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), mess);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
         String mess = ex.getMessage();
-        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), mess, ex.getCause().toString());
+        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), mess);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
