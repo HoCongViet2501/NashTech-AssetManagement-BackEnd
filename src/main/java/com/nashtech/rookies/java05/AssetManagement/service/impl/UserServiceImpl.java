@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Information;
 import com.nashtech.rookies.java05.AssetManagement.Model.repository.InformationRepository;
 import com.nashtech.rookies.java05.AssetManagement.dto.UserResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.exception.NotFoundException;
+import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
 @Service
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDto> getAllUserSameLocation(String location) {
         List<Information> lists = this.informationRepository.findByLocation(location);
         if (lists.isEmpty()) {
-            throw new NotFoundException("No User Founded");
+            throw new ResourceNotFoundException("No User Founded");
         }
 
         return lists.stream()

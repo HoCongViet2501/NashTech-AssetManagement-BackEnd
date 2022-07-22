@@ -8,16 +8,14 @@ import lombok.Setter;
 public class ErrorResponse {
     private String statusCode;
     private String message;
-    private String details;
 
     /**
      * @param statusCode
      * @param message
      * @param details
      */
-    public ErrorResponse(String statusCode, String message, String details) {
+    public ErrorResponse(String statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
-        this.details = details;
     }
 }

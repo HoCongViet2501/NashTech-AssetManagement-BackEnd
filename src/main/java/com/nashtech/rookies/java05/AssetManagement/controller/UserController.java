@@ -14,7 +14,6 @@ import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
 @RestController
 @RequestMapping("/user/")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class UserController {
 
     @Autowired
