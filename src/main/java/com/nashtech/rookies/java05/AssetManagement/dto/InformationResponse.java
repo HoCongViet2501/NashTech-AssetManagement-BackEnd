@@ -21,10 +21,12 @@ public class InformationResponse {
 	
 	private String lastname;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date dateOfBirth;
 
 	private boolean gender;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date joinedDate;
 
 	private String location;

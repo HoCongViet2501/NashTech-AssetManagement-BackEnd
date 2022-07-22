@@ -42,14 +42,12 @@ public class Information {
 //	@Size(min = 2, max = 50)
 	private String lastname;
 
-	@Basic
-	@Temporal(TemporalType.DATE)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date dateOfBirth;
 
 	private boolean gender;
 
-	@Basic
-	@Temporal(TemporalType.DATE)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date joinedDate;
 
 	private String location;

@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
 		// Auto create PassWord
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyy");
-		users.setPassword(users.getUsername() + "@" + information.getDateOfBirth().toString());
+		users.setPassword(users.getUsername() + "@" +simpleDateFormat.format(information.getDateOfBirth()));
 
 		Role role = roleRepository.findById(signupRequest.getRole())
 				.orElseThrow(() -> new ResourceNotFoundExceptions("Not.found.role"));

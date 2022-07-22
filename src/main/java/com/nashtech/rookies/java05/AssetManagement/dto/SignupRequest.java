@@ -26,13 +26,11 @@ public class SignupRequest {
 	@Size(min = 2, max = 50, message = "Firstname must be between {min} and {max}")
 	private String lastname;
 
-	@Temporal(TemporalType.DATE)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date dateOfBirth;
 
 	private boolean gender;
 
-	@Temporal(TemporalType.DATE)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date joinedDate;
 
