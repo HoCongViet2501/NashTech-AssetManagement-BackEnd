@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 
+import com.nashtech.rookies.java05.AssetManagement.Model.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.dto.UserResponseDto;
-import com.nashtech.rookies.java05.AssetManagement.model.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
 public class UserServiceImpl implements UserService {

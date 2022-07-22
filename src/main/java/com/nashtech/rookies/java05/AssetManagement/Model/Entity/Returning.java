@@ -1,9 +1,8 @@
-package com.nashtech.rookies.java05.AssetManagement.model.entity;
+package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
 
 import java.util.Date;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

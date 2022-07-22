@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.model.entity;
+package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
 
 import java.util.Collection;
 import java.util.Date;
@@ -10,12 +10,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "assets")
-@Entity
 public class Asset {
 	
 	@Id

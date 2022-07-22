@@ -2,9 +2,9 @@ package com.nashtech.rookies.java05.AssetManagement.dto;
 
 import java.util.Date;
 
-import com.nashtech.rookies.java05.AssetManagement.model.entity.Role;
-import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
-import com.nashtech.rookies.java05.AssetManagement.model.enums.UserRole;
+import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Role;
+import com.nashtech.rookies.java05.AssetManagement.Model.Entity.User;
+import com.nashtech.rookies.java05.AssetManagement.Model.enums.UserRole;
 
 import lombok.Data;
 import lombok.Getter;

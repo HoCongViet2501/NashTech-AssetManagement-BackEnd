@@ -1,13 +1,12 @@
-package com.nashtech.rookies.java05.AssetManagement.model.entity;
+package com.nashtech.rookies.java05.AssetManagement.Model.Entity;
 
 import java.util.Set;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nashtech.rookies.java05.AssetManagement.model.enums.UserStatus;
+import com.nashtech.rookies.java05.AssetManagement.Model.enums.UserStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
