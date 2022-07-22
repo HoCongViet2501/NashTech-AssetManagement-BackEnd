@@ -2,6 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.dto;
 
 import java.util.Date;
 
+import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Information;
 import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Role;
 import com.nashtech.rookies.java05.AssetManagement.Model.Entity.User;
 import com.nashtech.rookies.java05.AssetManagement.Model.enums.UserRole;
@@ -19,7 +20,7 @@ public class UserResponseDto {
     private String username;
     private Date dateOfBirth;
     private String gender;
-    private Date joinedDay;
+    private Date joinedDate;
     private UserRole role;
     private String location;
 
@@ -40,7 +41,7 @@ public class UserResponseDto {
         this.username = username;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
-        this.joinedDay = joinedDay;
+        this.joinedDate = joinedDay;
         this.role = role;
         this.location = location;
     }
@@ -56,5 +57,19 @@ public class UserResponseDto {
                 user.getInformation().getJoinedDate(),
                 user.getRole().getName(),
                 user.getInformation().getLocation());
+    }
+
+    public static UserResponseDto buildFromInfo(Information info) {
+        String fullName = info.getFirstName() + " " + info.getLastName();
+
+        String gender = info.isGender() ? "Male" : "Female";
+        return new UserResponseDto(info.getUser().getId(),
+                fullName,
+                info.getUser().getUsername(),
+                info.getUser().getInformation().getDateOfBirth(),
+                gender,
+                info.getUser().getInformation().getJoinedDate(),
+                info.getUser().getRole().getName(),
+                info.getUser().getInformation().getLocation());
     }
 }

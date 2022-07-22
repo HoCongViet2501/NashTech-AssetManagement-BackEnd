@@ -1,34 +1,33 @@
 package com.nashtech.rookies.java05.AssetManagement.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.nashtech.rookies.java05.AssetManagement.Model.repository.UserRepository;
+import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Information;
+import com.nashtech.rookies.java05.AssetManagement.Model.repository.InformationRepository;
 import com.nashtech.rookies.java05.AssetManagement.dto.UserResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.exception.NotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
+@Service
 public class UserServiceImpl implements UserService {
-
-    private UserRepository userRepository;
-
-    private ModelMapper modelMapper;
-
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
+    @Autowired
+    private InformationRepository informationRepository;
 
     @Override
     public List<UserResponseDto> getAllUserSameLocation(String location) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        List<Information> lists = this.informationRepository.findByLocation(location);
+        if (lists.isEmpty()) {
+            throw new NotFoundException("No User Founded");
+        }
 
-    @Override
-    public List<UserResponseDto> searchUserByIdAndUsername(String id, String username) {
-        // TODO Auto-generated method stub
-        return null;
+        return lists.stream()
+                .map(UserResponseDto::buildFromInfo)
+                .collect(Collectors.toList());
     }
 
 }
