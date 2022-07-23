@@ -11,7 +11,4 @@ import com.nashtech.rookies.java05.AssetManagement.Model.Entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-    // public List<User> findByLocation(String location);  // Nhu
-    // @Query()
-    // public Optional<User> searchUser();
 }
