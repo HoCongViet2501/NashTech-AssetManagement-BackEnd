@@ -24,11 +24,11 @@ public class User {
 	@Column(name = "id")
 	private String id;
 	
-	@Size(min = 3, max = 20)
-	private String username;
+	@Column(name = "username")
+	private String userName;
 	
-	@Size(min = 6, max = 20)
-	private String password;
+	@Column(name = "password")
+	private String passWord;
 	
 	@ManyToOne
 	@JoinColumn(name = "role_id", nullable = false)
