@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
@@ -37,6 +39,18 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	RoleRepository roleRepository;
 
+	public String getLocalUserName(){
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(userName);
+
+        if(userName != null)
+        {
+            return userName;
+        }
+        throw new ResourceNotFoundException("Cannot recognize user. Maybe you haven't log in");
+    }
+
+
 	public static int calculateAge(LocalDate birthDate) {
 		LocalDate currentDate = LocalDate.now();
 		if ((birthDate != null) && (currentDate != null)) {
@@ -46,7 +60,6 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	@Override
 	public void checkDate(SignupRequest signupRequest) {
 		int age = calculateAge(signupRequest.getDateOfBirth().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
@@ -70,15 +83,17 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	private void encryptPassword(User user) {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		user.setPassWord(passwordEncoder.encode(user.getPassWord()));
+	}
+
 	@Override
 	public UserResponse createUser(SignupRequest signupRequest) {
 		Information information = MappingData.mapToEntity(signupRequest, Information.class);
 		User user = MappingData.mapToEntity(signupRequest, User.class);
 
 		checkDate(signupRequest);
-		
-		user.setId(user.getId());
-		
 
 		// auto create username
 		user.setUserName(information.getFirstName().toLowerCase());
@@ -108,10 +123,18 @@ public class UserServiceImpl implements UserService {
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyy");
 		user.setPassWord(user.getUserName() + "@" +simpleDateFormat.format(information.getDateOfBirth()));
+		encryptPassword(user);
 
 		Role role = roleRepository.findById(signupRequest.getRole())
 				.orElseThrow(() -> new ResourceNotFoundException("Not.found.role"));
 		user.setRole(role);
+
+		String locations = signupRequest.getLocation();
+		if (signupRequest.getRole() == 2) {
+			String userName = getLocalUserName();
+			locations = informationRepository.getLocationByUserName(userName);
+		}
+		information.setLocation(locations);
 		
 		user.setStatus(UserStatus.NEW);
 		

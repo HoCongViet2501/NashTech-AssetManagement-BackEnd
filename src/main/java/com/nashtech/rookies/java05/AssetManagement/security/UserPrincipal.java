@@ -16,8 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 public class UserPrincipal implements UserDetails {
 	private String id;
-	private String userName;
-	private String passWord;
+	private String username;
+	private String password;
 	
 	private Collection<? extends GrantedAuthority> authorities;
 	
@@ -34,12 +34,12 @@ public class UserPrincipal implements UserDetails {
 	
 	@Override
 	public String getPassword() {
-		return passWord;
+		return password;
 	}
 	
 	@Override
 	public String getUsername() {
-		return userName;
+		return username;
 	}
 	
 	@Override

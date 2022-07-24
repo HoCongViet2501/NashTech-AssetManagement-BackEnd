@@ -19,6 +19,7 @@ public class JwtFilter extends GenericFilter {
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 		String token = jwtProvider.resolveToken((HttpServletRequest) servletRequest);
+
 		try {
 			if (token != null && jwtProvider.validateToken(token)) {
 				Authentication authentication = jwtProvider.getAuthentication(token);

@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.nashtech.rookies.java05.AssetManagement.exception.JwtAuthenticationException;
 
@@ -78,6 +79,15 @@ public class JwtProvider {
 	}
 	
 	public String resolveToken(HttpServletRequest request) {
-		return request.getHeader(authorizationHeader);
+		// return request.getHeader(authorizationHeader);
+		
+        String headerAuth = request.getHeader("Authorization");
+
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7, headerAuth.length());
+        }
+
+        return null;
+
 	}
 }

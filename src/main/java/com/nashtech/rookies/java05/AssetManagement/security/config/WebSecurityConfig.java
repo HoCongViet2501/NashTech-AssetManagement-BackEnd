@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.security.config;
 
+import com.nashtech.rookies.java05.AssetManagement.model.enums.UserRole;
 import com.nashtech.rookies.java05.AssetManagement.security.jwt.JwtConfigure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +25,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public WebSecurityConfig(JwtConfigure jwtConfigure) {
 		this.jwtConfigure = jwtConfigure;
+	}
+
+	@Configuration
+	public class CorsConfigure {
+		@Bean
+		public WebMvcConfigurer corsConfigurer() {
+			return new WebMvcConfigurer() {
+				@Override
+				public void addCorsMappings(CorsRegistry registry) {
+					registry.addMapping("/**").allowedMethods("*").allowedOrigins("*")
+							.allowedHeaders("*");
+				}
+			};
+		}
 	}
 	
 	@Bean
@@ -38,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and().authorizeRequests()
 				.antMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs/**").permitAll()
 				.antMatchers("/api/auth/login","/api/auth/user/**").permitAll()
+				.antMatchers("/api/user/register").permitAll()
 				.anyRequest().authenticated()
 				.and().apply(jwtConfigure);
 	}

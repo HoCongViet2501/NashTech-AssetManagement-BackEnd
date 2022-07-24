@@ -45,20 +45,20 @@ public class AuthController {
 	})
 	@Operation(summary = "login for user")
 	public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
-		Map<String, Object> credentials = authenticationService.login(request.getUserName(), request.getPassWord());
+		Map<String, Object> credentials = authenticationService.login(request.getUsername(), request.getPassword());
 		LoginResponse loginResponse = new LoginResponse();
 		loginResponse.setToken((String) credentials.get("token"));
 		loginResponse.setUserResponse(mapToResponse(credentials.get("user"), UserResponse.class));
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(loginResponse);
 	}
 	
-	@PutMapping("/user/{id}/newPassword")
+	@PutMapping("/user/{id}/{newPassword}")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "login.successfully"),
 			@ApiResponse(responseCode = "404", description = "not.found.user")
 	})
 	@Operation(summary = "change password for new user")
-	public ResponseEntity<String> changePassword(@PathVariable String id, @RequestParam String newPassword) {
+	public ResponseEntity<String> changePassword(@PathVariable String id, @PathVariable String newPassword) {
 		newPassword = passwordEncoder.encode(newPassword);
 		this.authenticationService.changePasswordNewUser(id, newPassword);
 		return ResponseEntity.ok().body("change.password.success!new.password.is." + newPassword);
