@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.dto;
+package com.nashtech.rookies.java05.AssetManagement.dto.response;
 
 public class MessageResponse {
     private String message;

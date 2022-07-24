@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.serviceimpl;
+package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -7,29 +7,25 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Optional;
 
-import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateExceptions;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import com.nashtech.rookies.java05.AssetManagement.Model.entity.Information;
-import com.nashtech.rookies.java05.AssetManagement.Model.entity.Role;
-import com.nashtech.rookies.java05.AssetManagement.Model.entity.Users;
-import com.nashtech.rookies.java05.AssetManagement.Model.enums.URole;
-import com.nashtech.rookies.java05.AssetManagement.Model.enums.UStatus;
-import com.nashtech.rookies.java05.AssetManagement.dto.InformationResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.MessageResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.SignupRequest;
-import com.nashtech.rookies.java05.AssetManagement.dto.UserResponse;
-import com.nashtech.rookies.java05.AssetManagement.exception.InvalidException;
-import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundExceptions;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.SignupRequest;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
+import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateExceptions;
+import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
+import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
+import com.nashtech.rookies.java05.AssetManagement.model.entity.Information;
+import com.nashtech.rookies.java05.AssetManagement.model.entity.Role;
+import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
+import com.nashtech.rookies.java05.AssetManagement.model.enums.UserStatus;
 import com.nashtech.rookies.java05.AssetManagement.repository.InformationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
-@Component
+@Service
 public class UserServiceImpl implements UserService {
 
 	@Autowired
@@ -40,12 +36,6 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	RoleRepository roleRepository;
-
-	@Autowired
-	ModelMapper modelMapper;
-
-//	@Autowired
-//    PasswordEncoder encoder;
 
 	public static int calculateAge(LocalDate birthDate) {
 		LocalDate currentDate = LocalDate.now();
@@ -82,21 +72,20 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponse createUser(SignupRequest signupRequest) {
-		System.out.println(signupRequest.toString());
-		Information information = modelMapper.map(signupRequest, Information.class);
-		Users users = modelMapper.map(signupRequest, Users.class);
+		Information information = MappingData.mapToEntity(signupRequest, Information.class);
+		User user = MappingData.mapToEntity(signupRequest, User.class);
 
 		checkDate(signupRequest);
 		
-		users.setUserId(users.getUserId());
+		user.setId(user.getId());
 		
 
 		// auto create username
-		users.setUsername(information.getFirstname().toLowerCase());
+		user.setUserName(information.getFirstName().toLowerCase());
 		
-		String template = users.getUsername();
+		String template = user.getUserName();
 
-		for (String s : information.getLastname().split(" ")) {
+		for (String s : information.getLastName().split(" ")) {
 			template += s.toLowerCase().charAt(0);
 		}
 
@@ -105,7 +94,7 @@ public class UserServiceImpl implements UserService {
 		int idx = 0;
 		while (flag) {
 			// check username in db
-			Optional<Users> existUser = userRepository.findByUsername(idx == 0 ? template : template + idx);
+			Optional<User> existUser = userRepository.findByUserName(idx == 0 ? template : template + idx);
 			if (existUser.isPresent()) {
 				idx++;
 				continue;
@@ -113,36 +102,38 @@ public class UserServiceImpl implements UserService {
 			finalUsername = idx == 0 ? template : template + idx;
 			flag = false;
 		}
-		users.setUsername(finalUsername);
+		user.setUserName(finalUsername);
 
 		// Auto create PassWord
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyy");
-		users.setPassword(users.getUsername() + "@" +simpleDateFormat.format(information.getDateOfBirth()));
+		user.setPassWord(user.getUserName() + "@" +simpleDateFormat.format(information.getDateOfBirth()));
 
 		Role role = roleRepository.findById(signupRequest.getRole())
-				.orElseThrow(() -> new ResourceNotFoundExceptions("Not.found.role"));
-		//role.setRoleId(Long.parseLong("1"));
-		users.setRole(role);
+				.orElseThrow(() -> new ResourceNotFoundException("Not.found.role"));
+		user.setRole(role);
 		
-		users.setStatus(UStatus.NEW_USER);
+		user.setStatus(UserStatus.NEW);
 		
-		Users saveUser = userRepository.save(users);
-		information.setUsers(saveUser);
+		User saveUser = userRepository.save(user);
+		information.setUser(saveUser);
 		Information saveInformation = informationRepository.save(information);
-		InformationResponse informationResponse = modelMapper.map(saveInformation, InformationResponse.class);
+		InformationResponse informationResponse = MappingData.mapToEntity(saveInformation, InformationResponse.class);
 
 		UserResponse userResponse;
-		userResponse = modelMapper.map(saveUser, UserResponse.class);
+		userResponse = MappingData.mapToEntity(saveUser, UserResponse.class);
 		userResponse.setInformationResponse(informationResponse);
 		return userResponse;
 	}
 	
-//	public String getLocation(String username) {
-//		Information information = informationRepository.getByUsername(username)
-//				.orElseThrow(() -> new ResourceNotFoundExceptions("Username not found"));
-//		return information.getLocation();
-//		
-//	}
+	/**
+	 * 
+	// public String getLocation(String username) {
+	// 	Information information = informationRepository.getByUsername(username)
+	// 			.orElseThrow(() -> new ResourceNotFoundExceptions("Username not found"));
+	// 	return information.getLocation();
+		
+	// }
+	 */
 
 }

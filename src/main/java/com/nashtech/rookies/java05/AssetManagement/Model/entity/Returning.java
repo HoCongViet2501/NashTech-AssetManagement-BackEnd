@@ -1,7 +1,8 @@
-package com.nashtech.rookies.java05.AssetManagement.Model.entity;
+package com.nashtech.rookies.java05.AssetManagement.model.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,33 +21,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Table(name = "returnings")
 public class Returning {
 	@Id
-	@NotBlank(message = "ID.is.not.null")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long returningId;
-
-	@Temporal(TemporalType.DATE)
-    @Column(nullable = false)
+	private long id;
+	
+	@Column(name = "returned_date")
 	private Date returnedDate;
-
+	
 	private String state;
-
-	@OneToOne
-	@JoinColumn(name = "returning_id")
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "assignment_id")
 	private Assignment assignment;
-
-	@ManyToOne(optional = false)
+	
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
-	private Users users;
-
-	@ManyToOne(optional = false)
+	private User user;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "creator_id")
-	private Users creator;
+	private User creator;
 }

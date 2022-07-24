@@ -1,11 +1,9 @@
 package com.nashtech.rookies.java05.AssetManagement.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.nashtech.rookies.java05.AssetManagement.dto.InformationResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.SignupRequest;
-import com.nashtech.rookies.java05.AssetManagement.dto.UserResponse;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.SignupRequest;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
 
 @Service
 public interface UserService {

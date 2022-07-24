@@ -1,14 +1,25 @@
 package com.nashtech.rookies.java05.AssetManagement.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import java.util.Map;
+import java.util.Date;
 
 public class ErrorResponse {
     String code;
     String message;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    Map<String, String> validationErrors;
+    Date timeStamp;
+    String details;
+
+     /**
+      * @param code
+      * @param message
+      * @param timeStamp
+      * @param details
+      */
+     public ErrorResponse(String code, String message, Date timeStamp, String details) {
+        this.code = code;
+        this.message = message;
+        this.timeStamp = timeStamp;
+        this.details = details;
+    }
 
     public ErrorResponse(String code, String message) {
         super();
@@ -16,12 +27,6 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    public ErrorResponse(String code, String message, Map<String, String> validationErrors) {
-        super();
-        this.code = code;
-        this.message = message;
-        this.validationErrors = validationErrors;
-    }
 
     public String getCode() {
         return code;
@@ -37,13 +42,5 @@ public class ErrorResponse {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public Map<String, String> getValidationErrors() {
-        return validationErrors;
-    }
-
-    public void setValidationErrors(Map<String, String> validationErrors) {
-        this.validationErrors = validationErrors;
     }
 }

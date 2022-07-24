@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.Model.entity;
+package com.nashtech.rookies.java05.AssetManagement.model.entity;
 
 import java.util.Date;
 
@@ -30,29 +30,30 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "information")
 public class Information {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long informationId;
-
-//	@Size(min = 2, max = 50)
-	private String firstname;
-
-//	@Size(min = 2, max = 50)
-	private String lastname;
-
+	private Long id;
+	
+	@Column(name = "first_name")
+	private String firstName;
+	
+	@Column(name = "last_name")
+	private String lastName;
+	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@Column(name = "date_birth")
 	private Date dateOfBirth;
-
+	
 	private boolean gender;
-
+	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@Column(name = "joined_date")
 	private Date joinedDate;
-
-	private String location;
-
+	
 	@OneToOne
-	@JoinColumn(name = "users_id")
-	private Users users;
+	@JoinColumn(name = "user_id")
+	private User user;
 }

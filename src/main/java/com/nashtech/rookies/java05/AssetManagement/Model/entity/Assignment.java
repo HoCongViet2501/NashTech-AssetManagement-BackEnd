@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.Model.entity;
+package com.nashtech.rookies.java05.AssetManagement.model.entity;
 
 import java.util.Date;
 
@@ -10,10 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,31 +22,29 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "assignments")
 public class Assignment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long assignmentId;
-
+	private Long id;
+	
 	@ManyToOne
 	@JoinColumn(name = "asset_id")
 	private Asset asset;
-
-	@ManyToOne
-	@JoinColumn(name = "users_id")
-	private Users users;
-
-	@ManyToOne(optional = false)
+	
+	@ManyToOne(cascade = CascadeType.ALL,optional = false)
+	@JoinColumn(name = "user_id" )
+	private User user;
+	
+	@ManyToOne(cascade = CascadeType.ALL,optional = false)
 	@JoinColumn(name = "creator_id")
-	private Users creator;
-
-	@Temporal(TemporalType.DATE)
-    @Column(nullable = false)
-	private Date assignDate;
-
+	private User creator;
+	
+	@Column(name = "assigned_date")
+	private Date assignedDate;
+	
 	private String note;
-
+	
 	private String state;
-
-	@OneToOne(mappedBy = "assignment", cascade = CascadeType.ALL)
-	private Returning returning;
+	
 }
