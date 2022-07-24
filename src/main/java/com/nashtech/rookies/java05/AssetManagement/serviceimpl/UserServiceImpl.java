@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(() -> new ResourceNotFoundExceptions("Not.found.role"));
 		//role.setRoleId(Long.parseLong("1"));
 		users.setRole(role);
-
+		
 		users.setStatus(UStatus.NEW_USER);
 		
 		Users saveUser = userRepository.save(users);
@@ -137,5 +137,12 @@ public class UserServiceImpl implements UserService {
 		userResponse.setInformationResponse(informationResponse);
 		return userResponse;
 	}
+	
+//	public String getLocation(String username) {
+//		Information information = informationRepository.getByUsername(username)
+//				.orElseThrow(() -> new ResourceNotFoundExceptions("Username not found"));
+//		return information.getLocation();
+//		
+//	}
 
 }

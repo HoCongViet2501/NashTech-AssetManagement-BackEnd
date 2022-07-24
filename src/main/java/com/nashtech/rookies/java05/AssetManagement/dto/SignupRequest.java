@@ -35,6 +35,8 @@ public class SignupRequest {
 	private Date joinedDate;
 
 	private Long role;
+	
+	private String location;
 
 //	private String status;
 
