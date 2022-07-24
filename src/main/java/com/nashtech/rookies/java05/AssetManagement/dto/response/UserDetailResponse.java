@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
-public class UserResponseDto {
+public class UserDetailResponse {
     private String staffCode;
     private String fullName;
     private String username;
@@ -33,7 +33,7 @@ public class UserResponseDto {
      * @param role
      * @param location
      */
-    public UserResponseDto(String staffCode, String fullName, String username, Date dateOfBirth, String gender,
+    public UserDetailResponse(String staffCode, String fullName, String username, Date dateOfBirth, String gender,
             Date joinedDay, UserRole role, String location) {
         this.staffCode = staffCode;
         this.fullName = fullName;
@@ -45,10 +45,10 @@ public class UserResponseDto {
         this.location = location;
     }
 
-    public static UserResponseDto build(User user) {
+    public static UserDetailResponse build(User user) {
         String fullName = user.getInformation().getFirstName() + " " + user.getInformation().getLastName();
         String gender = user.getInformation().isGender() ? "Male" : "Female";
-        return new UserResponseDto(user.getId(),
+        return new UserDetailResponse(user.getId(),
                 fullName,
                 user.getUserName(),
                 user.getInformation().getDateOfBirth(),
@@ -58,11 +58,11 @@ public class UserResponseDto {
                 user.getInformation().getLocation());
     }
 
-    public static UserResponseDto buildFromInfo(Information info) {
+    public static UserDetailResponse buildFromInfo(Information info) {
         String fullName = info.getFirstName() + " " + info.getLastName();
 
         String gender = info.isGender() ? "Male" : "Female";
-        return new UserResponseDto(info.getUser().getId(),
+        return new UserDetailResponse(info.getUser().getId(),
                 fullName,
                 info.getUser().getUserName(),
                 info.getUser().getInformation().getDateOfBirth(),
