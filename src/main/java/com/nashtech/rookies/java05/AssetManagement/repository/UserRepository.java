@@ -1,6 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.repository;
 
-import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
+import com.nashtech.rookies.java05.AssetManagement.Model.entity.User;
 
 import java.util.Optional;
 

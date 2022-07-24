@@ -17,7 +17,7 @@ import com.nashtech.rookies.java05.AssetManagement.service.serviceImpl.UserServi
 
 @CrossOrigin(origins = "http://localhost:3000/")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
 	
 	@Autowired

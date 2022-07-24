@@ -3,8 +3,8 @@ package com.nashtech.rookies.java05.AssetManagement.dto.response;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
-import com.nashtech.rookies.java05.AssetManagement.model.entity.Role;
-import com.nashtech.rookies.java05.AssetManagement.model.enums.UserStatus;
+import com.nashtech.rookies.java05.AssetManagement.Model.entity.Role;
+import com.nashtech.rookies.java05.AssetManagement.Model.enums.UserStatus;
 
 import lombok.Data;
 

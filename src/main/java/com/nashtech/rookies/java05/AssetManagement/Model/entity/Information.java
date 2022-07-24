@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.model.entity;
+package com.nashtech.rookies.java05.AssetManagement.Model.entity;
 
 import java.util.Date;
 
@@ -48,6 +48,8 @@ public class Information {
 	private Date dateOfBirth;
 	
 	private boolean gender;
+	
+	private String location;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "joined_date")

@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
+import com.nashtech.rookies.java05.AssetManagement.Model.entity.User;
 
 import java.util.Collection;
 import java.util.Collections;

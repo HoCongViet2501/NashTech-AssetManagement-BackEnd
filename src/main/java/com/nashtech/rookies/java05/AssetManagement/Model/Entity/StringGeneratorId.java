@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.model.entity;
+package com.nashtech.rookies.java05.AssetManagement.Model.entity;
 
 import java.io.Serializable;
 import java.util.stream.Stream;

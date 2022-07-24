@@ -1,8 +1,8 @@
 package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 
 import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
-import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
-import com.nashtech.rookies.java05.AssetManagement.model.enums.UserStatus;
+import com.nashtech.rookies.java05.AssetManagement.Model.entity.User;
+import com.nashtech.rookies.java05.AssetManagement.Model.enums.UserStatus;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.security.jwt.JwtProvider;
 import com.nashtech.rookies.java05.AssetManagement.service.AuthenticationService;

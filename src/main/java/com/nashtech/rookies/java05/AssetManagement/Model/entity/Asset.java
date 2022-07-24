@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.model.entity;
+package com.nashtech.rookies.java05.AssetManagement.Model.entity;
 
 import java.util.Collection;
 import java.util.Date;
@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nashtech.rookies.java05.AssetManagement.Model.entity.Category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

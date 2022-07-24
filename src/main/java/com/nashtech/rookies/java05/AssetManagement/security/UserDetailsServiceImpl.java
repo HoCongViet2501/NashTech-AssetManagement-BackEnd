@@ -1,7 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.security;
 
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
-import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
+import com.nashtech.rookies.java05.AssetManagement.Model.entity.User;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

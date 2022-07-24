@@ -4,6 +4,7 @@ import com.nashtech.rookies.java05.AssetManagement.security.jwt.JwtConfigure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,7 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and().authorizeRequests()
 				.antMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs/**").permitAll()
 				.antMatchers("/api/auth/login","/api/auth/user/**").permitAll()
-				.anyRequest().authenticated()
+				.antMatchers(HttpMethod.POST, "/api/users/**").hasAuthority("ADMIN")
+				.anyRequest().permitAll()
 				.and().apply(jwtConfigure);
 	}
 	
