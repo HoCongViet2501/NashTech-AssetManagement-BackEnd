@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nashtech.rookies.java05.AssetManagement.model.entity.Category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

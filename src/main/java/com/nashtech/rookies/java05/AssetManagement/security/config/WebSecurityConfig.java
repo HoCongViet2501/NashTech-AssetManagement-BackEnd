@@ -1,7 +1,5 @@
 package com.nashtech.rookies.java05.AssetManagement.security.config;
 
-import com.nashtech.rookies.java05.AssetManagement.model.enums.UserRole;
-import com.nashtech.rookies.java05.AssetManagement.security.jwt.JwtConfigure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.nashtech.rookies.java05.AssetManagement.security.jwt.JwtConfigure;
 
 @Configuration
 @EnableWebSecurity

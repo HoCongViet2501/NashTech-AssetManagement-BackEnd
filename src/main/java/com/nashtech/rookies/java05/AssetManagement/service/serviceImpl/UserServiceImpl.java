@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
@@ -25,6 +26,7 @@ import com.nashtech.rookies.java05.AssetManagement.model.enums.UserStatus;
 import com.nashtech.rookies.java05.AssetManagement.repository.InformationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
+import com.nashtech.rookies.java05.AssetManagement.security.config.UserLocal;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
 @Service
@@ -38,6 +40,10 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	RoleRepository roleRepository;
+	
+	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
+	UserLocal userLocal ;
 
 	public String getLocalUserName(){
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -82,7 +88,7 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceCheckDateExceptions("Joined date is Saturday or Sunday. Please select a different date");
 		}
 	}
-
+	
 	private void encryptPassword(User user) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		user.setPassWord(passwordEncoder.encode(user.getPassWord()));
