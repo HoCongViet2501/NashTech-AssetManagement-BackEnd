@@ -3,7 +3,6 @@ package com.nashtech.rookies.java05.AssetManagement.dto;
 import java.util.Date;
 
 import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Information;
-import com.nashtech.rookies.java05.AssetManagement.Model.Entity.Role;
 import com.nashtech.rookies.java05.AssetManagement.Model.Entity.User;
 import com.nashtech.rookies.java05.AssetManagement.Model.enums.UserRole;
 
