@@ -1,8 +1,8 @@
 package com.nashtech.rookies.java05.AssetManagement.exception;
 
-public class ResourceCheckDateExceptions extends RuntimeException{
+public class ResourceCheckDateException extends RuntimeException{
     private static final long serialVersionUID = 1L;
-    public ResourceCheckDateExceptions(String message){
+    public ResourceCheckDateException(String message){
         super(message);
     }
 }

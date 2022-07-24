@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.LoginRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.LoginResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
+import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
 import com.nashtech.rookies.java05.AssetManagement.service.serviceImpl.AuthenticationServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,29 +29,33 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-	
+
 	private final AuthenticationServiceImpl authenticationService;
 	private final PasswordEncoder passwordEncoder;
-	
+
 	public AuthController(AuthenticationServiceImpl authenticationService, PasswordEncoder passwordEncoder) {
 		this.authenticationService = authenticationService;
 		this.passwordEncoder = passwordEncoder;
 	}
-	
+
 	@PostMapping("/login")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "login.successfully"),
 			@ApiResponse(responseCode = "302", description = "username.or.password.is.incorrect")
 	})
 	@Operation(summary = "login for user")
+	// not return location for front end
 	public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
 		Map<String, Object> credentials = authenticationService.login(request.getUsername(), request.getPassword());
-		LoginResponse loginResponse = new LoginResponse();
-		loginResponse.setToken((String) credentials.get("token"));
-		loginResponse.setUserResponse(mapToResponse(credentials.get("user"), UserResponse.class));
+		String token = (String) credentials.get("token");
+		User user = mapToResponse(credentials.get("user"), User.class);
+
+		LoginResponse loginResponse = LoginResponse.builder().token(token).location(user.getInformation().getLocation()).username(user.getUserName())
+				.role(user.getRole()).status(user.getStatus()).userId(user.getId()).build();
+				
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(loginResponse);
 	}
-	
+
 	@PutMapping("/user/{id}/{newPassword}")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "login.successfully"),
@@ -63,5 +67,5 @@ public class AuthController {
 		this.authenticationService.changePasswordNewUser(id, newPassword);
 		return ResponseEntity.ok().body("change.password.success!new.password.is." + newPassword);
 	}
-	
+
 }

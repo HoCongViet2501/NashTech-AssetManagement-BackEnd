@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,10 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nashtech.rookies.java05.AssetManagement.dto.request.SignupRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.response.SignupRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
-import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateExceptions;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Information;
@@ -26,7 +29,6 @@ import com.nashtech.rookies.java05.AssetManagement.model.enums.UserStatus;
 import com.nashtech.rookies.java05.AssetManagement.repository.InformationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
-import com.nashtech.rookies.java05.AssetManagement.security.config.UserLocal;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
 @Service
@@ -42,8 +44,6 @@ public class UserServiceImpl implements UserService {
 	RoleRepository roleRepository;
 	
 	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-	
-	UserLocal userLocal ;
 
 	public String getLocalUserName(){
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -70,22 +70,22 @@ public class UserServiceImpl implements UserService {
 		int age = calculateAge(signupRequest.getDateOfBirth().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
 		if (age < 18) {
-			throw new ResourceCheckDateExceptions("User is under 18. Please select a different date");
+			throw new ResourceCheckDateException("User is under 18. Please select a different date");
 		}
 
 		if (signupRequest.getJoinedDate().before(signupRequest.getDateOfBirth())) {
-			throw new ResourceCheckDateExceptions("Joined date is not later than Date of Birth. Please select a different date");
+			throw new ResourceCheckDateException("Joined date is not later than Date of Birth. Please select a different date");
 		}
 
 		if (signupRequest.getJoinedDate().equals(signupRequest.getDateOfBirth())) {
-			throw new ResourceCheckDateExceptions("Joined date is not later than Date of Birth. Please select a different date");
+			throw new ResourceCheckDateException("Joined date is not later than Date of Birth. Please select a different date");
 		}
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(signupRequest.getJoinedDate());
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 		if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-			throw new ResourceCheckDateExceptions("Joined date is Saturday or Sunday. Please select a different date");
+			throw new ResourceCheckDateException("Joined date is Saturday or Sunday. Please select a different date");
 		}
 	}
 	
@@ -154,7 +154,19 @@ public class UserServiceImpl implements UserService {
 		userResponse.setInformationResponse(informationResponse);
 		return userResponse;
 	}
-	
+
+	@Override
+	public List<UserResponseDto> getAllUserSameLocation(String location) {
+		List<Information> lists = this.informationRepository.findByLocation(location);
+		if (lists.isEmpty()) {
+			throw new ResourceNotFoundException("No User Founded");
+		}
+
+		return lists.stream()
+				.map(UserResponseDto::buildFromInfo)
+				.collect(Collectors.toList());
+	}
+
 	/**
 	 * 
 	// public String getLocation(String username) {

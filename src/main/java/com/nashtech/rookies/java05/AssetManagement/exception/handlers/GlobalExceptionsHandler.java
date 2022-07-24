@@ -2,7 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.exception.handlers;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.response.ErrorResponse;
 import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
-import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateExceptions;
+import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
 
 import org.springframework.http.HttpHeaders;
@@ -41,7 +41,7 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ ResourceCheckDateExceptions.class })
+    @ExceptionHandler({ ResourceCheckDateException.class })
     protected ResponseEntity<ErrorResponse> handleCategoryNotAcceptException(RuntimeException exception, WebRequest request) {
         ErrorResponse error = new ErrorResponse("400", exception.getMessage());
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_ACCEPTABLE);

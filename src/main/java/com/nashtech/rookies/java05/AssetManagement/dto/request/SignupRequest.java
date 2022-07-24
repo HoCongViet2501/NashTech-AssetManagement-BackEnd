@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.dto.response;
+package com.nashtech.rookies.java05.AssetManagement.dto.request;
 
 import java.util.Date;
 
