@@ -2,8 +2,12 @@ package com.nashtech.rookies.java05.AssetManagement.security.jwt;
 
 import com.nashtech.rookies.java05.AssetManagement.exception.JwtAuthenticationException;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -14,6 +18,7 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends GenericFilter {
+	@Autowired
 	private final JwtProvider jwtProvider;
 	
 	@Override
@@ -22,8 +27,10 @@ public class JwtFilter extends GenericFilter {
 
 		try {
 			if (token != null && jwtProvider.validateToken(token)) {
-				Authentication authentication = jwtProvider.getAuthentication(token);
+				UsernamePasswordAuthenticationToken authentication = jwtProvider.getAuthentication(token);
 				if (authentication != null) {
+					authentication.setDetails(
+							new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) servletRequest));
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 				}
 			}

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import com.nashtech.rookies.java05.AssetManagement.dto.request.SignupRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponseDto;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
@@ -46,6 +46,14 @@ public class UserServiceImpl implements UserService {
 	RoleRepository roleRepository;
 	
 	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+	public UserServiceImpl(UserRepository userRepository2, InformationRepository informationRepository2,
+			RoleRepository roleRepository2) {
+		this.userRepository=userRepository2;
+		this.informationRepository=informationRepository2;
+		this.roleRepository=roleRepository2;
+	}
+
 
 	public String getLocalUserName(){
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -173,14 +181,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserResponseDto> getAllUserSameLocation(String location) {
+	public List<UserDetailResponse> getAllUserSameLocation(String location) {
 		List<Information> lists = this.informationRepository.findByLocation(location);
 		if (lists.isEmpty()) {
 			throw new ResourceNotFoundException("No User Founded");
 		}
 
 		return lists.stream()
-				.map(UserResponseDto::buildFromInfo)
+				.map(UserDetailResponse::buildFromInfo)
 				.collect(Collectors.toList());
 	}
 
