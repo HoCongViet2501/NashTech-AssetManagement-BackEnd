@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.security;
 
+import com.nashtech.rookies.java05.AssetManagement.model.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,8 +28,8 @@ public class UserPrincipal implements UserDetails {
 	}
 	
 	public static UserPrincipal create(User user) {
-		String userRole = user.getRole().toString();
-		List<GrantedAuthority> grantedAuthorityList = Collections.singletonList(new SimpleGrantedAuthority(userRole));
+		UserRole userRole = user.getRole().getName();
+		List<GrantedAuthority> grantedAuthorityList = Collections.singletonList(new SimpleGrantedAuthority(userRole.toString()));
 		return new UserPrincipal(user.getId(), user.getUserName(), user.getPassWord(), grantedAuthorityList);
 	}
 	
