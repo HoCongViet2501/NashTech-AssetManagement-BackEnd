@@ -7,5 +7,4 @@ import com.nashtech.rookies.java05.AssetManagement.model.entity.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role,Long>{
-
 }
