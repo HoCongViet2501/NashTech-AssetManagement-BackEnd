@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.SignupRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.AllUserResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
 
 @RestController
-//@PreAuthorize("hasAuthority('ADMIN')")
+@PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/api/user")
 public class UserController {
 	
@@ -35,8 +36,18 @@ public class UserController {
 		return userService.createUser(signUpRequest);
 	}
 
-	@GetMapping("getAll/{location}")
+	@GetMapping("/getAll/{location}")
     public List<UserDetailResponse> getAllUserSameLocation(@PathVariable String location) {
         return userService.getAllUserSameLocation(location);
     }
+
+	@GetMapping("/getAll/{location}/{raw}")
+	public AllUserResponse getAllUser(@PathVariable String location, @PathVariable int raw) {
+		return this.userService.getAllUserResponse(location, raw);
+	}
+
+	@GetMapping("/search/{location}/{content}")
+	public AllUserResponse searchUser(@PathVariable String location, @PathVariable String content) {
+		return this.userService.searchUser(content, location);
+	}
 }
