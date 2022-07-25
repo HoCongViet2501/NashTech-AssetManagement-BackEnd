@@ -2,6 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.dto.response;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Information;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
 import com.nashtech.rookies.java05.AssetManagement.model.enums.UserRole;
@@ -17,8 +18,10 @@ public class UserResponseDto {
     private String staffCode;
     private String fullName;
     private String username;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
     private String gender;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date joinedDate;
     private UserRole role;
     private String location;

@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
@@ -7,6 +8,7 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +95,9 @@ public class UserServiceImpl implements UserService {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		user.setPassWord(passwordEncoder.encode(user.getPassWord()));
 	}
+	public static String removeSpace(String s) {
+		return s.trim().replaceAll("\\s+", " ");
+	}
 
 	@Override
 	public UserResponse createUser(SignupRequest signupRequest) {
@@ -103,6 +108,12 @@ public class UserServiceImpl implements UserService {
 
 		// auto create username
 		user.setUserName(information.getFirstName().toLowerCase());
+		information.setFirstName(removeSpace(information.getFirstName()));
+		System.out.print("------------"+information.getFirstName());
+		information.setLastName(removeSpace(information.getLastName()));
+//		user.setUserName(removeAccent(information.getFirstName()).toLowerCase());
+		user.setUserName(removeSpace(user.getUserName()));
+		
 		
 		String template = user.getUserName();
 
@@ -153,6 +164,12 @@ public class UserServiceImpl implements UserService {
 		userResponse = MappingData.mapToEntity(saveUser, UserResponse.class);
 		userResponse.setInformationResponse(informationResponse);
 		return userResponse;
+	}
+	
+	private static String removeAccent(String s) {
+		String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
+		Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+		return pattern.matcher(temp).replaceAll("");
 	}
 
 	@Override
