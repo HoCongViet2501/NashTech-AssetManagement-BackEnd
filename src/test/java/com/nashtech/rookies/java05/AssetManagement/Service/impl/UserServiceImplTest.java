@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.Service.impl;
+package com.nashtech.rookies.java05.AssetManagement.service.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;

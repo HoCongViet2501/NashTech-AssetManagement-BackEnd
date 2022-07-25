@@ -1,4 +1,4 @@
-package com.nashtech.rookies.java05.AssetManagement.Service.impl;
+package com.nashtech.rookies.java05.AssetManagement.service.impl;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.LoginRequest;
 import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
