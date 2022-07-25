@@ -23,7 +23,7 @@ import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
 
 @RestController
-@PreAuthorize("hasAuthority('ADMIN')")
+// @PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/api/user")
 public class UserController {
 	
