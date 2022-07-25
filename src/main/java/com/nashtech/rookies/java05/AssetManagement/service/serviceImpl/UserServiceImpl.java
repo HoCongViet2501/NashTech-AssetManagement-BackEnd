@@ -45,28 +45,25 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	RoleRepository roleRepository;
-	
+
 	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	public UserServiceImpl(UserRepository userRepository2, InformationRepository informationRepository2,
 			RoleRepository roleRepository2) {
-		this.userRepository=userRepository2;
-		this.informationRepository=informationRepository2;
-		this.roleRepository=roleRepository2;
+		this.userRepository = userRepository2;
+		this.informationRepository = informationRepository2;
+		this.roleRepository = roleRepository2;
 	}
 
+	public String getLocalUserName() {
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		System.out.println(userName);
 
-	public String getLocalUserName(){
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(userName);
-
-        if(userName != null)
-        {
-            return userName;
-        }
-        throw new ResourceNotFoundException("Cannot recognize user. Maybe you haven't log in");
-    }
-
+		if (userName != null) {
+			return userName;
+		}
+		throw new ResourceNotFoundException("Cannot recognize user. Maybe you haven't log in");
+	}
 
 	public static int calculateAge(LocalDate birthDate) {
 		LocalDate currentDate = LocalDate.now();
@@ -77,19 +74,34 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	public static int calculateAgeJoinedDate(LocalDate birthDate, LocalDate joinedDate) {
+		if ((birthDate != null) && (joinedDate != null)) {
+			return Period.between(birthDate, joinedDate).getYears();
+		} else {
+			return 0;
+		}
+	}
+
 	public void checkDate(SignupRequest signupRequest) {
 		int age = calculateAge(signupRequest.getDateOfBirth().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-
+		int ageJoinedDate = calculateAgeJoinedDate(
+				signupRequest.getDateOfBirth().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+				signupRequest.getJoinedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 		if (age < 18) {
 			throw new ResourceCheckDateException("User is under 18. Please select a different date");
 		}
 
 		if (signupRequest.getJoinedDate().before(signupRequest.getDateOfBirth())) {
-			throw new ResourceCheckDateException("Joined date is not later than Date of Birth. Please select a different date");
+			throw new ResourceCheckDateException(
+					"Joined date is not later than Date of Birth. Please select a different date");
 		}
 
 		if (signupRequest.getJoinedDate().equals(signupRequest.getDateOfBirth())) {
-			throw new ResourceCheckDateException("Joined date is not later than Date of Birth. Please select a different date");
+			throw new ResourceCheckDateException(
+					"Joined date is not later than Date of Birth. Please select a different date");
+		}
+		if (ageJoinedDate < 16) {
+			throw new ResourceCheckDateException("User is underage to join. Please select a different date");
 		}
 
 		Calendar calendar = Calendar.getInstance();
@@ -99,11 +111,12 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceCheckDateException("Joined date is Saturday or Sunday. Please select a different date");
 		}
 	}
-	
+
 	private void encryptPassword(User user) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		user.setPassWord(passwordEncoder.encode(user.getPassWord()));
 	}
+
 	public static String removeSpace(String s) {
 		return s.trim().replaceAll("\\s+", " ");
 	}
@@ -118,12 +131,11 @@ public class UserServiceImpl implements UserService {
 		// auto create username
 		user.setUserName(information.getFirstName().toLowerCase());
 		information.setFirstName(removeSpace(information.getFirstName()));
-		System.out.print("------------"+information.getFirstName());
+		System.out.print("------------" + information.getFirstName());
 		information.setLastName(removeSpace(information.getLastName()));
 //		user.setUserName(removeAccent(information.getFirstName()).toLowerCase());
 		user.setUserName(removeSpace(user.getUserName()));
-		
-		
+
 		String template = user.getUserName();
 
 		for (String s : information.getLastName().split(" ")) {
@@ -148,7 +160,7 @@ public class UserServiceImpl implements UserService {
 		// Auto create PassWord
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyy");
-		user.setPassWord(user.getUserName() + "@" +simpleDateFormat.format(information.getDateOfBirth()));
+		user.setPassWord(user.getUserName() + "@" + simpleDateFormat.format(information.getDateOfBirth()));
 		encryptPassword(user);
 
 		Role role = roleRepository.findById(signupRequest.getRole())
@@ -161,9 +173,9 @@ public class UserServiceImpl implements UserService {
 			locations = informationRepository.getLocationByUserName(userName);
 		}
 		information.setLocation(locations);
-		
+
 		user.setStatus(UserStatus.NEW);
-		
+
 		User saveUser = userRepository.save(user);
 		information.setUser(saveUser);
 		Information saveInformation = informationRepository.save(information);
@@ -174,7 +186,7 @@ public class UserServiceImpl implements UserService {
 		userResponse.setInformationResponse(informationResponse);
 		return userResponse;
 	}
-	
+
 	private static String removeAccent(String s) {
 		String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
 		Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
@@ -188,9 +200,7 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceNotFoundException("No User Founded");
 		}
 
-		return lists.stream()
-				.map(UserDetailResponse::buildFromInfo)
-				.collect(Collectors.toList());
+		return lists.stream().map(UserDetailResponse::buildFromInfo).collect(Collectors.toList());
 	}
 
 	@Override
@@ -201,8 +211,7 @@ public class UserServiceImpl implements UserService {
 		}
 		int total = this.informationRepository.findTotalUserSameLocation(location);
 
-		List<UserDetailResponse> users = lists.stream()
-				.map(UserDetailResponse::buildFromInfo)
+		List<UserDetailResponse> users = lists.stream().map(UserDetailResponse::buildFromInfo)
 				.collect(Collectors.toList());
 
 		return AllUserResponse.builder().totalRecord(total).users(users).raw(raw).build();
@@ -215,8 +224,7 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceNotFoundException("No User Founded");
 		}
 
-		List<UserDetailResponse> users = lists.stream()
-				.map(UserDetailResponse::buildFromInfo)
+		List<UserDetailResponse> users = lists.stream().map(UserDetailResponse::buildFromInfo)
 				.collect(Collectors.toList());
 
 		return AllUserResponse.builder().totalRecord(users.size()).users(users).raw(1).build();
@@ -224,12 +232,12 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * 
-	// public String getLocation(String username) {
-	// 	Information information = informationRepository.getByUsername(username)
-	// 			.orElseThrow(() -> new ResourceNotFoundExceptions("Username not found"));
-	// 	return information.getLocation();
-		
-	// }
+	 * // public String getLocation(String username) { // Information information =
+	 * informationRepository.getByUsername(username) // .orElseThrow(() -> new
+	 * ResourceNotFoundExceptions("Username not found")); // return
+	 * information.getLocation();
+	 * 
+	 * // }
 	 */
 
 }

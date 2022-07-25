@@ -40,15 +40,16 @@ public class UserServiceImplTest {
 	Information information;
 	User user;
 	Role role;
-	MappingData mappingData;
+//	MappingData mappingData;
 	UserResponse userResponse;
+	InformationResponse informationResponse;
 
 	@BeforeEach
 	public void beforeEach() {
 		userRepository = mock(UserRepository.class);
 		informationRepository = mock(InformationRepository.class);
 		roleRepository = mock(RoleRepository.class);
-		mappingData = mock(MappingData.class);
+//		mappingData = mock(MappingData.class);
 		userServiceImpl = new UserServiceImpl(userRepository, informationRepository, roleRepository);
 		signupRequest = mock(SignupRequest.class);
 		information = mock(Information.class);
@@ -57,40 +58,41 @@ public class UserServiceImplTest {
 		role = mock(Role.class);
 
 		userResponse = mock(UserResponse.class);
+		informationResponse = mock(InformationResponse.class);
 
 	}
 
 	@Test
 	public void createUser_ShouldReturnStatusOK_WhenDataValid() throws ParseException {
 
-		SignupRequest signupRequest = new SignupRequest();
+		SignupRequest signupRequestDTO = new SignupRequest();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		signupRequest.setFirstName("Hai");
-		signupRequest.setLastName("Pham Dang");
-		signupRequest.setDateOfBirth(formatter.parse("2000-12-06"));
-		signupRequest.setGender(true);
-		signupRequest.setJoinedDate(formatter.parse("2022-25-07"));
-		signupRequest.setRole((long) 1);
-		signupRequest.setLocation("HCM");
+		signupRequestDTO.setFirstName("Hai");
+		signupRequestDTO.setLastName("Pham Dang");
+		signupRequestDTO.setDateOfBirth(formatter.parse("2000-12-06"));
+		signupRequestDTO.setGender(true);
+		signupRequestDTO.setJoinedDate(formatter.parse("2022-25-07"));
+		signupRequestDTO.setRole((long) 1);
+		signupRequestDTO.setLocation("HCM");
 
-		when(MappingData.mapToEntity(signupRequest, Information.class)).thenReturn(information);
-		when(MappingData.mapToEntity(signupRequest, User.class)).thenReturn(user);
+		when(MappingData.mapToEntity(signupRequestDTO, User.class)).thenReturn(user);
+		when(MappingData.mapToEntity(signupRequestDTO, Information.class)).thenReturn(information);
 
-		User saveUser = new User();
+//		User saveUser = new User();
 
-		when(userRepository.save(user)).thenReturn(saveUser);
-		// information.setUser(saveUser);
+		when(userRepository.save(user)).thenReturn(user);
+		 information.setUser(user);
 
-		Information saveInformation = new Information();
-		when(informationRepository.save(information)).thenReturn(saveInformation);
+//		Information saveInformation = new Information();
+		when(informationRepository.save(information)).thenReturn(information);
 
 		InformationResponse informationResponse = new InformationResponse();
 
-		when(MappingData.mapToEntity(saveInformation, InformationResponse.class)).thenReturn(informationResponse);
+		when(MappingData.mapToEntity(information, InformationResponse.class)).thenReturn(informationResponse);
 
-		when(MappingData.mapToEntity(saveUser, UserResponse.class)).thenReturn(userResponse);
-		// userResponse.setInformationResponse(informationResponse);
-		UserResponse result = userServiceImpl.createUser(signupRequest);
+		when(MappingData.mapToEntity(user, UserResponse.class)).thenReturn(userResponse);
+		userResponse.setInformationResponse(informationResponse);
+		UserResponse result = userServiceImpl.createUser(signupRequestDTO);
 		assertThat(result, is(userResponse));
 	}
 
