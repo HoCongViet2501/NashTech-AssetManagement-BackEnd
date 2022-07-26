@@ -1,6 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.model.entity;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -36,11 +36,6 @@ public class UserController {
 		return userService.createUser(signUpRequest);
 	}
 
-	@GetMapping("/getAll/{location}")
-    public List<UserDetailResponse> getAllUserSameLocation(@PathVariable String location) {
-        return userService.getAllUserSameLocation(location);
-    }
-
 	@GetMapping("/getAll/{location}/{raw}")
 	public AllUserResponse getAllUser(@PathVariable String location, @PathVariable int raw) {
 		return this.userService.getAllUserResponse(location, raw);

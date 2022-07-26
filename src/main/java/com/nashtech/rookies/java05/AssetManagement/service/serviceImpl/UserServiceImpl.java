@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
 		information.setFirstName(removeSpace(information.getFirstName()));
 		System.out.print("------------" + information.getFirstName());
 		information.setLastName(removeSpace(information.getLastName()));
-//		user.setUserName(removeAccent(information.getFirstName()).toLowerCase());
+		user.setUserName(removeAccent(information.getFirstName()).toLowerCase());
 		user.setUserName(removeSpace(user.getUserName()));
 
 		String template = user.getUserName();
@@ -191,16 +191,6 @@ public class UserServiceImpl implements UserService {
 		String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
 		Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 		return pattern.matcher(temp).replaceAll("");
-	}
-
-	@Override
-	public List<UserDetailResponse> getAllUserSameLocation(String location) {
-		List<Information> lists = this.informationRepository.findByLocation(location);
-		if (lists.isEmpty()) {
-			throw new ResourceNotFoundException("No User Founded");
-		}
-
-		return lists.stream().map(UserDetailResponse::buildFromInfo).collect(Collectors.toList());
 	}
 
 	@Override
