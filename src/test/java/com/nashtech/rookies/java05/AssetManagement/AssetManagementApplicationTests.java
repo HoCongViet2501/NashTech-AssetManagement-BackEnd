@@ -1,13 +1,13 @@
-package com.nashtech.rookies.java05.AssetManagement;
+// package com.nashtech.rookies.java05.AssetManagement;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class AssetManagementApplicationTests {
+// @SpringBootTest
+// class AssetManagementApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+// 	@Test
+// 	void contextLoads() {
+// 	}
 
-}
+// }
