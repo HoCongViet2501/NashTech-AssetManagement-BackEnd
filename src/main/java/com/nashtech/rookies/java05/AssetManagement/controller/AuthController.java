@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.LoginRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.LoginResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
 import com.nashtech.rookies.java05.AssetManagement.service.serviceImpl.AuthenticationServiceImpl;
 
