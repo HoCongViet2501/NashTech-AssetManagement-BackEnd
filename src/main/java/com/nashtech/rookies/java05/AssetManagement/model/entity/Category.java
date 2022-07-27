@@ -21,6 +21,8 @@ public class Category {
 	private Long id;
 	
 	private String name;
+
+	private String prefix;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "category")
 	private Set<Asset> asset;
