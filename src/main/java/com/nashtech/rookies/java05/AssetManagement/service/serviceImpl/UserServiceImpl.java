@@ -198,8 +198,7 @@ public class UserServiceImpl implements UserService {
 		if (lists.isEmpty()) {
 			throw new ResourceNotFoundException("No User Founded");
 		}
-		return lists.stream().map(UserDetailResponse::buildFromInfo)
-				.collect(Collectors.toList());
+		return lists.stream().map(UserDetailResponse::buildFromInfo).collect(Collectors.toList());
 	}
 
 	@Override
@@ -209,10 +208,51 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceNotFoundException("No User Founded");
 		}
 
-		return lists.stream().map(UserDetailResponse::buildFromInfo)
-		.collect(Collectors.toList());
+		return lists.stream().map(UserDetailResponse::buildFromInfo).collect(Collectors.toList());
 	}
 
+	@Override
+	public UserResponse editUserInformation(String id, SignupRequest signupRequest) {
+
+		Information information = MappingData.mapToEntity(signupRequest, Information.class);
+		User user = MappingData.mapToEntity(signupRequest, User.class);
+
+		checkDate(signupRequest);
+
+		Optional<User> userOptional = userRepository.findById(id);
+		if (!userOptional.isPresent()) {
+			throw new ResourceNotFoundException("Cant find user with id: " + id);
+		}
+		
+//		User oldUser = userOptional.get();
+
+		user.setId(id);
+		information.setId(informationRepository.getInformationIbByUserId(id));
+		user.setUserName(userOptional.get().getUserName());
+		user.setPassWord(userOptional.get().getPassWord());
+		user.setStatus(userOptional.get().getStatus());
+//		information.setLastName(userOptional.get().getInformation().getLastName());
+//		information.setFirstName(userOptional.get().getInformation().getFirstName());
+		Role role = roleRepository.findById(signupRequest.getRole())
+				.orElseThrow(() -> new ResourceNotFoundException("Not.found.role"));
+		user.setRole(role);
+		System.out.println(signupRequest.toString());
+		System.out.println(information.toString());
+		System.out.println(user.toString());
+		information.setDateOfBirth(signupRequest.getDateOfBirth());
+		information.setJoinedDate(signupRequest.getJoinedDate());
+		information.setGender(signupRequest.isGender());
+
+		User saveUser = userRepository.save(user);
+		information.setUser(saveUser);
+		Information saveInformation = informationRepository.save(information);
+		InformationResponse informationResponse = MappingData.mapToEntity(saveInformation, InformationResponse.class);
+
+		UserResponse userResponse;
+		userResponse = MappingData.mapToEntity(saveUser, UserResponse.class);
+		userResponse.setInformationResponse(informationResponse);
+		return userResponse;
+	}
 	/**
 	 * 
 	 * // public String getLocation(String username) { // Information information =

@@ -10,10 +10,12 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
 
 @Service
 public interface UserService {
-    
+
 	public UserResponse createUser(SignupRequest signupRequest);
 
-    public List<UserDetailResponse> getAllUserSameLocation(String location);
+	public List<UserDetailResponse> getAllUserSameLocation(String location);
 
-    public List<UserDetailResponse> searchUser(String content, String location);
+	public List<UserDetailResponse> searchUser(String content, String location);
+
+	public UserResponse editUserInformation(String id,SignupRequest signupRequest);
 }
