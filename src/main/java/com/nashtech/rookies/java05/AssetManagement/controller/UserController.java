@@ -40,7 +40,7 @@ public class UserController {
 	}
 
 	@GetMapping("/search/{location}/{content}")
-	public AllUserResponse searchUser(@PathVariable String location, @PathVariable String content) {
+	public List<UserDetailResponse> searchUser(@PathVariable String location, @PathVariable String content) {
 		return this.userService.searchUser(content, location);
 	}
 }

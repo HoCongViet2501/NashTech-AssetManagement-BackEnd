@@ -204,16 +204,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public AllUserResponse searchUser(String content, String location) {
+	public List<UserDetailResponse> searchUser(String content, String location) {
 		List<Information> lists = this.informationRepository.searchUser(content, location);
 		if (lists.isEmpty()) {
 			throw new ResourceNotFoundException("No User Founded");
 		}
 
-		List<UserDetailResponse> users = lists.stream().map(UserDetailResponse::buildFromInfo)
-				.collect(Collectors.toList());
-
-		return AllUserResponse.builder().totalRecord(users.size()).users(users).raw(1).build();
+		return lists.stream().map(UserDetailResponse::buildFromInfo)
+		.collect(Collectors.toList());
 	}
 
 	/**
