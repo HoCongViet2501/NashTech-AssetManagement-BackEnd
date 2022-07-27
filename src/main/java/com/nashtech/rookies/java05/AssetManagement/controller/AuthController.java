@@ -4,6 +4,8 @@ import static com.nashtech.rookies.java05.AssetManagement.mapper.MappingData.map
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -28,42 +30,52 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
-	private final AuthenticationServiceImpl authenticationService;
-	private final PasswordEncoder passwordEncoder;
-
-	public AuthController(AuthenticationServiceImpl authenticationService, PasswordEncoder passwordEncoder) {
-		this.authenticationService = authenticationService;
-		this.passwordEncoder = passwordEncoder;
-	}
-
-	@PostMapping("/login")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "login.successfully"),
-			@ApiResponse(responseCode = "302", description = "username.or.password.is.incorrect")
-	})
-	@Operation(summary = "login for user")
-	public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
-		Map<String, Object> credentials = authenticationService.login(request.getUsername(), request.getPassword());
-		String token = (String) credentials.get("token");
-		User user = mapToResponse(credentials.get("user"), User.class);
-
-		LoginResponse loginResponse = LoginResponse.builder().token(token).location(user.getInformation().getLocation()).username(user.getUserName())
-				.role(user.getRole()).status(user.getStatus()).userId(user.getId()).build();
-				
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(loginResponse);
-	}
-
-	@PutMapping("/user/{id}/{newPassword}")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "login.successfully"),
-			@ApiResponse(responseCode = "404", description = "not.found.user")
-	})
-	@Operation(summary = "change password for new user")
-	public ResponseEntity<String> changePassword(@PathVariable String id, @PathVariable String newPassword) {
-		newPassword = passwordEncoder.encode(newPassword);
-		this.authenticationService.changePasswordNewUser(id, newPassword);
-		return ResponseEntity.ok().body("change.password.success!new.password.is." + newPassword);
-	}
-
+    
+    private final AuthenticationServiceImpl authenticationService;
+    private final PasswordEncoder passwordEncoder;
+    
+    public AuthController(AuthenticationServiceImpl authenticationService, PasswordEncoder passwordEncoder) {
+        this.authenticationService = authenticationService;
+        this.passwordEncoder = passwordEncoder;
+    }
+    
+    @PostMapping("/login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "login.successfully"),
+            @ApiResponse(responseCode = "302", description = "username.or.password.is.incorrect")
+    })
+    @Operation(summary = "login for user")
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
+        Map<String, Object> credentials = authenticationService.login(request.getUsername(), request.getPassword());
+        String token = (String) credentials.get("token");
+        User user = mapToResponse(credentials.get("user"), User.class);
+        
+        LoginResponse loginResponse = LoginResponse.builder().token(token).location(user.getInformation().getLocation()).username(user.getUserName())
+                .role(user.getRole()).status(user.getStatus()).userId(user.getId()).build();
+        
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(loginResponse);
+    }
+    
+    @PutMapping("/user/{id}/{newPassword}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "login.successfully"),
+            @ApiResponse(responseCode = "404", description = "not.found.user")
+    })
+    @Operation(summary = "change password for new user")
+    public ResponseEntity<String> changePassword(@PathVariable String id, @PathVariable String newPassword) {
+        newPassword = passwordEncoder.encode(newPassword);
+        this.authenticationService.changePasswordNewUser(id, newPassword);
+        return ResponseEntity.ok().body("change.password.success!new.password.is." + newPassword);
+    }
+    
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "logout.successfully"),
+            @ApiResponse(responseCode = "500", description = "request.logout.have.error")
+    })
+    @Operation(summary = "logout for user")
+    @PostMapping("/logout")
+    public ResponseEntity<String> logoutUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        this.authenticationService.logout(httpServletRequest, httpServletResponse);
+        return ResponseEntity.ok("Logout.user.successfully!");
+    }
 }
