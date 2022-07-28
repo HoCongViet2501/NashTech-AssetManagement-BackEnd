@@ -1,9 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.controller;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.AssetRequest;
-import com.nashtech.rookies.java05.AssetManagement.dto.request.CategoryRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssetResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.response.CategoryResponse;
 import com.nashtech.rookies.java05.AssetManagement.service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,9 +19,9 @@ public class AssetController {
         this.assetService = assetService;
     }
 
-    @PostMapping("{creatorId}")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    AssetResponse createCategory(@Valid @RequestBody AssetRequest assetRequest, @PathVariable String creatorId){
-        return this.assetService.createAsset(assetRequest, creatorId);
+    AssetResponse createCategory(@Valid @RequestBody AssetRequest assetRequest){
+        return this.assetService.createAsset(assetRequest);
     }
 }
