@@ -31,13 +31,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse createCategory(CategoryRequest categoryRequest) {
         Optional<Category> categoryNameOptional = this.categoryRepository.findByName(categoryRequest.getName());
-        Optional<Category> categoryPrefixOptional = this.categoryRepository.findByPrefix(categoryRequest.getPrefix());
+        Optional<Category> categoryPrefixOptional = this.categoryRepository.findById(categoryRequest.getId());
 
-        if (categoryRequest.getName().isEmpty() &&  categoryRequest.getPrefix().isEmpty()){
+        if (categoryRequest.getName().isEmpty() &&  categoryRequest.getId().isEmpty()){
             throw new ResourceCategoryException("Category.Name.and.Category.Prefix.Are.Required");
         } else if (categoryRequest.getName().isEmpty()) {
             throw new ResourceCategoryException("Category.Name.Is.Required");
-        } else if (categoryRequest.getPrefix().isEmpty()) {
+        } else if (categoryRequest.getId().isEmpty()) {
             throw new ResourceCategoryException("Category.Prefix.Is.Required");
         }
 

@@ -12,7 +12,6 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryRequest {
+    private String id;
     private String name;
-
-    private String prefix;
 }

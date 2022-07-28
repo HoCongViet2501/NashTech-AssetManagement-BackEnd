@@ -1,5 +1,6 @@
-package com.nashtech.rookies.java05.AssetManagement.dto.request;
+package com.nashtech.rookies.java05.AssetManagement.dto.response;
 
+import com.nashtech.rookies.java05.AssetManagement.model.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,10 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssetRequest {
+public class AssetResponse {
+    private String id;
     private String name;
-    private String category;
+    private Category category;
     private String specification;
     private Date installedDate;
     private String state;
