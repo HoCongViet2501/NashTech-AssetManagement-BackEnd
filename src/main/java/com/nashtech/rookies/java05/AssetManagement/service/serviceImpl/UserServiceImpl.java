@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,10 +26,12 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailRespon
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
+import com.nashtech.rookies.java05.AssetManagement.model.entity.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Information;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Role;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
 import com.nashtech.rookies.java05.AssetManagement.model.enums.UserStatus;
+import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.InformationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
@@ -44,6 +48,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	RoleRepository roleRepository;
+
+	@Autowired
+	AssignmentRepository assignmentRepository;
 
 	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -194,7 +201,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserDetailResponse> getAllUserSameLocation(String location) {
-		List<Information> lists = this.informationRepository.findByLocation(location);
+		List<Information> lists = this.informationRepository.findUserByLocationAndNotInactive(location);
 		if (lists.isEmpty()) {
 			throw new ResourceNotFoundException("No User Founded");
 		}
@@ -209,8 +216,37 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceNotFoundException("No User Founded");
 		}
 
-		return lists.stream().map(UserDetailResponse::buildFromInfo)
-		.collect(Collectors.toList());
+		List<UserDetailResponse> result = new ArrayList<>();
+		for (Information info : lists) {
+			if (!info.getUser().getStatus().equals(UserStatus.INACTIVE)) {
+				result.add(UserDetailResponse.buildFromInfo(info));
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public boolean checkUserIsAvailable(String staffCode) {
+		User user = this.userRepository.findById(staffCode)
+				.orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+		List<Assignment> assignments = this.assignmentRepository.findByUserAndStatus(user, false);
+
+		if (assignments.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public ResponseEntity<Object> disableUser(String staffCode) {
+		User user = this.userRepository.findById(staffCode)
+				.orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+
+		user.setStatus(UserStatus.INACTIVE);
+
+		this.userRepository.save(user);
+		return ResponseEntity.ok().body("User is disabled");
 	}
 
 	/**
