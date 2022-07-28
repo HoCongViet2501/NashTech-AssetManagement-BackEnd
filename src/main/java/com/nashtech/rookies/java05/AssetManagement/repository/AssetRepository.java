@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, String>{
-    @Query(value = "SELECT * FROM assets a WHERE a.id LIKE %:category% ORDER BY  a.id desc", nativeQuery = true)
+    @Query(value = "SELECT * FROM assets a WHERE a.category_id LIKE %:category ORDER BY  a.id desc", nativeQuery = true)
     List<Asset> findByOrderByIdDesc(String category);
  }
