@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Information;
-import com.nashtech.rookies.java05.AssetManagement.model.enums.UserStatus;
 
 
 

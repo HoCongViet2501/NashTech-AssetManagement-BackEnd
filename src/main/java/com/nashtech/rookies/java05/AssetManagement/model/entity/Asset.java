@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.model.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -45,6 +46,10 @@ public class Asset {
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
+
+	@ManyToOne
+	@JoinColumn(name = "creator_id")
+	private User creator;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "asset",cascade = CascadeType.ALL)

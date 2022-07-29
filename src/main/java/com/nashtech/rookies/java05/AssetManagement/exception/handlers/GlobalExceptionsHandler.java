@@ -1,9 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.exception.handlers;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.response.ErrorResponse;
-import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
-import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateException;
-import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
+import com.nashtech.rookies.java05.AssetManagement.exception.*;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -67,6 +65,24 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN.toString(),
                 forbiddenException.getMessage(), new Date(), request.getDescription(false));
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler({ ResourceCategoryException.class })
+    protected ResponseEntity<ErrorResponse> handleCategoryException(RuntimeException exception, WebRequest request) {
+        ErrorResponse error = new ErrorResponse("417", exception.getMessage());
+        return new ResponseEntity<ErrorResponse>(error, HttpStatus.EXPECTATION_FAILED);
+    }
+
+    @ExceptionHandler({ ResourceAssetException.class })
+    protected ResponseEntity<ErrorResponse> handleAssetException(RuntimeException exception, WebRequest request) {
+        ErrorResponse error = new ErrorResponse("417", exception.getMessage());
+        return new ResponseEntity<ErrorResponse>(error, HttpStatus.EXPECTATION_FAILED);
+    }
+
+    @ExceptionHandler({ ResourceCheckException.class })
+    protected ResponseEntity<ErrorResponse> handleNotFoundAssetException(RuntimeException exception, WebRequest request) {
+        ErrorResponse error = new ErrorResponse("400", exception.getMessage());
+        return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_FOUND);
     }
 
 }
