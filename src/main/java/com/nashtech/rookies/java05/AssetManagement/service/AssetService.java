@@ -9,4 +9,8 @@ import org.springframework.stereotype.Service;
 public interface AssetService {
     AssetResponse createAsset(AssetRequest assetRequest);
     public Authentication getAuthentication();
+    AssetResponse updateAsset(AssetRequest assetRequest, String id);
+
+    boolean deleteAsset(String id);
+
 }

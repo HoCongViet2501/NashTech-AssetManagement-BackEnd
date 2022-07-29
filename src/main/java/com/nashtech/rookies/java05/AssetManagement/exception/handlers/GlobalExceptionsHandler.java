@@ -79,4 +79,10 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.EXPECTATION_FAILED);
     }
 
+    @ExceptionHandler({ ResourceCheckException.class })
+    protected ResponseEntity<ErrorResponse> handleNotFoundAssetException(RuntimeException exception, WebRequest request) {
+        ErrorResponse error = new ErrorResponse("400", exception.getMessage());
+        return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_FOUND);
+    }
+
 }
