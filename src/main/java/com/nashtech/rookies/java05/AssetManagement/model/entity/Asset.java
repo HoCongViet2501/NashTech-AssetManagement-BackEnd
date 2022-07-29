@@ -1,6 +1,5 @@
 package com.nashtech.rookies.java05.AssetManagement.model.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 

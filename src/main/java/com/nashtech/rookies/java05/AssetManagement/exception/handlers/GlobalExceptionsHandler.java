@@ -1,13 +1,10 @@
 package com.nashtech.rookies.java05.AssetManagement.exception.handlers;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.response.ErrorResponse;
-<<<<<<< HEAD
 import com.nashtech.rookies.java05.AssetManagement.exception.*;
-=======
 import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateException;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
->>>>>>> origin/US-1026
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

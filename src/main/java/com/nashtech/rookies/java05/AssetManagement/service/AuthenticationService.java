@@ -1,9 +1,8 @@
 package com.nashtech.rookies.java05.AssetManagement.service;
-import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 public interface AuthenticationService {
     Map<String, Object> login(String userName, String passWord);
