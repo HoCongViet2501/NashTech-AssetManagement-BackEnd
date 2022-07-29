@@ -299,4 +299,12 @@ public class UserServiceImpl implements UserService {
 		return userResponse;
 	}
 
+	@Override
+	public void changePassword(String userId, String newPassword) {
+		User user = this.userRepository.findUserById(userId).orElseThrow(
+				() -> new ResourceNotFoundException("not.found.user.have.id." + userId));
+		user.setPassWord(newPassword);
+		this.userRepository.save(user);
+	}
+
 }

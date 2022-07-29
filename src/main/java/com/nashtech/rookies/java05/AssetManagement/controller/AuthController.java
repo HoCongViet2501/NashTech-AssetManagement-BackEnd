@@ -42,7 +42,7 @@ public class AuthController {
     @PostMapping("/login")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "login.successfully"),
-            @ApiResponse(responseCode = "302", description = "username.or.password.is.incorrect")
+            @ApiResponse(responseCode = "403", description = "username.or.password.is.incorrect")
     })
     @Operation(summary = "login for user")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
@@ -65,7 +65,7 @@ public class AuthController {
     public ResponseEntity<String> changePassword(@PathVariable String id, @PathVariable String newPassword) {
         newPassword = passwordEncoder.encode(newPassword);
         this.authenticationService.changePasswordNewUser(id, newPassword);
-        return ResponseEntity.ok().body("change.password.success!new.password.is." + newPassword);
+        return ResponseEntity.ok().body("change.password.successfully!");
     }
     
     @ApiResponses(value = {

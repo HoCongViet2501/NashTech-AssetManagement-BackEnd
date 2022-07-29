@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,9 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@Operation(summary = "Create new user")
 	@PostMapping("/register")
@@ -86,5 +90,18 @@ public class UserController {
 	@Operation(summary = "edit user information by staffCode")
 	public List<UserDetailResponse> getUserInformation(@PathVariable String staffCode) {
 		return userService.getUserInformationById(staffCode);
+	}
+
+	@Operation(summary = "change password for current user")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "change password success fully"),
+			@ApiResponse(responseCode = "404", description = "not found user"),
+			@ApiResponse(responseCode = "403", description = "Access denied, please enter token!")
+	})
+	@PutMapping("/{id}/{password}")
+	public ResponseEntity<String> changePassword(@PathVariable String id, @PathVariable String password) {
+		password = this.passwordEncoder.encode(password);
+		this.userService.changePassword(id, password);
+		return ResponseEntity.ok("change.password.successfully!");
 	}
 }
