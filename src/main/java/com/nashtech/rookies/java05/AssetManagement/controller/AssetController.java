@@ -24,7 +24,7 @@ public class AssetController {
   }
 
   @GetMapping("/search/{location}/{content}")
-  public List<AssetResponse> searchAsset(String location, String content) {
+  public List<AssetResponse> searchAsset(@PathVariable String location,@PathVariable String content) {
     return assetService.searchAsset(content, location);
   }
 }
