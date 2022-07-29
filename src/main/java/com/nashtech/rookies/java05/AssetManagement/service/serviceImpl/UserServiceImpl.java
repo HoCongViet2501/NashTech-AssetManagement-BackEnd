@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.SignupRequest;
-import com.nashtech.rookies.java05.AssetManagement.dto.response.AllUserResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
@@ -194,30 +193,24 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public AllUserResponse getAllUserResponse(String location, int raw) {
-		List<Information> lists = this.informationRepository.findAllUserSameLocation(location, (raw - 1) * 20);
+	public List<UserDetailResponse> getAllUserSameLocation(String location) {
+		List<Information> lists = this.informationRepository.findByLocation(location);
 		if (lists.isEmpty()) {
 			throw new ResourceNotFoundException("No User Founded");
 		}
-		int total = this.informationRepository.findTotalUserSameLocation(location);
-
-		List<UserDetailResponse> users = lists.stream().map(UserDetailResponse::buildFromInfo)
+		return lists.stream().map(UserDetailResponse::buildFromInfo)
 				.collect(Collectors.toList());
-
-		return AllUserResponse.builder().totalRecord(total).users(users).raw(raw).build();
 	}
 
 	@Override
-	public AllUserResponse searchUser(String content, String location) {
+	public List<UserDetailResponse> searchUser(String content, String location) {
 		List<Information> lists = this.informationRepository.searchUser(content, location);
 		if (lists.isEmpty()) {
 			throw new ResourceNotFoundException("No User Founded");
 		}
 
-		List<UserDetailResponse> users = lists.stream().map(UserDetailResponse::buildFromInfo)
-				.collect(Collectors.toList());
-
-		return AllUserResponse.builder().totalRecord(users.size()).users(users).raw(1).build();
+		return lists.stream().map(UserDetailResponse::buildFromInfo)
+		.collect(Collectors.toList());
 	}
 
 	/**

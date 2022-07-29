@@ -22,7 +22,7 @@ public interface InformationRepository extends JpaRepository<Information, Long> 
     @Query(value = "select  count(i.id) from information i  where i.location = :location", nativeQuery = true)
     public int findTotalUserSameLocation(@Param("location") String location);
 
-    @Query(value = "select * from information i where i.location = :location limit 20 offset :offset ", nativeQuery = true)
+    @Query(value = "select * from information i where i.location = :location limit 50 offset :offset ", nativeQuery = true)
     public List<Information> findAllUserSameLocation(@Param("location") String location, @Param("offset") int raw);
 
     @Query(value = "select * from information i where (i.first_name like %:content% or i.last_name like %:content%  or  i.user_id like %:content%) and i.location  = :location", nativeQuery = true)

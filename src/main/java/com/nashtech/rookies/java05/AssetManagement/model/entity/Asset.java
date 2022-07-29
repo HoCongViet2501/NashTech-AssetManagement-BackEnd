@@ -49,4 +49,8 @@ public class Asset {
 	@JsonIgnore
 	@OneToMany(mappedBy = "asset",cascade = CascadeType.ALL)
 	private Set<Assignment> assignment;
+
+	@ManyToOne
+	@JoinColumn(name = "creator_id")
+	private User creator;
 }
