@@ -3,7 +3,7 @@ package com.nashtech.rookies.java05.AssetManagement.exception.handlers;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.ErrorResponse;
 import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateException;
-import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -47,13 +47,13 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ExceptionHandler({ ResourceNotFoundException.class })
+    @ExceptionHandler({ResourceNotFoundException.class })
     public ResponseEntity<Object> resourceNotFoundHandling(ResourceNotFoundException exception, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), exception.getMessage(),
                 new Date(), request.getDescription(false));
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
-
+    
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<Object> globalExceptionHandling(Exception exception, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
