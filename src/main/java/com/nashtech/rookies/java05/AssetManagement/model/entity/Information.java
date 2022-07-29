@@ -43,8 +43,8 @@ public class Information {
 	private String lastName;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@Column(name = "date_birth")
 	@Temporal(TemporalType.DATE)
+	@Column(name = "date_birth")
 	private Date dateOfBirth;
 
 	private boolean gender;
@@ -59,4 +59,12 @@ public class Information {
 	@OneToOne
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	@Override
+	public String toString() {
+		return "Information [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dateOfBirth="
+				+ dateOfBirth + ", gender=" + gender + ", location=" + location + ", joinedDate=" + joinedDate
+				+ ", user=" + user + "]";
+	}
+
 }
