@@ -272,17 +272,12 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceNotFoundException("Cant find user with id: " + id);
 		}
 
-//		User oldUser = userOptional.get();
-
 		user.setId(id);
 		Optional<Information> informationOptional = informationRepository.findByUserId(id);
 		information.setId(informationOptional.get().getId());
-//		information.setId(informationRepository.getInformationIbByUserId(id));
 		user.setUserName(userOptional.get().getUserName());
 		user.setPassWord(userOptional.get().getPassWord());
 		user.setStatus(userOptional.get().getStatus());
-//		information.setLastName(userOptional.get().getInformation().getLastName());
-//		information.setFirstName(userOptional.get().getInformation().getFirstName());
 		Role role = roleRepository.findById(signupRequest.getRole())
 				.orElseThrow(() -> new ResourceNotFoundException("Not.found.role"));
 		user.setRole(role);
@@ -303,14 +298,5 @@ public class UserServiceImpl implements UserService {
 		userResponse.setInformationResponse(informationResponse);
 		return userResponse;
 	}
-	/**
-	 * 
-	 * // public String getLocation(String username) { // Information information =
-	 * informationRepository.getByUsername(username) // .orElseThrow(() -> new
-	 * ResourceNotFoundExceptions("Username not found")); // return
-	 * information.getLocation();
-	 * 
-	 * // }
-	 */
 
 }

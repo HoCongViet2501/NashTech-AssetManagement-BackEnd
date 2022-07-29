@@ -1,7 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nashtech.rookies.java05.AssetManagement.dto.request.SignupRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
-import com.nashtech.rookies.java05.AssetManagement.model.entity.Information;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
