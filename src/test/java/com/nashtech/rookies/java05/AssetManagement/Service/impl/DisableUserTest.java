@@ -21,7 +21,8 @@ import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentReposito
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 
-@SpringBootTest
+// @SpringBootTest
+
 public class DisableUserTest {
 
     @Mock
@@ -60,17 +61,17 @@ public class DisableUserTest {
         assertThat(expectResult).isFalse();
     }
 
-    // @Test
-    // public void givenId_ShowReturnTrue_whenIdInvalid() {
-    //     user = new User();
-    //     List<Assignment> list = new ArrayList<>();
+    @Test
+    public void givenId_ShowReturnTrue_whenIdInvalid() {
+        user = new User();
+        List<Assignment> list = new ArrayList<>();
 
-    //     when(userRepository.findById("staffCode")).thenReturn(optionalUser);
-    //     // when(optionalUser.get()).thenReturn(user);
-    //     User newUser = optionalUser.get();
-    //     when(assignmentRepository.findByUserAndStatus(newUser, false)).thenReturn(list);
-    //     boolean expectResult = userService.checkUserIsAvailable("staffCode");
-    //     assertThat(expectResult).isTrue();
+        when(userRepository.findById("staffCode")).thenReturn(Optional.of(user));
+        when(assignmentRepository.findByUserAndStatus(user, false)).thenReturn(list);
 
-    // }
+        boolean expectResult = userService.checkUserIsAvailable("staffCode");
+
+        assertThat(expectResult).isTrue();
+
+    }
 }
