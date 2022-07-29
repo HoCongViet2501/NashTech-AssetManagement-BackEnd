@@ -34,3 +34,5 @@ build/
 
 *.properties
 application.properties
+
+!**/src/test/**
