@@ -1,12 +1,14 @@
 package com.nashtech.rookies.java05.AssetManagement.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.SignupRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
+import com.nashtech.rookies.java05.AssetManagement.model.entity.Information;
 
 @Service
 public interface UserService {
@@ -18,4 +20,8 @@ public interface UserService {
 	public List<UserDetailResponse> searchUser(String content, String location);
 
 	public UserResponse editUserInformation(String id,SignupRequest signupRequest);
+	
+//	public Optional<Information> getUserInformationById(String id);
+	
+	public List<UserDetailResponse> getUserInformationById(String id);
 }

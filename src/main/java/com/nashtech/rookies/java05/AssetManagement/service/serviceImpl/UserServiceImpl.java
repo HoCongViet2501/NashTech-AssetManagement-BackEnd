@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -120,6 +121,11 @@ public class UserServiceImpl implements UserService {
 		return s.trim().replaceAll("\\s+", " ");
 	}
 
+	public String generteUsername(String firstName) {
+
+		return null;
+	}
+
 	@Override
 	public UserResponse createUser(SignupRequest signupRequest) {
 		Information information = MappingData.mapToEntity(signupRequest, Information.class);
@@ -128,8 +134,8 @@ public class UserServiceImpl implements UserService {
 		checkDate(signupRequest);
 
 		// auto create username
+		information.setFirstName(information.getFirstName().replaceAll(" ", ""));
 		user.setUserName(information.getFirstName().toLowerCase());
-		information.setFirstName(removeSpace(information.getFirstName()));
 		System.out.print("------------" + information.getFirstName());
 		information.setLastName(removeSpace(information.getLastName()));
 		user.setUserName(removeAccent(information.getFirstName()).toLowerCase());
@@ -201,6 +207,14 @@ public class UserServiceImpl implements UserService {
 		return lists.stream().map(UserDetailResponse::buildFromInfo).collect(Collectors.toList());
 	}
 
+	public List<UserDetailResponse> getUserInformationById(String id) {
+		List<Information> lists = this.informationRepository.findInformationByUserId(id);
+		if (lists.isEmpty()) {
+			throw new ResourceNotFoundException("No User Founded");
+		}
+		return lists.stream().map(UserDetailResponse::buildEditFromInfo).collect(Collectors.toList());
+	}
+
 	@Override
 	public List<UserDetailResponse> searchUser(String content, String location) {
 		List<Information> lists = this.informationRepository.searchUser(content, location);
@@ -223,11 +237,13 @@ public class UserServiceImpl implements UserService {
 		if (!userOptional.isPresent()) {
 			throw new ResourceNotFoundException("Cant find user with id: " + id);
 		}
-		
+
 //		User oldUser = userOptional.get();
 
 		user.setId(id);
-		information.setId(informationRepository.getInformationIbByUserId(id));
+		Optional<Information> informationOptional = informationRepository.findByUserId(id);
+		information.setId(informationOptional.get().getId());
+//		information.setId(informationRepository.getInformationIbByUserId(id));
 		user.setUserName(userOptional.get().getUserName());
 		user.setPassWord(userOptional.get().getPassWord());
 		user.setStatus(userOptional.get().getStatus());

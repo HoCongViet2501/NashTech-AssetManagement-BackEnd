@@ -1,6 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -29,6 +30,10 @@ public interface InformationRepository extends JpaRepository<Information, Long> 
     public List<Information> searchUser(@Param("content") String content, @Param("location") String location);
     
     @Query(value = "select i.id from Information i where i.user_id = :userId", nativeQuery = true)
-    public Long getInformationIbByUserId(String userId);
+    public Long getInformationIdByUserId(String userId);
+    
+    public List<Information> findInformationByUserId(String userId);
+    
+    Optional<Information> findByUserId(String userId);
 
 }

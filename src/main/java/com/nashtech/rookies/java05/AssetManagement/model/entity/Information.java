@@ -61,4 +61,12 @@ public class Information {
 	@OneToOne
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	@Override
+	public String toString() {
+		return "Information [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dateOfBirth="
+				+ dateOfBirth + ", gender=" + gender + ", location=" + location + ", joinedDate=" + joinedDate
+				+ ", user=" + user + "]";
+	}
+
 }
