@@ -62,9 +62,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and().authorizeRequests()
 				.antMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs/**").permitAll()
 				.antMatchers("/api/auth/login", "/api/auth/user/**").permitAll()
-				.antMatchers("/api/user/register").permitAll()
-				.antMatchers("/api/category/**").permitAll()
-				.antMatchers("/api/asset/**").permitAll()
+				.antMatchers("/api/user/register").hasAnyAuthority("ADMIN")
+				.antMatchers("/api/category/**").hasAnyAuthority("ADMIN")
+				.antMatchers("/api/asset/**").hasAnyAuthority("ADMIN")
 				.anyRequest().authenticated()
 				.and().apply(jwtConfigure);
 	}
