@@ -228,14 +228,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean checkUserIsAvailable(String staffCode) {
-		User user = this.userRepository.findById(staffCode)
-				.orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+		Optional<User> optionalUser = this.userRepository.findById(staffCode);
+		if(!optionalUser.isPresent()){
+			throw new ResourceNotFoundException("User Not Found");
+		}
+
+		User user = optionalUser.get();
 		List<Assignment> assignments = this.assignmentRepository.findByUserAndStatus(user, false);
 
-		if (assignments.isEmpty()) {
-			return true;
-		}
-		return false;
+		return assignments.isEmpty();
 	}
 
 	@Override
