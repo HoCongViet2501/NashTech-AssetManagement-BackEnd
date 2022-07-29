@@ -1,8 +1,16 @@
 package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.nashtech.rookies.java05.AssetManagement.dto.request.AssetRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssetResponse;
-import com.nashtech.rookies.java05.AssetManagement.exception.ResourceAssetException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCategoryException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
@@ -15,14 +23,6 @@ import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentReposito
 import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
 import com.nashtech.rookies.java05.AssetManagement.service.AssetService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AssetServiceImpl implements AssetService {
@@ -103,13 +103,9 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public boolean deleteAsset(String id) {
-        User user = this.userRepository.findByUserName(getAuthentication().getName()).orElseThrow(() ->
-                new ResourceCheckException("Not.Found.User.Id"));
-
         Asset asset = this.assetRepository.findById(id).orElseThrow(
                 () -> new ResourceCheckException("Not.Found.Asset.Id")
         );
-        System.out.println(asset.getId());
 
         try {
             List<Assignment> assignments = this.assignmentRepository.findAssignmentByAsset(asset.getId());
@@ -124,4 +120,25 @@ public class AssetServiceImpl implements AssetService {
         }
         return false;
     }
+
+
+  @Override
+  public List<AssetResponse> getAllAssetByLocation(String location) {
+    List<Asset> assets = assetRepository.findAssetByLocation(location);
+    if (assets.isEmpty()) {
+      throw new ResourceNotFoundException("No asset found in this location");
+    }
+    return assets.stream().map(AssetResponse::build).collect(Collectors.toList());
+  }
+  
+  @Override
+  public List<AssetResponse> searchAsset(String content, String location) {
+    
+    List<Asset> assets = assetRepository.searchAssetByNameOrCode(content, location);
+    if (assets.isEmpty()) {
+      throw new ResourceNotFoundException("No asset found in this location");
+    }
+    return assets.stream().map(AssetResponse::build).collect(Collectors.toList());
+  }
+
 }

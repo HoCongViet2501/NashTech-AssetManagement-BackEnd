@@ -8,7 +8,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AssetRepository extends JpaRepository<Asset, String>{
-    @Query(value = "SELECT * FROM assets a WHERE a.category_id LIKE %:category ORDER BY  a.id desc", nativeQuery = true)
-    List<Asset> findByOrderByIdDesc(String category);
- }
+public interface AssetRepository extends JpaRepository<Asset, String> {
+  @Query(value = "SELECT * FROM assets a WHERE a.category_id LIKE %:category ORDER BY  a.id desc", nativeQuery = true)
+  List<Asset> findByOrderByIdDesc(String category);
+
+  @Query(value = "select a.* from information i inner join assets a on i.user_id = a.creator_id where i.location = :location", nativeQuery = true)
+  public List<Asset> findAssetByLocation(String location);
+
+  @Query(value = "select a.* from information i inner join assets a on i.user_id = a.creator_id where (lower(a.name) like lower(concat('%', :content,'%')) or lower(a.id) like lower(concat('%', :content,'%'))) and i.location = :location", nativeQuery = true)
+  public List<Asset> searchAssetByNameOrCode(String content, String location);
+}
