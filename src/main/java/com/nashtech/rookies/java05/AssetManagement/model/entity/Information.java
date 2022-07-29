@@ -2,10 +2,8 @@ package com.nashtech.rookies.java05.AssetManagement.model.entity;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,8 +43,8 @@ public class Information {
 	private String lastName;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@Column(name = "date_birth")
 	@Temporal(TemporalType.DATE)
+	@Column(name = "date_birth")
 	private Date dateOfBirth;
 
 	private boolean gender;
