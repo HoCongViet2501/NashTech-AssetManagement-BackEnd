@@ -23,8 +23,8 @@ public class AssetController {
     return assetService.getAllAssetByLocation(location);
   }
 
-  @GetMapping("/search/{content}/{location}")
-  public List<AssetResponse> searchAsset(String content, String location) {
+  @GetMapping("/search/{location}/{content}")
+  public List<AssetResponse> searchAsset(String location, String content) {
     return assetService.searchAsset(content, location);
   }
 }
