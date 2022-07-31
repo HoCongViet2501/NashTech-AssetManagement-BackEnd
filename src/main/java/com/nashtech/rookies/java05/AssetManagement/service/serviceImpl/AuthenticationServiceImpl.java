@@ -66,6 +66,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(httpServletRequest, httpServletResponse, null);
     }
-    
-    
 }

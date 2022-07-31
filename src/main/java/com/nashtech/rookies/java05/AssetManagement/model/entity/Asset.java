@@ -46,11 +46,11 @@ public class Asset {
 	@JoinColumn(name = "category_id")
 	private Category category;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "asset",cascade = CascadeType.ALL)
-	private Set<Assignment> assignment;
-
 	@ManyToOne
 	@JoinColumn(name = "creator_id")
 	private User creator;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "asset",cascade = CascadeType.ALL)
+	private Set<Assignment> assignment;
 }

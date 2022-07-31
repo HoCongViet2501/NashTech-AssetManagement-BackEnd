@@ -46,5 +46,7 @@ public class Assignment {
 	private String note;
 	
 	private String state;
+
+	private boolean status; // true: deleted
 	
 }

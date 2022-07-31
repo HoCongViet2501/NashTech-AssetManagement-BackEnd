@@ -1,16 +1,16 @@
 package com.nashtech.rookies.java05.AssetManagement.repository;
 
-import java.util.List;
-
+import com.nashtech.rookies.java05.AssetManagement.model.entity.Asset;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.nashtech.rookies.java05.AssetManagement.model.entity.Asset;
+import java.util.List;
 
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, String> {
+  @Query(value = "SELECT * FROM assets a WHERE a.category_id LIKE %:category ORDER BY  a.id desc", nativeQuery = true)
+  List<Asset> findByOrderByIdDesc(String category);
 
   @Query(value = "select a.* from information i inner join assets a on i.user_id = a.creator_id where i.location = :location", nativeQuery = true)
   public List<Asset> findAssetByLocation(String location);

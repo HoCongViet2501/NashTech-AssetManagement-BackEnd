@@ -26,8 +26,13 @@ public class ErrorResponse {
         this.code = code;
         this.message = message;
     }
-
-
+    
+    public ErrorResponse(Date timeStamp, String message, String details) {
+        this.message = message;
+        this.timeStamp = timeStamp;
+        this.details = details;
+    }
+    
     public String getCode() {
         return code;
     }
