@@ -153,16 +153,9 @@ public class AssetServiceImpl implements AssetService {
         Asset asset = this.assetRepository.findById(id).orElseThrow(
                 () -> new ResourceCheckException("Not.Found.Asset.Id")
         );
-        try {
-            List<Assignment> assignments = this.assignmentRepository.findAssignmentByAsset(asset.getId());
 
-            if (assignments.isEmpty()){
-                return true;
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        return false;
+        List<Assignment> assignments = this.assignmentRepository.findAssignmentByAsset(asset.getId());
+
+        return assignments.isEmpty();
     }
 }
