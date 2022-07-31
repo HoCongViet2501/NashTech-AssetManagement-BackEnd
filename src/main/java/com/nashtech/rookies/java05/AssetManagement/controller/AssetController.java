@@ -89,6 +89,7 @@ public class AssetController {
     }
 
     @GetMapping("/check/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Check asset can disable or not")
     public ResponseEntity<Boolean> checkAssetHistory(@PathVariable String id) {
         return ResponseEntity.ok().body(this.assetService.checkAssetHistory(id));
