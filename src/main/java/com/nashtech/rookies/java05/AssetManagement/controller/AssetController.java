@@ -80,4 +80,10 @@ public class AssetController {
   public List<AssetResponse> searchAsset(String location, String content) {
     return assetService.searchAsset(content, location);
   }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    AssetResponse getEmployeeById(@PathVariable("id") String id){
+        return this.assetService.getAssetById(id);
+    }
 }

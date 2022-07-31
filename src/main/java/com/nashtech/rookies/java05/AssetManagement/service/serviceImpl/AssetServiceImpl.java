@@ -141,4 +141,10 @@ public class AssetServiceImpl implements AssetService {
     return assets.stream().map(AssetResponse::build).collect(Collectors.toList());
   }
 
+    @Override
+    public AssetResponse getAssetById(String id) {
+        Asset asset = this.assetRepository.findById(id).orElseThrow(
+                () -> new ResourceCheckException("Not.Found.Asset.With.ID." + id));
+        return modelMapper.map(asset, AssetResponse.class);
+    }
 }
