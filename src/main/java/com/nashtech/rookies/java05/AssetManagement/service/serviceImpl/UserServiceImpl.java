@@ -1,9 +1,11 @@
 package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 
+import com.nashtech.rookies.java05.AssetManagement.dto.request.ChangePasswordRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.request.SignupRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
+import com.nashtech.rookies.java05.AssetManagement.exception.PasswordException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
@@ -26,9 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -44,7 +44,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     RoleRepository roleRepository;
     
-    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     public UserServiceImpl(UserRepository userRepository2, InformationRepository informationRepository2,
                            RoleRepository roleRepository2) {
@@ -213,14 +214,19 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void changePassword(String userId, String newPassword) {
+    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+        String userId = changePasswordRequest.getUserId();
         User user = this.userRepository.findUserById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("not.found.user.have.id." + userId));
+        if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassWord())) {
+            throw new PasswordException("old.password.incorrect!");
+        }
+        String newPassword = passwordEncoder.encode(changePasswordRequest.getNewPassword());
         user.setPassWord(newPassword);
         this.userRepository.save(user);
     }
     
-    /**
+    /*
      *
      * // public String getLocation(String username) { // Information information =
      * informationRepository.getByUsername(username) // .orElseThrow(() -> new
