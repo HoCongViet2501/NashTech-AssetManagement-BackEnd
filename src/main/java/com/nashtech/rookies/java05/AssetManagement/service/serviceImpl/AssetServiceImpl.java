@@ -147,4 +147,22 @@ public class AssetServiceImpl implements AssetService {
                 () -> new ResourceCheckException("Not.Found.Asset.With.ID." + id));
         return modelMapper.map(asset, AssetResponse.class);
     }
+
+    @Override
+    public boolean checkAssetHistory(String id) {
+        Asset asset = this.assetRepository.findById(id).orElseThrow(
+                () -> new ResourceCheckException("Not.Found.Asset.Id")
+        );
+        try {
+            List<Assignment> assignments = this.assignmentRepository.findAssignmentByAsset(asset.getId());
+
+            if (assignments.isEmpty()){
+                return true;
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

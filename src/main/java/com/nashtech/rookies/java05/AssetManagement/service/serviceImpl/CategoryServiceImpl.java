@@ -44,9 +44,9 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryNameOptional.isPresent() &&  categoryPrefixOptional.isPresent()){
             throw new ResourceCategoryException("Category.Name.and.Category.Prefix.Are.Already.Existed");
         } else if (categoryNameOptional.isPresent()) {
-            throw new ResourceCategoryException("Category.Name.Is.Already.Existed");
+            throw new ResourceCategoryException("Category.Name.Is.Already.Existed.Please.Enter.A.Different.Category");
         } else if (categoryPrefixOptional.isPresent()) {
-            throw new ResourceCategoryException("Category.Prefix.Is.Already.Existed");
+            throw new ResourceCategoryException("Category.Prefix.Is.Already.Existed.Please.Enter.A.Different.Prefix");
         }
 
         Category category = modelMapper.map(categoryRequest, Category.class);
