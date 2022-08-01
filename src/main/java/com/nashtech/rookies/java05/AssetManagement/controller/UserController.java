@@ -92,17 +92,4 @@ public class UserController {
 	public List<UserDetailResponse> getUserInformation(@PathVariable String staffCode) {
 		return userService.getUserInformationById(staffCode);
 	}
-
-	@Operation(summary = "change password for current user")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "change password success fully"),
-			@ApiResponse(responseCode = "404", description = "not found user"),
-			@ApiResponse(responseCode = "403", description = "Access denied, please enter token!"),
-			@ApiResponse(responseCode = "400", description = "old password incorrect")
-	})
-	@PostMapping("/changePassword")
-	public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
-		this.userService.changePassword(changePasswordRequest);
-		return ResponseEntity.ok("change.password.successfully!");
-	}
 }
