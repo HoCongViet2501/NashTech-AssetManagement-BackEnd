@@ -5,6 +5,7 @@ import com.nashtech.rookies.java05.AssetManagement.dto.request.SignupRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
+import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
 import com.nashtech.rookies.java05.AssetManagement.exception.PasswordException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
@@ -247,6 +248,9 @@ public class UserServiceImpl implements UserService {
         User user = this.userRepository.findById(staffCode)
                 .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
         
+        if (user.getStatus() == UserStatus.INACTIVE) {
+            throw new ForbiddenException("User already disable");
+        }
         List<Assignment> assignments = this.assignmentRepository.findByUserAndStatus(user, false);
         
         return assignments.isEmpty();
@@ -256,6 +260,10 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<Object> disableUser(String staffCode) {
         User user = this.userRepository.findById(staffCode)
                 .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+        
+        if (user.getStatus() == UserStatus.INACTIVE) {
+            throw new ForbiddenException("User already disable");
+        }
         
         user.setStatus(UserStatus.INACTIVE);
         
@@ -275,7 +283,11 @@ public class UserServiceImpl implements UserService {
         if (!userOptional.isPresent()) {
             throw new ResourceNotFoundException("Cant find user with id: " + id);
         }
-        
+
+        if (userOptional.get().getStatus() == UserStatus.INACTIVE) {
+            throw new ForbiddenException("User has already disabled");
+        }
+
         user.setId(id);
         Optional<Information> informationOptional = informationRepository.findByUserId(id);
         information.setId(informationOptional.get().getId());
