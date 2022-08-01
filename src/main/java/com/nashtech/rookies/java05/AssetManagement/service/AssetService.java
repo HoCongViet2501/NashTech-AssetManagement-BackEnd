@@ -21,4 +21,8 @@ public interface AssetService {
   public List<AssetResponse> getAllAssetByLocation(String location);
 
   public List<AssetResponse> searchAsset(String content, String location);
+
+  AssetResponse getAssetById(String id);
+
+  boolean checkAssetHistory(String id);
 }

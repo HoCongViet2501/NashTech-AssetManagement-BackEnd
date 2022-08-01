@@ -3,6 +3,8 @@ package com.nashtech.rookies.java05.AssetManagement.service;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import com.nashtech.rookies.java05.AssetManagement.dto.request.ChangePasswordRequest;
+import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.SignupRequest;
@@ -26,5 +28,5 @@ public interface UserService {
 
 	public List<UserDetailResponse> getUserInformationById(String id);
 
-	public void changePassword(String userId, String newPassword);
+	public void changePassword(ChangePasswordRequest changePasswordRequest);
 }

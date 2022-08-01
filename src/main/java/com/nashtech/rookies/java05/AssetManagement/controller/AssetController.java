@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,7 +78,20 @@ public class AssetController {
   }
 
   @GetMapping("/search/{location}/{content}")
-  public List<AssetResponse> searchAsset(String location, String content) {
+  public List<AssetResponse> searchAsset(@PathVariable String location,@PathVariable String content) {
     return assetService.searchAsset(content, location);
   }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    AssetResponse getEmployeeById(@PathVariable("id") String id){
+        return this.assetService.getAssetById(id);
+    }
+
+    @GetMapping("/check/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Check asset can disable or not")
+    public ResponseEntity<Boolean> checkAssetHistory(@PathVariable String id) {
+        return ResponseEntity.ok().body(this.assetService.checkAssetHistory(id));
+    }
 }

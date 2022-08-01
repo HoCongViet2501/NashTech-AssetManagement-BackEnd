@@ -34,19 +34,19 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> categoryPrefixOptional = this.categoryRepository.findById(categoryRequest.getId());
 
         if (categoryRequest.getName().isEmpty() &&  categoryRequest.getId().isEmpty()){
-            throw new ResourceCategoryException("Category.Name.and.Category.Prefix.Are.Required");
+            throw new ResourceCategoryException("Category and Prefix are required");
         } else if (categoryRequest.getName().isEmpty()) {
-            throw new ResourceCategoryException("Category.Name.Is.Required");
+            throw new ResourceCategoryException("Category is required");
         } else if (categoryRequest.getId().isEmpty()) {
-            throw new ResourceCategoryException("Category.Prefix.Is.Required");
+            throw new ResourceCategoryException("Prefix is required");
         }
 
         if (categoryNameOptional.isPresent() &&  categoryPrefixOptional.isPresent()){
-            throw new ResourceCategoryException("Category.Name.and.Category.Prefix.Are.Already.Existed");
+            throw new ResourceCategoryException("Category and Prefix are already existed");
         } else if (categoryNameOptional.isPresent()) {
-            throw new ResourceCategoryException("Category.Name.Is.Already.Existed");
+            throw new ResourceCategoryException("Category is already existed. Please enter a different category");
         } else if (categoryPrefixOptional.isPresent()) {
-            throw new ResourceCategoryException("Category.Prefix.Is.Already.Existed");
+            throw new ResourceCategoryException("Prefix is already existed. Please enter a different prefix");
         }
 
         Category category = modelMapper.map(categoryRequest, Category.class);

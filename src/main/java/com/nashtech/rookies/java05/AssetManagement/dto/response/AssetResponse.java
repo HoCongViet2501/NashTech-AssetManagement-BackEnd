@@ -23,7 +23,7 @@ public class AssetResponse {
   private Date installedDate;
   private String state;
 
-  public static AssetResponse build(Asset asset) {
+   public static AssetResponse build(Asset asset) {
     return new AssetResponse(asset.getId(),
         asset.getName(),
         asset.getCategory(),
