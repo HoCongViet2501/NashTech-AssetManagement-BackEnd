@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nashtech.rookies.java05.AssetManagement.dto.request.ChangePasswordRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.request.SignupRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
@@ -96,12 +97,12 @@ public class UserController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "change password success fully"),
 			@ApiResponse(responseCode = "404", description = "not found user"),
-			@ApiResponse(responseCode = "403", description = "Access denied, please enter token!")
+			@ApiResponse(responseCode = "403", description = "Access denied, please enter token!"),
+			@ApiResponse(responseCode = "400", description = "old password incorrect")
 	})
-	@PutMapping("/{id}/{password}")
-	public ResponseEntity<String> changePassword(@PathVariable String id, @PathVariable String password) {
-		password = this.passwordEncoder.encode(password);
-		this.userService.changePassword(id, password);
+	@PostMapping("/changePassword")
+	public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+		this.userService.changePassword(changePasswordRequest);
 		return ResponseEntity.ok("change.password.successfully!");
 	}
 }

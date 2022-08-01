@@ -19,10 +19,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nashtech.rookies.java05.AssetManagement.dto.request.ChangePasswordRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.request.SignupRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
+import com.nashtech.rookies.java05.AssetManagement.exception.PasswordException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
@@ -299,10 +301,16 @@ public class UserServiceImpl implements UserService {
 		return userResponse;
 	}
 
+
 	@Override
-	public void changePassword(String userId, String newPassword) {
+	public void changePassword(ChangePasswordRequest changePasswordRequest) {
+		String userId = changePasswordRequest.getUserId();
 		User user = this.userRepository.findUserById(userId).orElseThrow(
 				() -> new ResourceNotFoundException("not.found.user.have.id." + userId));
+		if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassWord())) {
+			throw new PasswordException("old.password.incorrect!");
+		}
+		String newPassword = passwordEncoder.encode(changePasswordRequest.getNewPassword());
 		user.setPassWord(newPassword);
 		this.userRepository.save(user);
 	}
