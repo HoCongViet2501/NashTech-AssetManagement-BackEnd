@@ -35,13 +35,11 @@ public class AuthController {
     
     private final AuthenticationService authenticationService;
     private final PasswordEncoder passwordEncoder;
-    private final MappingData mappingData;
     private final UserService userService;
     @Autowired
-    public AuthController(AuthenticationService authenticationService, PasswordEncoder passwordEncoder, MappingData mappingData, UserService userService) {
+    public AuthController(AuthenticationService authenticationService, PasswordEncoder passwordEncoder, UserService userService) {
         this.authenticationService = authenticationService;
         this.passwordEncoder = passwordEncoder;
-        this.mappingData = mappingData;
         this.userService = userService;
     }
     
@@ -54,7 +52,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
         Map<String, Object> credentials = authenticationService.login(request.getUsername(), request.getPassword());
         String token = (String) credentials.get("token");
-        User user = mappingData.mapToResponse(credentials.get("user"), User.class);
+        User user = MappingData.mapping(credentials.get("user"), User.class);
         
         LoginResponse loginResponse = LoginResponse.builder().token(token).location(user.getInformation().getLocation()).username(user.getUserName())
                 .role(user.getRole()).status(user.getStatus()).userId(user.getId()).build();
