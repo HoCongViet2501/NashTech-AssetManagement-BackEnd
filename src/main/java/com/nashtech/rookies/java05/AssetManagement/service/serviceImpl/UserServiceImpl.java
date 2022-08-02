@@ -54,16 +54,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     AssignmentRepository assignmentRepository;
     
-    @Autowired
-    MappingData mappingData;
-    
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     
-    public UserServiceImpl(UserRepository userRepository2, InformationRepository informationRepository2,
-                           RoleRepository roleRepository2) {
-        this.userRepository = userRepository2;
-        this.informationRepository = informationRepository2;
-        this.roleRepository = roleRepository2;
+    public UserServiceImpl(UserRepository userRepository, InformationRepository informationRepository,
+                           RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.informationRepository = informationRepository;
+        this.roleRepository = roleRepository;
     }
     
     public String getLocalUserName() {
@@ -139,8 +136,8 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public UserResponse createUser(SignupRequest signupRequest) {
-        Information information = mappingData.mapToEntity(signupRequest, Information.class);
-        User user = mappingData.mapToEntity(signupRequest, User.class);
+        Information information = MappingData.mapping(signupRequest, Information.class);
+        User user = MappingData.mapping(signupRequest, User.class);
         
         checkDate(signupRequest);
         
@@ -152,10 +149,10 @@ public class UserServiceImpl implements UserService {
         user.setUserName(removeAccent(information.getFirstName()).toLowerCase());
         user.setUserName(removeSpace(user.getUserName()));
         
-        String template = user.getUserName();
+        StringBuilder template = new StringBuilder(user.getUserName());
         
         for (String s : information.getLastName().split(" ")) {
-            template += s.toLowerCase().charAt(0);
+            template.append(s.toLowerCase().charAt(0));
         }
         
         String finalUsername = null;
@@ -163,12 +160,12 @@ public class UserServiceImpl implements UserService {
         int idx = 0;
         while (flag) {
             // check username in db
-            Optional<User> existUser = userRepository.findByUserName(idx == 0 ? template : template + idx);
+            Optional<User> existUser = userRepository.findByUserName(idx == 0 ? template.toString() : template.toString() + idx);
             if (existUser.isPresent()) {
                 idx++;
                 continue;
             }
-            finalUsername = idx == 0 ? template : template + idx;
+            finalUsername = idx == 0 ? template.toString() : template.toString() + idx;
             flag = false;
         }
         user.setUserName(finalUsername);
@@ -195,10 +192,10 @@ public class UserServiceImpl implements UserService {
         User saveUser = userRepository.save(user);
         information.setUser(saveUser);
         Information saveInformation = informationRepository.save(information);
-        InformationResponse informationResponse = mappingData.mapToEntity(saveInformation, InformationResponse.class);
+        InformationResponse informationResponse = MappingData.mapping(saveInformation, InformationResponse.class);
         
         UserResponse userResponse;
-        userResponse = mappingData.mapToEntity(saveUser, UserResponse.class);
+        userResponse = MappingData.mapping(saveUser, UserResponse.class);
         userResponse.setInformationResponse(informationResponse);
         return userResponse;
     }
@@ -274,26 +271,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse editUserInformation(String id, SignupRequest signupRequest) {
         
-        Information information = mappingData.mapToEntity(signupRequest, Information.class);
-        User user = mappingData.mapToEntity(signupRequest, User.class);
+        Information information = MappingData.mapping(signupRequest, Information.class);
+        User user = MappingData.mapping(signupRequest, User.class);
         
         checkDate(signupRequest);
         
-        Optional<User> userOptional = userRepository.findById(id);
-        if (!userOptional.isPresent()) {
-            throw new ResourceNotFoundException("Cant find user with id: " + id);
-        }
-
-        if (userOptional.get().getStatus() == UserStatus.INACTIVE) {
+        User userOptional = userRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Cant find user with id: " + id));
+        
+        if (userOptional.getStatus() == UserStatus.INACTIVE) {
             throw new ForbiddenException("User has already disabled");
         }
-
+        
         user.setId(id);
         Optional<Information> informationOptional = informationRepository.findByUserId(id);
         information.setId(informationOptional.get().getId());
-        user.setUserName(userOptional.get().getUserName());
-        user.setPassWord(userOptional.get().getPassWord());
-        user.setStatus(userOptional.get().getStatus());
+        user.setUserName(userOptional.getUserName());
+        user.setPassWord(userOptional.getPassWord());
+        user.setStatus(userOptional.getStatus());
         Role role = roleRepository.findById(signupRequest.getRole())
                 .orElseThrow(() -> new ResourceNotFoundException("Not.found.role"));
         user.setRole(role);
@@ -304,10 +299,10 @@ public class UserServiceImpl implements UserService {
         User saveUser = userRepository.save(user);
         information.setUser(saveUser);
         Information saveInformation = informationRepository.save(information);
-        InformationResponse informationResponse = mappingData.mapToEntity(saveInformation, InformationResponse.class);
+        InformationResponse informationResponse = MappingData.mapping(saveInformation, InformationResponse.class);
         
         UserResponse userResponse;
-        userResponse = mappingData.mapToEntity(saveUser, UserResponse.class);
+        userResponse = MappingData.mapping(saveUser, UserResponse.class);
         userResponse.setInformationResponse(informationResponse);
         return userResponse;
     }
