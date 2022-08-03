@@ -67,6 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/user/**").hasAnyAuthority("ADMIN")
 				.antMatchers("/api/category/**").hasAnyAuthority("ADMIN")
 				.antMatchers("/api/asset/**").hasAnyAuthority("ADMIN")
+				.antMatchers("/api/report/**").hasAnyAuthority("ADMIN")
 				.anyRequest().authenticated()
 				.and().apply(jwtConfigure);
 	}
