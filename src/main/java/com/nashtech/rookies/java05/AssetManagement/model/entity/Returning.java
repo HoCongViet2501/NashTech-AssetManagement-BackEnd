@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +30,7 @@ import lombok.Setter;
 public class Returning {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
 	@Column(name = "returned_date")
 	private Date returnedDate;
@@ -46,4 +48,6 @@ public class Returning {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "creator_id")
 	private User creator;
+
+	private boolean isDelete;
 }
