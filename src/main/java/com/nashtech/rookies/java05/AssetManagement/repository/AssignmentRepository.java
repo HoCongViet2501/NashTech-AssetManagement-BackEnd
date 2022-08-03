@@ -12,8 +12,10 @@ import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     List<Assignment> findByUserAndStatus(User user, boolean status);
-
+    
     @Query(value = "select * from assignments a where a.asset_id = :id", nativeQuery = true)
     List<Assignment> findAssignmentByAsset(String id);
-
+    
+    @Query(value = "select * from assignments where assigned_date < NOW()", nativeQuery = true)
+    List<Assignment> getAssignmentsByAssignedDateBeforeNow();
 }
