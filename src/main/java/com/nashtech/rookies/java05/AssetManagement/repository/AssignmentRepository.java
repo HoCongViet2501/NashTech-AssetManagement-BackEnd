@@ -34,7 +34,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 			+ "join users ub on ub.id =a.creator_id "
 			+ "join users ut on ut.id =a.user_id "
 			+ "join information i on i.user_id = ub.id "
-			+ "where (a.asset_id  like %:content% or a2.name like %:content% or ut.username like %:content%) and i.location  = :location", nativeQuery = true)
+			+ "where (lower(a.asset_id)  like lower(concat('%', :content,'%')) or lower(a2.name) like lower(concat('%', :content,'%')) or lower(ut.username) like lower(concat('%', :content,'%'))) and i.location  = :location", nativeQuery = true)
 	List<Assignment> searchUser(@Param("content") String content, @Param("location") String location);
 
 	

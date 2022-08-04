@@ -13,13 +13,12 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentDetail
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
-import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
+import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckException;
+import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckException;
 import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Asset;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Assignment;
-import com.nashtech.rookies.java05.AssetManagement.model.entity.Information;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
-import com.nashtech.rookies.java05.AssetManagement.model.enums.UserStatus;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.InformationRepository;
@@ -44,13 +43,13 @@ public class AssignmentServiceImpl implements AssignmentService {
 		Assignment assignment = MappingData.mapping(assignmentRequest, Assignment.class);
 
 		User creator = userRepository.findByUserNameAndStatus(username, "ACTIVE")
-				.orElseThrow(() -> new ResourceNotFoundException("Not.found.username"));
+				.orElseThrow(() -> new ResourceCheckException("Not found username: " + username));
 
 		User user = userRepository.findByUserNameAndStatus(assignmentRequest.getUser(), "ACTIVE")
-				.orElseThrow(() -> new ResourceNotFoundException("Not.found.username"));
+				.orElseThrow(() -> new ResourceCheckException("Not found username: " + assignmentRequest.getUser()));
 
 		Asset asset = assetRepository.findByIdAndState(assignmentRequest.getAsset(), "Available")
-				.orElseThrow(() -> new ResourceNotFoundException("Not.found.id.asset"));
+				.orElseThrow(() -> new ResourceCheckException("Not found asset: " + assignmentRequest.getAsset()));
 
 		assignment.setCreator(creator);
 
@@ -79,7 +78,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		assignmentResponse.setState(assignment.getState());
 		assignmentResponse.setNote(assignment.getNote());
 
-		asset.setState("Not Available");
+		asset.setState("Not available");
 		assetRepository.save(asset);
 
 		return assignmentResponse;
@@ -91,16 +90,16 @@ public class AssignmentServiceImpl implements AssignmentService {
 		
 		Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
 		if(!assignmentOptional.isPresent()) {
-			throw new ResourceNotFoundException("Not.found.assignment");
+			throw new ResourceCheckException("Not found assignment");
 		}
 		Optional<Asset> asset = assetRepository.findById(assignmentRequest.getAsset());
         if(!asset.isPresent()){
-            throw new ResourceNotFoundException("Asset.not.found " + assignmentRequest.getAsset());
+            throw new ResourceCheckException("Asset not found " + assignmentRequest.getAsset());
         }
 
         Optional<User> user = userRepository.findById(assignmentRequest.getUser());
         if(!user.isPresent()){
-            throw new ResourceNotFoundException("User.not.found ");
+            throw new ResourceCheckException("User not found ");
         }
         
         assignment.setId(assignmentOptional.get().getId());
@@ -153,7 +152,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 	public List<AssignmentDetailResponse> getAllAssignmentByLocation(String location) {
 		List<Assignment> assignment = assignmentRepository.getAllAssignmentByLocation(location);
 		if (assignment.isEmpty()) {
-			throw new ResourceNotFoundException("No asset found in this location");
+			throw new ResourceCheckException("No asset found in this location");
 		}
 		return assignment.stream().map(AssignmentDetailResponse::buildFromAssignment).collect(Collectors.toList());
 	}
@@ -162,7 +161,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 	public List<AssignmentDetailResponse> searchAssignment(String content, String location) {
 		List<Assignment> assignment = assignmentRepository.searchUser(content, location);
 		if (assignment.isEmpty()) {
-			throw new ResourceNotFoundException("No asset found in this location");
+			throw new ResourceCheckException("No asset found in this location");
 		}
 		return assignment.stream().map(AssignmentDetailResponse::buildFromAssignment).collect(Collectors.toList());
 	}
