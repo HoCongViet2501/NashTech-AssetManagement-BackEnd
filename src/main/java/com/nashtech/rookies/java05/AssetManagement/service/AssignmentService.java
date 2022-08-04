@@ -8,4 +8,6 @@ public interface AssignmentService {
     List<AssignmentDetailResponse> getListAssignments();
     
     AssignmentDetailResponse getAssignmentById(long id);
+    
+    AssignmentDetailResponse updateStateAssignment(long id , String status);
 }

@@ -41,4 +41,13 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignmentResponse.setAssignTo(assignment.getUser().getUserName());
         return assignmentResponse;
     }
+    
+    @Override
+    public AssignmentDetailResponse updateStateAssignment(long id, String state) {
+        Assignment assignment = this.assignmentRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("not.found.assignment.have.id." + id));
+        ;
+        assignment.setState(state);
+        return AssignmentDetailResponse.build(assignment);
+    }
 }
