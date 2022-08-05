@@ -59,6 +59,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		assignment.setAsset(asset);
 
 		assignment.setState("Waiting for acceptance");
+		assignment.setHasReturning(false);
 		assignmentRepository.save(assignment);
 
 		UserResponse userResponse = MappingData.mapping(user, UserResponse.class);

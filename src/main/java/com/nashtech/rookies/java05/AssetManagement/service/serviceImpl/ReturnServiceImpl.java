@@ -1,6 +1,5 @@
 package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +40,8 @@ public class ReturnServiceImpl implements ReturnService {
         Returning newReturn = Returning.builder().isDelete(false).requestBy(requestUser).assignment(assignment)
                 .state("Waiting for returning").build();
 
+        assignment.setHasReturning(true);
+        assignmentRepository.save(assignment);
         this.returnRepository.save(newReturn);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
