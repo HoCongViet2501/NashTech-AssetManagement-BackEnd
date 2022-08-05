@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.AssignmentRequest;
@@ -13,6 +14,7 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentDetail
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
+import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Asset;
@@ -144,9 +146,16 @@ public class AssignmentServiceImpl implements AssignmentService {
 	}
 
 	@Override
-	public boolean deleteAssignment(Long id) {
-		// TODO Auto-generated method stub
-		return false;
+	public ResponseEntity<?> deleteAssignment(Long id) {
+		Assignment assignment = assignmentRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Not.found.assignment.id"));
+		if(assignment.isStatus()==false) {
+			throw new ForbiddenException("Assignment already disable");
+		}
+		
+		assignment.setStatus(false);
+		this.assignmentRepository.save(assignment);
+		return ResponseEntity.ok().body("Assignment is disabled");
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.nashtech.rookies.java05.AssetManagement.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.AssignmentRequest;
@@ -17,7 +18,7 @@ public interface AssignmentService {
 
 	AssignmentResponse getAssignment(Long id);
 
-	boolean deleteAssignment(Long id);
+	ResponseEntity<?> deleteAssignment(Long id);
 
 	public List<AssignmentDetailResponse> getAllAssignmentByLocation(String location);
 
