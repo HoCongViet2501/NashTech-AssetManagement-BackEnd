@@ -270,7 +270,7 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public UserResponse editUserInformation(String id, SignupRequest signupRequest) {
-        
+    	System.out.println(signupRequest.toString());
         Information information = MappingData.mapping(signupRequest, Information.class);
         User user = MappingData.mapping(signupRequest, User.class);
         

@@ -24,6 +24,8 @@ public class UserDetailResponse {
     private Date joinedDate;
     private UserRole role;
     private String location;
+    
+    
 
     /**
      * @param staffCode   id of user
@@ -103,4 +105,8 @@ public class UserDetailResponse {
                 info.getUser().getRole().getName(),
                 info.getLocation());
     }
+
+	public UserDetailResponse() {
+		super();
+	}
 }
