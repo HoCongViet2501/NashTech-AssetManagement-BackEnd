@@ -30,5 +30,5 @@ public class AssignmentResponse {
 
 	private String note;
 
-	private String status;
+	private boolean status;
 }

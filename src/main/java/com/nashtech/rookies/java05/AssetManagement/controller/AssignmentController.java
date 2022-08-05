@@ -55,4 +55,9 @@ public class AssignmentController {
 	public ResponseEntity<?> disableUser(@PathVariable Long id) {
 		return this.assignmentService.deleteAssignment(id);
 	}
+	
+	@GetMapping("/getAssignment/{id}")
+	public AssignmentResponse getAssignmentById(@PathVariable Long id) {
+		return assignmentService.getAssignment(id);
+	}
 }
