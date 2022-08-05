@@ -16,12 +16,11 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationRespo
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
+import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckException;
 import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Asset;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Assignment;
-import com.nashtech.rookies.java05.AssetManagement.model.entity.Information;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
-import com.nashtech.rookies.java05.AssetManagement.model.enums.UserStatus;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.InformationRepository;
@@ -46,20 +45,20 @@ public class AssignmentServiceImpl implements AssignmentService {
 		Assignment assignment = MappingData.mapping(assignmentRequest, Assignment.class);
 
 		User creator = userRepository.findByUserNameAndStatus(username, "ACTIVE")
-				.orElseThrow(() -> new ResourceNotFoundException("Not.found.username"));
+				.orElseThrow(() -> new ResourceCheckException("Not found username: " + username));
 
 		User user = userRepository.findByUserNameAndStatus(assignmentRequest.getUser(), "ACTIVE")
-				.orElseThrow(() -> new ResourceNotFoundException("Not.found.username"));
+				.orElseThrow(() -> new ResourceCheckException("Not found username: " + assignmentRequest.getUser()));
 
 		Asset asset = assetRepository.findByIdAndState(assignmentRequest.getAsset(), "Available")
-				.orElseThrow(() -> new ResourceNotFoundException("Not.found.id.asset"));
+				.orElseThrow(() -> new ResourceCheckException("Not found asset: " + assignmentRequest.getAsset()));
 
 		assignment.setCreator(creator);
 
 		assignment.setUser(user);
 		assignment.setAsset(asset);
 
-		assignment.setState("Waiting for recycling");
+		assignment.setState("Waiting for acceptance");
 		assignmentRepository.save(assignment);
 
 		UserResponse userResponse = MappingData.mapping(user, UserResponse.class);
@@ -81,7 +80,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		assignmentResponse.setState(assignment.getState());
 		assignmentResponse.setNote(assignment.getNote());
 
-		asset.setState("Not Available");
+		asset.setState("Not available");
 		assetRepository.save(asset);
 
 		return assignmentResponse;
@@ -90,31 +89,33 @@ public class AssignmentServiceImpl implements AssignmentService {
 	@Override
 	public AssignmentResponse editAssignment(AssignmentRequest assignmentRequest, Long id) {
 		Assignment assignment = MappingData.mapping(assignmentRequest, Assignment.class);
-		
+
 		Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
-		if(!assignmentOptional.isPresent()) {
-			throw new ResourceNotFoundException("Not.found.assignment");
+		if (!assignmentOptional.isPresent()) {
+			throw new ResourceCheckException("Not found assignment");
 		}
 		Optional<Asset> asset = assetRepository.findById(assignmentRequest.getAsset());
-        if(!asset.isPresent()){
-            throw new ResourceNotFoundException("Asset.not.found " + assignmentRequest.getAsset());
-        }
+		if (!asset.isPresent()) {
+			throw new ResourceCheckException("Asset not found " + assignmentRequest.getAsset());
+		}
 
-        Optional<User> user = userRepository.findById(assignmentRequest.getUser());
-        if(!user.isPresent()){
-            throw new ResourceNotFoundException("User.not.found ");
-        }
-        
-        assignment.setId(assignmentOptional.get().getId());
-        assignment.setState(assignmentOptional.get().getState());
-        assignment.setCreator(assignmentOptional.get().getCreator());
-        assignment.setAsset(asset.get());
-        assignment.setUser(user.get());
-        assignment.setAssignedDate(assignmentRequest.getAssignedDate());
-        assignment.setNote(assignmentRequest.getNote());
-        assignmentRepository.save(assignment);
-        UserResponse userResponse = MappingData.mapping(user.get(), UserResponse.class);
-		userResponse.setInformationResponse(MappingData.mapping(user.get().getInformation(), InformationResponse.class));
+		Optional<User> user = userRepository.findById(assignmentRequest.getUser());
+		if (!user.isPresent()) {
+			throw new ResourceCheckException("User not found ");
+		}
+
+		assignment.setId(assignmentOptional.get().getId());
+		assignment.setState(assignmentOptional.get().getState());
+		assignment.setCreator(assignmentOptional.get().getCreator());
+		assignment.setAsset(asset.get());
+		assignment.setUser(user.get());
+		assignment.setAssignedDate(assignmentRequest.getAssignedDate());
+		assignment.setNote(assignmentRequest.getNote());
+		assignment.setStatus(true);
+		assignmentRepository.save(assignment);
+		UserResponse userResponse = MappingData.mapping(user.get(), UserResponse.class);
+		userResponse
+				.setInformationResponse(MappingData.mapping(user.get().getInformation(), InformationResponse.class));
 
 //		UserResponse userCreateResponse = MappingData.mapping(creator, UserResponse.class);
 //		userCreateResponse
@@ -138,31 +139,36 @@ public class AssignmentServiceImpl implements AssignmentService {
 	@Override
 	public AssignmentResponse getAssignment(Long id) {
 		Assignment assignment = assignmentRepository.findById(id).get();
-        assignment.setState("Waiting for acceptance");
-        Asset asset = assignment.getAsset();
-        asset.setState("Available");
-        assetRepository.save(asset);
+		assignment.setState("Waiting for acceptance");
+		Asset asset = assignment.getAsset();
+		asset.setState("Available");
+		assetRepository.save(asset);
 		return null;
 	}
 
 	@Override
 	public ResponseEntity<?> deleteAssignment(Long id) {
 		Assignment assignment = assignmentRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Not.found.assignment.id"));
-		if(assignment.isStatus()==false) {
+				.orElseThrow(() -> new ResourceNotFoundException("Not found assignment id :" + id));
+		if (assignment.isStatus() == false) {
 			throw new ForbiddenException("Assignment already disable");
+		} 
+		if (!assignment.getState().equalsIgnoreCase("Waiting for acceptance")) {
+			throw new ForbiddenException("Assignment cannot disable");
+		} 
+		else {
+			assignment.setStatus(false);
+			this.assignmentRepository.save(assignment);
+			return ResponseEntity.ok().body("Assignment is disabled");
 		}
-		
-		assignment.setStatus(false);
-		this.assignmentRepository.save(assignment);
-		return ResponseEntity.ok().body("Assignment is disabled");
+
 	}
 
 	@Override
 	public List<AssignmentDetailResponse> getAllAssignmentByLocation(String location) {
 		List<Assignment> assignment = assignmentRepository.getAllAssignmentByLocation(location);
 		if (assignment.isEmpty()) {
-			throw new ResourceNotFoundException("No asset found in this location");
+			throw new ResourceCheckException("No asset found in this location");
 		}
 		return assignment.stream().map(AssignmentDetailResponse::buildFromAssignment).collect(Collectors.toList());
 	}
@@ -171,7 +177,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 	public List<AssignmentDetailResponse> searchAssignment(String content, String location) {
 		List<Assignment> assignment = assignmentRepository.searchUser(content, location);
 		if (assignment.isEmpty()) {
-			throw new ResourceNotFoundException("No asset found in this location");
+			throw new ResourceCheckException("No asset found in this location");
 		}
 		return assignment.stream().map(AssignmentDetailResponse::buildFromAssignment).collect(Collectors.toList());
 	}
