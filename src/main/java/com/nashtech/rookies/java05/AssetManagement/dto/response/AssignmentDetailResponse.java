@@ -16,6 +16,8 @@ public class AssignmentDetailResponse {
 
 	private String assetName;
 
+	private String assignedToId;
+
 	private String assignedTo;
 
 	private String assignedBy;
@@ -23,7 +25,7 @@ public class AssignmentDetailResponse {
 	private Date assignedDate;
 
 	private String state;
-	
+
 	private String note;
 
 	private boolean status;
@@ -31,9 +33,11 @@ public class AssignmentDetailResponse {
 	private String specification;
 
 	public static AssignmentDetailResponse buildFromAssignment(Assignment assignment) {
-		return new AssignmentDetailResponse(assignment.getId(),
+		return new AssignmentDetailResponse(
+				assignment.getId(),
 				assignment.getAsset().getId(),
 				assignment.getAsset().getName(),
+				assignment.getUser().getId(),
 				assignment.getUser().getUserName(),
 				assignment.getCreator().getUserName(),
 				assignment.getAssignedDate(),

@@ -16,7 +16,7 @@ public interface AssignmentService {
 
 	AssignmentResponse editAssignment(AssignmentRequest assignmentRequest, Long id);
 
-	AssignmentResponse getAssignment(Long id);
+	AssignmentDetailResponse getAssignment(Long id);
 
 	ResponseEntity<?> deleteAssignment(Long id);
 
