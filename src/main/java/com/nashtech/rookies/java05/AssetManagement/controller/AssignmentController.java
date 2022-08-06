@@ -33,6 +33,8 @@ public class AssignmentController {
 	@Autowired
 	AssignmentService assignmentService;
 
+	@Operation(summary = "create new assignment")
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/createAssign/{assignedby}")
 	AssignmentResponse createAssignment(@PathVariable String assignedby,
 			@Valid @RequestBody AssignmentRequest assignmentRequest) {

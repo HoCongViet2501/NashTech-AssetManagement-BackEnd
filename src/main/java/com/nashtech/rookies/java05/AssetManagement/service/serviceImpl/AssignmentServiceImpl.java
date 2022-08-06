@@ -59,6 +59,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		assignment.setAsset(asset);
 
 		assignment.setState("Waiting for acceptance");
+		assignment.setStatus(true);
 		assignmentRepository.save(assignment);
 
 		UserResponse userResponse = MappingData.mapping(user, UserResponse.class);
@@ -117,22 +118,24 @@ public class AssignmentServiceImpl implements AssignmentService {
 		userResponse
 				.setInformationResponse(MappingData.mapping(user.get().getInformation(), InformationResponse.class));
 
-//		UserResponse userCreateResponse = MappingData.mapping(creator, UserResponse.class);
-//		userCreateResponse
-//				.setInformationResponse(MappingData.mapping(creator.getInformation(), InformationResponse.class));
+		// UserResponse userCreateResponse = MappingData.mapping(creator,
+		// UserResponse.class);
+		// userCreateResponse
+		// .setInformationResponse(MappingData.mapping(creator.getInformation(),
+		// InformationResponse.class));
 
 		AssignmentResponse assignmentResponse = new AssignmentResponse();
-		
-		
+
 		assignmentResponse.setId(assignment.getId());
 		assignmentResponse.setAssetResponse(MappingData.mapping(asset.get(), AssetResponse.class));
-		
+
 		assignmentResponse.setCreateUser(MappingData.mapping(assignmentOptional.get().getCreator(), UserResponse.class));
-		assignmentResponse.getCreateUser().setInformationResponse(MappingData.mapping(assignmentOptional.get().getCreator().getInformation(), InformationResponse.class));
+		assignmentResponse.getCreateUser().setInformationResponse(
+				MappingData.mapping(assignmentOptional.get().getCreator().getInformation(), InformationResponse.class));
 
 		assignmentResponse.setUser(userResponse);
 
-//		assignmentResponse.setCreateUser(userCreateResponse);
+		// assignmentResponse.setCreateUser(userCreateResponse);
 
 		assignmentResponse.setAssignedDate(assignment.getAssignedDate());
 		assignmentResponse.setState(assignment.getState());
@@ -141,30 +144,34 @@ public class AssignmentServiceImpl implements AssignmentService {
 		return assignmentResponse;
 	}
 
-// 	@Override
-// 	public AssignmentResponse getAssignment(Long id) {
-// 		Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
-// 		System.out.println(assignmentOptional.toString());
-// 		if(assignmentOptional.isEmpty()) {
-// 			throw new ResourceCheckException("Cant find assignment with id: " + id);
-// 		}
-// 		AssignmentResponse assignmentResponse = new AssignmentResponse();
-// 		assignmentResponse.setId(assignmentOptional.get().getId());
-// 		assignmentResponse.setAssetResponse(MappingData.mapping(assignmentOptional.get().getAsset(), AssetResponse.class));
-// 		assignmentResponse.setUser(MappingData.mapping(assignmentOptional.get().getUser(), UserResponse.class));
-// 		assignmentResponse.getUser().setInformationResponse(MappingData.mapping(assignmentOptional.get().getUser().getInformation(), InformationResponse.class));
-// 		assignmentResponse.setCreateUser(MappingData.mapping(assignmentOptional.get().getCreator(), UserResponse.class));
-// 		assignmentResponse.getCreateUser().setInformationResponse(MappingData.mapping(assignmentOptional.get().getCreator().getInformation(), InformationResponse.class));
-// 		assignmentResponse.setState(assignmentOptional.get().getState());
-// 		assignmentResponse.setAssignedDate(assignmentOptional.get().getAssignedDate());
-// 		assignmentResponse.setNote(assignmentOptional.get().getNote());
-// //		assignmentResponse.setStatus(assignmentOptional.get().isStatus());
+	// @Override
+	// public AssignmentResponse getAssignment(Long id) {
+	// Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
+	// System.out.println(assignmentOptional.toString());
+	// if(assignmentOptional.isEmpty()) {
+	// throw new ResourceCheckException("Cant find assignment with id: " + id);
+	// }
+	// AssignmentResponse assignmentResponse = new AssignmentResponse();
+	// assignmentResponse.setId(assignmentOptional.get().getId());
+	// assignmentResponse.setAssetResponse(MappingData.mapping(assignmentOptional.get().getAsset(),
+	// AssetResponse.class));
+	// assignmentResponse.setUser(MappingData.mapping(assignmentOptional.get().getUser(),
+	// UserResponse.class));
+	// assignmentResponse.getUser().setInformationResponse(MappingData.mapping(assignmentOptional.get().getUser().getInformation(),
+	// InformationResponse.class));
+	// assignmentResponse.setCreateUser(MappingData.mapping(assignmentOptional.get().getCreator(),
+	// UserResponse.class));
+	// assignmentResponse.getCreateUser().setInformationResponse(MappingData.mapping(assignmentOptional.get().getCreator().getInformation(),
+	// InformationResponse.class));
+	// assignmentResponse.setState(assignmentOptional.get().getState());
+	// assignmentResponse.setAssignedDate(assignmentOptional.get().getAssignedDate());
+	// assignmentResponse.setNote(assignmentOptional.get().getNote());
+	// // assignmentResponse.setStatus(assignmentOptional.get().isStatus());
 
-
-		
-// //		AssignmentResponse assignmentResponse =  MappingData.mapping(assignmentOptional.get(), AssignmentResponse.class);
-// 		return assignmentResponse;
-// 	}
+	// // AssignmentResponse assignmentResponse =
+	// MappingData.mapping(assignmentOptional.get(), AssignmentResponse.class);
+	// return assignmentResponse;
+	// }
 
 	@Override
 	public ResponseEntity<?> deleteAssignment(Long id) {
@@ -172,11 +179,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 				.orElseThrow(() -> new ResourceCheckException("Not found assignment id :" + id));
 		if (assignment.isStatus() == false) {
 			throw new ForbiddenException("Assignment already disable");
-		} 
+		}
 		if (!assignment.getState().equalsIgnoreCase("Waiting for acceptance")) {
 			throw new ForbiddenException("Assignment cannot disable");
-		} 
-		else {
+		} else {
 			assignment.setStatus(false);
 			this.assignmentRepository.save(assignment);
 			return ResponseEntity.ok().body("Assignment is disabled");
