@@ -23,7 +23,7 @@ import com.nashtech.rookies.java05.AssetManagement.security.jwt.JwtConfigure;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private final JwtConfigure jwtConfigure;
-	private UserDetailsServiceImpl userDetailsService;
+	private final UserDetailsServiceImpl userDetailsService;
 
 	@Autowired
 	public WebSecurityConfig(JwtConfigure jwtConfigure, UserDetailsServiceImpl userDetailsServiceImpl) {
@@ -68,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/category/**").hasAnyAuthority("ADMIN")
 				.antMatchers("/api/asset/**").hasAnyAuthority("ADMIN")
 				.antMatchers("/api/report/**").hasAnyAuthority("ADMIN")
+				.antMatchers("/api/staff/**").hasAnyAuthority("STAFF")
 				.anyRequest().authenticated()
 				.and().apply(jwtConfigure);
 	}

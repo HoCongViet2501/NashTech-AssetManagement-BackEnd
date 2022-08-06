@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Assignment;
@@ -12,8 +13,10 @@ import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     List<Assignment> findByUserAndStatus(User user, boolean status);
-
+    
     @Query(value = "select * from assignments a where a.asset_id = :id", nativeQuery = true)
     List<Assignment> findAssignmentByAsset(String id);
-
+    
+    @Query(value = "select * from assignments where assigned_date < NOW() and user_id= :userId and state !='Declined'", nativeQuery = true)
+    List<Assignment> getAssignmentsByIdAndAssignedDateBeforeNow(@Param("userId") String userId);
 }

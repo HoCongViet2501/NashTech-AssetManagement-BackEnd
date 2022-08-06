@@ -1,6 +1,5 @@
 package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 
-import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
 import com.nashtech.rookies.java05.AssetManagement.model.enums.UserStatus;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
@@ -47,7 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return response;
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            throw new ForbiddenException("incorrect.password.or.username ", e);
+            throw new ResourceNotFoundException("incorrect.password.or.username ", e);
         }
     }
     
