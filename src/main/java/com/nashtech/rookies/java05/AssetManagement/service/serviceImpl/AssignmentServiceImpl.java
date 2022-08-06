@@ -93,7 +93,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 		assignment.setAsset(asset);
 
 		assignment.setState("Waiting for acceptance");
+
 		assignment.setHasReturning(false);
+
+		assignment.setStatus(true);
 		assignmentRepository.save(assignment);
 
 		UserResponse userResponse = MappingData.mapping(user, UserResponse.class);
@@ -159,8 +162,14 @@ public class AssignmentServiceImpl implements AssignmentService {
 		// InformationResponse.class));
 
 		AssignmentResponse assignmentResponse = new AssignmentResponse();
+
 		assignmentResponse.setId(assignment.getId());
 		assignmentResponse.setAssetResponse(MappingData.mapping(asset.get(), AssetResponse.class));
+
+		assignmentResponse
+				.setCreateUser(MappingData.mapping(assignmentOptional.get().getCreator(), UserResponse.class));
+		assignmentResponse.getCreateUser().setInformationResponse(
+				MappingData.mapping(assignmentOptional.get().getCreator().getInformation(), InformationResponse.class));
 
 		assignmentResponse.setUser(userResponse);
 
@@ -173,20 +182,39 @@ public class AssignmentServiceImpl implements AssignmentService {
 		return assignmentResponse;
 	}
 
-	@Override
-	public AssignmentResponse getAssignment(Long id) {
-		Assignment assignment = assignmentRepository.findById(id).get();
-		assignment.setState("Waiting for acceptance");
-		Asset asset = assignment.getAsset();
-		asset.setState("Available");
-		assetRepository.save(asset);
-		return null;
-	}
+	// @Override
+	// public AssignmentResponse getAssignment(Long id) {
+	// Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
+	// System.out.println(assignmentOptional.toString());
+	// if(assignmentOptional.isEmpty()) {
+	// throw new ResourceCheckException("Cant find assignment with id: " + id);
+	// }
+	// AssignmentResponse assignmentResponse = new AssignmentResponse();
+	// assignmentResponse.setId(assignmentOptional.get().getId());
+	// assignmentResponse.setAssetResponse(MappingData.mapping(assignmentOptional.get().getAsset(),
+	// AssetResponse.class));
+	// assignmentResponse.setUser(MappingData.mapping(assignmentOptional.get().getUser(),
+	// UserResponse.class));
+	// assignmentResponse.getUser().setInformationResponse(MappingData.mapping(assignmentOptional.get().getUser().getInformation(),
+	// InformationResponse.class));
+	// assignmentResponse.setCreateUser(MappingData.mapping(assignmentOptional.get().getCreator(),
+	// UserResponse.class));
+	// assignmentResponse.getCreateUser().setInformationResponse(MappingData.mapping(assignmentOptional.get().getCreator().getInformation(),
+	// InformationResponse.class));
+	// assignmentResponse.setState(assignmentOptional.get().getState());
+	// assignmentResponse.setAssignedDate(assignmentOptional.get().getAssignedDate());
+	// assignmentResponse.setNote(assignmentOptional.get().getNote());
+	// // assignmentResponse.setStatus(assignmentOptional.get().isStatus());
+
+	// // AssignmentResponse assignmentResponse =
+	// MappingData.mapping(assignmentOptional.get(), AssignmentResponse.class);
+	// return assignmentResponse;
+	// }
 
 	@Override
 	public ResponseEntity<?> deleteAssignment(Long id) {
 		Assignment assignment = assignmentRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Not found assignment id :" + id));
+				.orElseThrow(() -> new ResourceCheckException("Not found assignment id :" + id));
 		if (assignment.isStatus() == false) {
 			throw new ForbiddenException("Assignment already disable");
 		}
@@ -216,5 +244,12 @@ public class AssignmentServiceImpl implements AssignmentService {
 			throw new ResourceCheckException("No asset found in this location");
 		}
 		return assignment.stream().map(AssignmentDetailResponse::buildFromAssignment).collect(Collectors.toList());
+	}
+
+	@Override
+	public AssignmentDetailResponse getAssignment(Long id) {
+		Assignment assignment = assignmentRepository.findById(id)
+				.orElseThrow(() -> new ResourceCheckException("Not found assignment id :" + id));
+		return AssignmentDetailResponse.buildFromAssignment(assignment);
 	}
 }

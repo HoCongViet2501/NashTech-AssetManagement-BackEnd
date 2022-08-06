@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +14,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.AssignmentRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentResponse;
 import com.nashtech.rookies.java05.AssetManagement.service.AssignmentService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/assignment")
@@ -27,6 +33,8 @@ public class AssignmentController {
 	@Autowired
 	AssignmentService assignmentService;
 
+	@Operation(summary = "create new assignment")
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/createAssign/{assignedby}")
 	AssignmentResponse createAssignment(@PathVariable String assignedby,
 			@Valid @RequestBody AssignmentRequest assignmentRequest) {
@@ -48,9 +56,26 @@ public class AssignmentController {
 			@PathVariable String content) {
 		return assignmentService.searchAssignment(content, location);
 	}
-	
+
 	@DeleteMapping("/disable/{id}")
 	public ResponseEntity<?> disableUser(@PathVariable Long id) {
 		return this.assignmentService.deleteAssignment(id);
+	}
+
+	// @GetMapping("/getAssignment/{id}")
+	// public AssignmentResponse getAssignmentById(@PathVariable Long id) {
+	// 	return assignmentService.getAssignment(id);
+	// }
+
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Get assignment by id Success"),
+			@ApiResponse(responseCode = "404", description = "Not Found"),
+			@ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+	})
+	@Operation(summary = "get assignment by id", description = "get assignment by id")
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping("/getAssignment/{id}")
+	public AssignmentDetailResponse getAssignmentById(@PathVariable Long id) {
+		return assignmentService.getAssignment(id);
 	}
 }
