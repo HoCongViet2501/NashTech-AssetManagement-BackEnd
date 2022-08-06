@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.response.ReturningResponse;
+import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Returning;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
@@ -39,6 +40,9 @@ public class ReturnServiceImpl implements ReturnService {
 
         Returning newReturn = Returning.builder().isDelete(false).requestBy(requestUser).assignment(assignment)
                 .state("Waiting for returning").build();
+        if (assignment.isHasReturning()) {
+            throw new ForbiddenException("Assignment has been a request for returning");
+        }
 
         assignment.setHasReturning(true);
         assignmentRepository.save(assignment);
@@ -81,5 +85,5 @@ public class ReturnServiceImpl implements ReturnService {
 
         return returnLists.stream().map(ReturningResponse::buildFromModel).collect(Collectors.toList());
     }
-    
+
 }
