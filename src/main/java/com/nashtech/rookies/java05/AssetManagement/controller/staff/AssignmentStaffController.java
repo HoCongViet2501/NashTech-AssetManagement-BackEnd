@@ -20,11 +20,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/staff/assignments")
-public class AssignmentController {
+public class AssignmentStaffController {
     private final AssignmentService assignmentService;
     
     @Autowired
-    public AssignmentController(AssignmentService assignmentService) {
+    public AssignmentStaffController(AssignmentService assignmentService) {
         this.assignmentService = assignmentService;
     }
     
