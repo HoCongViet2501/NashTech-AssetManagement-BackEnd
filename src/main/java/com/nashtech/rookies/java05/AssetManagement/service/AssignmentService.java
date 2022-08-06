@@ -5,7 +5,7 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentDetail
 import java.util.List;
 
 public interface AssignmentService {
-    List<AssignmentDetailResponse> getListAssignments();
+    List<AssignmentDetailResponse> getListAssignments(String userId);
     
     AssignmentDetailResponse getAssignmentById(long id);
     

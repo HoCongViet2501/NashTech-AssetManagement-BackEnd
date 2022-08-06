@@ -24,11 +24,12 @@ public class AssignmentController {
     @Operation(summary = "get list assignment have assignDate < current date")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "get list assignment"),
-            @ApiResponse(responseCode = "500", description = "error!")
+            @ApiResponse(responseCode = "500", description = "error!"),
+            @ApiResponse(responseCode = "404",description = "not found user!")
     })
-    @GetMapping()
-    public ResponseEntity<Object> getListAssignmentsSortedDate() {
-        List<AssignmentDetailResponse> assignmentResponses = this.assignmentService.getListAssignments();
+    @GetMapping("/{userId}")
+    public ResponseEntity<Object> getListAssignmentsSortedDate(@PathVariable String userId) {
+        List<AssignmentDetailResponse> assignmentResponses = this.assignmentService.getListAssignments(userId);
         return ResponseEntity.ok().body(assignmentResponses);
     }
     
@@ -37,7 +38,7 @@ public class AssignmentController {
             @ApiResponse(responseCode = "200", description = "get list assignment"),
             @ApiResponse(responseCode = "404", description = "not found assignment!")
     })
-    @GetMapping("/{id}")
+    @GetMapping("/getOne/{id}")
     public ResponseEntity<Object> getAssignmentById(@PathVariable long id) {
         return ResponseEntity.ok().body(this.assignmentService.getAssignmentById(id));
     }

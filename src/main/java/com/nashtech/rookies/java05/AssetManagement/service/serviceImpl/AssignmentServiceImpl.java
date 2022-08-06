@@ -24,8 +24,11 @@ public class AssignmentServiceImpl implements AssignmentService {
     
     
     @Override
-    public List<AssignmentDetailResponse> getListAssignments() {
-        List<Assignment> assignments = this.assignmentRepository.getAssignmentsByAssignedDateBeforeNow();
+    public List<AssignmentDetailResponse> getListAssignments(String userId) {
+        List<Assignment> assignments = this.assignmentRepository.getAssignmentsByIdAndAssignedDateBeforeNow(userId);
+        if (assignments.isEmpty()) {
+            throw new ResourceNotFoundException("no.assignment.found");
+        }
         return assignments.stream().map(AssignmentDetailResponse::build).collect(Collectors.toList());
     }
     
@@ -46,8 +49,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     public AssignmentDetailResponse updateStateAssignment(long id, String state) {
         Assignment assignment = this.assignmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("not.found.assignment.have.id." + id));
-        ;
         assignment.setState(state);
+        this.assignmentRepository.save(assignment);
         return AssignmentDetailResponse.build(assignment);
     }
 }
