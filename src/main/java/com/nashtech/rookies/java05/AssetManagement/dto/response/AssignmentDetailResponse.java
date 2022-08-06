@@ -35,6 +35,8 @@ public class AssignmentDetailResponse {
 
 	private boolean hasReturning;
 
+	private boolean status;
+
 	public static AssignmentDetailResponse buildFromAssignment(Assignment assignment) {
 		return new AssignmentDetailResponse(assignment.getId(),
 				assignment.getAsset().getId(),
@@ -44,12 +46,13 @@ public class AssignmentDetailResponse {
 				assignment.getAssignedDate(),
 				assignment.getState(),
 				assignment.getNote(),
-				assignment.isHasReturning()
+				assignment.isHasReturning(),
+				assignment.isStatus()
 				);
 	}
 
 	public AssignmentDetailResponse(Long id, String assetCode, String assetName, String assignedTo, String assignedBy,
-			Date assignedDate, String state, String note, boolean hasReturning) {
+			Date assignedDate, String state, String note, boolean hasReturning, boolean status) {
 		super();
 		this.id = id;
 		this.assetCode = assetCode;
@@ -60,6 +63,7 @@ public class AssignmentDetailResponse {
 		this.state = state;
 		this.note = note;
 		this.hasReturning = hasReturning;
+		this.status = status;
 	}
 
 
