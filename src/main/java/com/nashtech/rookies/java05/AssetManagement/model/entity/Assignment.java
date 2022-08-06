@@ -11,6 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,26 +31,30 @@ public class Assignment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "asset_id")
 	private Asset asset;
-	
-	@ManyToOne(cascade = CascadeType.ALL,optional = false)
-	@JoinColumn(name = "user_id" )
+
+	@ManyToOne(cascade = CascadeType.ALL, optional = false)
+	@JoinColumn(name = "user_id")
 	private User user;
-	
-	@ManyToOne(cascade = CascadeType.ALL,optional = false)
+
+	@ManyToOne(cascade = CascadeType.ALL, optional = false)
 	@JoinColumn(name = "creator_id")
 	private User creator;
-	
+
 	@Column(name = "assigned_date")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date assignedDate;
-	
+
 	private String note;
-	
+
 	private String state;
 
 	private boolean status;
-	
+
+	private boolean hasReturning;
+
 }

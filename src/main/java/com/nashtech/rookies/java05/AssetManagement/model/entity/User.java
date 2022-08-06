@@ -53,11 +53,11 @@ public class User {
 	private UserStatus status;
 
 	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "acceptedBy")
 	private Set<Returning> returningUser;
 
 	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "creator")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "requestBy")
 	private Set<Returning> returningCreator;
 
 	@JsonIgnore

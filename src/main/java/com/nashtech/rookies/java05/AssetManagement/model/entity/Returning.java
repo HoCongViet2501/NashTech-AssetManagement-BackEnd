@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,11 +25,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "returnings")
 public class Returning {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
 	@Column(name = "returned_date")
 	private Date returnedDate;
@@ -40,10 +42,12 @@ public class Returning {
 	private Assignment assignment;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@JoinColumn(name = "request_by")
+	private User requestBy;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "creator_id")
-	private User creator;
+	@JoinColumn(name = "accepted_by")
+	private User acceptedBy;
+
+	private boolean isDelete;
 }
