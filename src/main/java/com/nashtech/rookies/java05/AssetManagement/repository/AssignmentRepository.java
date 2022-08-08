@@ -27,7 +27,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 			+ "join assets b on b.id =a.asset_id "
 			+ "join users u on a.creator_id = u.id "
 			+ "join information i on i.user_id =u.id "
-			+ "where i.location = :location", nativeQuery = true)
+			+ "where i.location = :location and a.status = false" , nativeQuery = true)
 	List<Assignment> getAllAssignmentByLocation(@Param("location") String location);
 
 	@Query(value = "select a.*"
