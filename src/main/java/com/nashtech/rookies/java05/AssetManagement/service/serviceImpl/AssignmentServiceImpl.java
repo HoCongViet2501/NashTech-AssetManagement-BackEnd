@@ -224,4 +224,13 @@ public class AssignmentServiceImpl implements AssignmentService {
 				.orElseThrow(() -> new ResourceCheckException("Not found assignment id :" + id));
 		return AssignmentDetailResponse.buildFromAssignment(assignment);
 	}
+
+	@Override
+	public List<AssetResponse> getAllAssetByLocationAndState(String location) {
+		List<Asset> assets = assetRepository.findAssetByLocationAndState(location);
+		if (assets.isEmpty()) {
+			throw new ResourceNotFoundException("No asset found in this location");
+		}
+		return assets.stream().map(AssetResponse::build).collect(Collectors.toList());
+	}
 }
