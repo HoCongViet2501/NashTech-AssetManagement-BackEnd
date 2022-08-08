@@ -33,6 +33,6 @@ build/
 .vscode/
 
 *.properties
-application.properties
+!**/src/main/resources/
 
 !**/src/test/**
