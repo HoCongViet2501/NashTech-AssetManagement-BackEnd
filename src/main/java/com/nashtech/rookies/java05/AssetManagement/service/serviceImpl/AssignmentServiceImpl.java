@@ -194,6 +194,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 			throw new ForbiddenException("Assignment cannot disable");
 		} else {
 			assignment.setStatus(false);
+			assignment.getAsset().setState("Available");
 			this.assignmentRepository.save(assignment);
 			return ResponseEntity.ok().body("Assignment is disabled");
 		}
