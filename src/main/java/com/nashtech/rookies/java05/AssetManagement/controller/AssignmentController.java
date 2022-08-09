@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.AssignmentRequest;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.AssetResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentResponse;
 import com.nashtech.rookies.java05.AssetManagement.service.AssignmentService;
@@ -78,4 +79,9 @@ public class AssignmentController {
 	public AssignmentDetailResponse getAssignmentById(@PathVariable Long id) {
 		return assignmentService.getAssignment(id);
 	}
+	
+	@GetMapping("/getAsset/{location}")
+	  public List<AssetResponse> getAllAsset(@PathVariable String location) {
+	    return assignmentService.getAllAssetByLocationAndState(location);
+	  }
 }

@@ -144,7 +144,6 @@ public class UserServiceImpl implements UserService {
         // auto create username
         information.setFirstName(information.getFirstName().replaceAll(" ", ""));
         user.setUserName(information.getFirstName().toLowerCase());
-        System.out.print("------------" + information.getFirstName());
         information.setLastName(removeSpace(information.getLastName()));
         user.setUserName(removeAccent(information.getFirstName()).toLowerCase());
         user.setUserName(removeSpace(user.getUserName()));
@@ -271,7 +270,6 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public UserResponse editUserInformation(String id, SignupRequest signupRequest) {
-    	System.out.println(signupRequest.toString());
         Information information = MappingData.mapping(signupRequest, Information.class);
         User user = MappingData.mapping(signupRequest, User.class);
         

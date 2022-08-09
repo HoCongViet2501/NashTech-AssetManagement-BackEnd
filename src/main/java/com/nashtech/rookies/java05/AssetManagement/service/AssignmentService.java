@@ -1,12 +1,14 @@
 package com.nashtech.rookies.java05.AssetManagement.service;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.request.AssignmentRequest;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.AssetResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentStaffResponse;
 
 import java.util.List;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 
 public interface AssignmentService {
@@ -28,4 +30,5 @@ public interface AssignmentService {
 
 	public List<AssignmentDetailResponse> searchAssignment(String content, String location);
 
+	public List<AssetResponse> getAllAssetByLocationAndState(String location);
 }

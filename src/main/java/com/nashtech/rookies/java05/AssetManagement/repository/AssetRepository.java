@@ -22,4 +22,7 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
 
 	@Query(value = "select a.* from assets a where a.id = :id and a.state = :state", nativeQuery = true)
 	Optional<Asset> findByIdAndState(@Param("id") String id,@Param("state") String state);
+	
+	@Query(value = "select a.* from information i inner join assets a on i.user_id = a.creator_id where i.location = :location and a.state = 'Available'", nativeQuery = true)
+	public List<Asset> findAssetByLocationAndState(@Param("location")String location);
 }
