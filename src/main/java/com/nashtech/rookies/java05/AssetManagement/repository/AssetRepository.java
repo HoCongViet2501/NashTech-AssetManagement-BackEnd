@@ -25,4 +25,10 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
 	
 	@Query(value = "select a.* from information i inner join assets a on i.user_id = a.creator_id where i.location = :location and a.state = 'Available'", nativeQuery = true)
 	public List<Asset> findAssetByLocationAndState(@Param("location")String location);
+	
+	@Query(value = "select a.* from information i "
+			+ "inner join assets a on i.user_id = a.creator_id "
+			+ "where (lower(a.id)  like lower(concat('%', :content,'%')) or lower(a.name) like lower(concat('%', :content,'%'))"
+			+ "i.location = :location and a.state = 'Available'", nativeQuery = true)
+	public List<Asset> searchAssetByLocationAndState(@Param("location")String location,@Param("content") String content);
 }

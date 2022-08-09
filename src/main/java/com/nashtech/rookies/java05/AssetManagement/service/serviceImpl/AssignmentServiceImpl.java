@@ -233,4 +233,13 @@ public class AssignmentServiceImpl implements AssignmentService {
 		}
 		return assets.stream().map(AssetResponse::build).collect(Collectors.toList());
 	}
+	
+	@Override
+	public List<AssetResponse> searchAssetByLocationAndState(String location,String content) {
+		List<Asset> assets = assetRepository.searchAssetByLocationAndState(location,content);
+		if (assets.isEmpty()) {
+			throw new ResourceNotFoundException("No asset found in this location");
+		}
+		return assets.stream().map(AssetResponse::build).collect(Collectors.toList());
+	}
 }
