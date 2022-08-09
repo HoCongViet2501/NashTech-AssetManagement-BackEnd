@@ -248,7 +248,8 @@ public class UserServiceImpl implements UserService {
         if (user.getStatus() == UserStatus.INACTIVE) {
             throw new ForbiddenException("User already disable");
         }
-        List<Assignment> assignments = this.assignmentRepository.findByUserAndStatus(user, false);
+        
+        List<Assignment> assignments = this.assignmentRepository.findByUserAndStatus(user, true);
         
         return assignments.isEmpty();
     }
