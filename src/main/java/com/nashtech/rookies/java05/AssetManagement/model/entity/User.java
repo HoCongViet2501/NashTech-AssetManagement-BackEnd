@@ -74,4 +74,14 @@ public class User {
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "creator")
 	private Set<Asset> asset;
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", userName=" + userName + ", passWord=" + passWord + ", role=" + role + ", status="
+				+ status + ", returningUser=" + returningUser + ", returningCreator=" + returningCreator
+				+ ", assignmentUser=" + assignmentUser + ", assignmentCreator=" + assignmentCreator + ", information="
+				+ information + ", asset=" + asset + "]";
+	}
+	
+	
 }

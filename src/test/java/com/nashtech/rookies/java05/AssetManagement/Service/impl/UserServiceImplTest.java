@@ -43,6 +43,8 @@ public class UserServiceImplTest {
     
     User user;
     
+    Information information;
+    
     Role role;
     
     ModelMapper modelMapper;
@@ -66,6 +68,7 @@ public class UserServiceImplTest {
         userServiceImpl = new UserServiceImpl(userRepository, informationRepository, roleRepository);
         signupRequest = mock(SignupRequest.class);
         user = mock(User.class);
+        information = mock(Information.class);
         role = mock(Role.class);
         userResponse = mock(UserResponse.class);
         informationResponse = mock(InformationResponse.class);
@@ -88,14 +91,18 @@ public class UserServiceImplTest {
 		signupRequestDTO.setJoinedDate(formatter.parse("2022-26-07"));
 		signupRequestDTO.setRole(1L);
 		signupRequestDTO.setLocation("HCM");
+//		userServiceImpl = mock(UserServiceImpl.class);
 
-		User user = MappingData.mapping(signupRequestDTO, User.class);
+		
 		Information information = MappingData.mapping(signupRequestDTO, Information.class);
+		User user = MappingData.mapping(signupRequestDTO, User.class);
 
 		when(MappingData.mapping(signupRequestDTO, User.class)).thenReturn(user);
 		when(MappingData.mapping(signupRequestDTO, Information.class)).thenReturn(information);
-		
-		
+		System.out.println("User: " + user.toString() );
+		System.out.println("Information: " + information.toString() );
+//		userServiceImpl.checkDate(signupRequestDTO);
+//		verify(userServiceImpl).checkDate(signupRequestDTO);
 		when(roleRepository.findById(signupRequestDTO.getRole())).thenReturn(Optional.of(role));
 
 		when(userRepository.save(user)).thenReturn(user);
@@ -111,6 +118,7 @@ public class UserServiceImplTest {
 		when(MappingData.mapping(user, UserResponse.class)).thenReturn(userResponse);
 		userResponse.setInformationResponse(informationResponse);
 		UserResponse result = userServiceImpl.createUser(signupRequestDTO);
+//		System.out.println("UserResponse: " + result.getUserId() );
 		assertThat(result, is(userResponse));
 	}
     
@@ -134,27 +142,51 @@ public class UserServiceImplTest {
         verify(userServiceImpl).changePassword(changePasswordRequest);
     }
     
-    @Test
-	public void editUser_ShouldReturnUser_WhenDataValid() throws ParseException {
-    	String id ="SD0002";
-    	
-    	SignupRequest signupRequestDTO = new SignupRequest();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		signupRequestDTO.setFirstName("Karney");
-		signupRequestDTO.setLastName("Freeland");
-		signupRequestDTO.setDateOfBirth(formatter.parse("1995-04-30"));
-		signupRequestDTO.setGender(true);
-		signupRequestDTO.setJoinedDate(formatter.parse("2022-06-06"));
-		signupRequestDTO.setRole(2L);
-		signupRequestDTO.setLocation("HCM");
-    	
-    	Information information = MappingData.mapping(signupRequest, Information.class);
-        User user = MappingData.mapping(signupRequest, User.class);
-        
-        when(MappingData.mapping(signupRequestDTO, User.class)).thenReturn(user);
-		when(MappingData.mapping(signupRequestDTO, Information.class)).thenReturn(information);
-		
-		when(informationRepository.findByUserId(id)).thenReturn(Optional.of(information));
-		
-    }
+//    @Test
+//	public void editUser_ShouldReturnUser_WhenDataValid() throws ParseException {
+//    	
+//    	
+//    	String id ="SD0002";
+//    	
+//    	SignupRequest signupRequestDTO = new SignupRequest();
+//		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//		signupRequestDTO.setFirstName("Karney");
+//		signupRequestDTO.setLastName("Freeland");
+//		signupRequestDTO.setDateOfBirth(formatter.parse("1995-04-30"));
+//		signupRequestDTO.setGender(true);
+//		signupRequestDTO.setJoinedDate(formatter.parse("2022-06-06"));
+//		signupRequestDTO.setRole(2L);
+//		signupRequestDTO.setLocation("HCM");
+//    	
+//		User user = MappingData.mapping(signupRequest, User.class);
+//        
+//    	Information information = MappingData.mapping(signupRequest, Information.class);
+//    	information.setUser(user);
+//        
+//        when(MappingData.mapping(signupRequestDTO, User.class)).thenReturn(user);
+//        System.out.println("User:  "+user.getId());
+//		when(MappingData.mapping(signupRequestDTO, Information.class)).thenReturn(information);
+//		
+//		when(informationRepository.findByUserId(id)).thenReturn(Optional.of(information));
+//		
+//		when(roleRepository.findById(signupRequestDTO.getRole())).thenReturn(Optional.of(role));
+//		
+//		information.setDateOfBirth(signupRequestDTO.getDateOfBirth());
+//		information.setJoinedDate(signupRequestDTO.getJoinedDate());
+//        information.setGender(signupRequestDTO.isGender());
+//		when(userRepository.save(user)).thenReturn(user);
+//		information.setUser(user);
+//
+//		when(informationRepository.save(information)).thenReturn(information);
+//
+//		InformationResponse informationResponse = new InformationResponse();
+//
+//		when(MappingData.mapping(information, InformationResponse.class)).thenReturn(informationResponse);
+//
+//		when(MappingData.mapping(user, UserResponse.class)).thenReturn(userResponse);
+//		userResponse.setInformationResponse(informationResponse);
+//		UserResponse result = userServiceImpl.editUserInformation(id,signupRequestDTO);
+//		assertThat(result, is(userResponse));
+//		
+//    }
 }
