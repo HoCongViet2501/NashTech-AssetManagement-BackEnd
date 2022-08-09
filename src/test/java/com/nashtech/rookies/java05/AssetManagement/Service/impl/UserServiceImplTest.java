@@ -88,7 +88,7 @@
 //		signupRequestDTO.setLastName("Pham Dang");
 //		signupRequestDTO.setDateOfBirth(formatter.parse("2000-12-06"));
 //		signupRequestDTO.setGender(true);
-//		signupRequestDTO.setJoinedDate(formatter.parse("2022-26-07"));
+//		signupRequestDTO.setJoinedDate(formatter.parse("2022-07-26"));
 //		signupRequestDTO.setRole(1L);
 //		signupRequestDTO.setLocation("HCM");
 ////		userServiceImpl = mock(UserServiceImpl.class);
