@@ -30,4 +30,6 @@ public interface AssignmentService {
 	public List<AssignmentDetailResponse> searchAssignment(String content, String location);
 
 	public List<AssetResponse> getAllAssetByLocationAndState(String location);
+	
+	public List<AssetResponse> searchAssetByLocationAndState(String location,String content);
 }

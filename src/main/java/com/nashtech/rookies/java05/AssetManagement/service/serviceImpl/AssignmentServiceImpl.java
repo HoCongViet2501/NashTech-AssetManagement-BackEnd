@@ -42,6 +42,14 @@ public class AssignmentServiceImpl implements AssignmentService {
 	@Autowired
 	AssetRepository assetRepository;
 
+	public AssignmentServiceImpl(AssignmentRepository assignmentRepository2, UserRepository userRepository2,
+			AssetRepository assetRepository2, InformationRepository informationRepository2) {
+		this.assignmentRepository = assignmentRepository2;
+		this.userRepository = userRepository2;
+		this.informationRepository = informationRepository2;
+		this.assetRepository = assetRepository2;
+	}
+
 	@Override
 	public List<AssignmentStaffResponse> getListAssignments(String userId) {
 		List<Assignment> assignments = this.assignmentRepository.getAssignmentsByIdAndAssignedDateBeforeNow(userId);
@@ -88,14 +96,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 				.orElseThrow(() -> new ResourceCheckException("Not found asset: " + assignmentRequest.getAsset()));
 
 		assignment.setCreator(creator);
-
 		assignment.setUser(user);
 		assignment.setAsset(asset);
-
 		assignment.setState("Waiting for acceptance");
-
 		assignment.setHasReturning(false);
-
 		assignment.setStatus(true);
 		assignmentRepository.save(assignment);
 
@@ -149,17 +153,13 @@ public class AssignmentServiceImpl implements AssignmentService {
 		assignment.setUser(user.get());
 		assignment.setAssignedDate(assignmentRequest.getAssignedDate());
 		assignment.setNote(assignmentRequest.getNote());
-		assignment.setStatus(true);
+		if (assignment.isStatus() == false) {
+			throw new ForbiddenException("Assignment already disable");
+		}
 		assignmentRepository.save(assignment);
 		UserResponse userResponse = MappingData.mapping(user.get(), UserResponse.class);
 		userResponse
 				.setInformationResponse(MappingData.mapping(user.get().getInformation(), InformationResponse.class));
-
-		// UserResponse userCreateResponse = MappingData.mapping(creator,
-		// UserResponse.class);
-		// userCreateResponse
-		// .setInformationResponse(MappingData.mapping(creator.getInformation(),
-		// InformationResponse.class));
 
 		AssignmentResponse assignmentResponse = new AssignmentResponse();
 
@@ -172,9 +172,6 @@ public class AssignmentServiceImpl implements AssignmentService {
 				MappingData.mapping(assignmentOptional.get().getCreator().getInformation(), InformationResponse.class));
 
 		assignmentResponse.setUser(userResponse);
-
-		// assignmentResponse.setCreateUser(userCreateResponse);
-
 		assignmentResponse.setAssignedDate(assignment.getAssignedDate());
 		assignmentResponse.setState(assignment.getState());
 		assignmentResponse.setNote(assignment.getNote());
@@ -192,12 +189,14 @@ public class AssignmentServiceImpl implements AssignmentService {
 		if (!assignment.getState().equalsIgnoreCase("Waiting for acceptance")
 				&& !assignment.getState().equalsIgnoreCase("Declined")) {
 			throw new ForbiddenException("Assignment cannot disable");
-		} else {
-			assignment.setStatus(false);
-			assignment.getAsset().setState("Available");
-			this.assignmentRepository.save(assignment);
-			return ResponseEntity.ok().body("Assignment is disabled");
 		}
+		if (assignment.isStatus() == false) {
+			throw new ForbiddenException("Assignment already disable");
+		}
+		assignment.setStatus(false);
+		assignment.getAsset().setState("Available");
+		this.assignmentRepository.save(assignment);
+		return ResponseEntity.ok().body("Assignment is disabled");
 
 	}
 
@@ -229,6 +228,15 @@ public class AssignmentServiceImpl implements AssignmentService {
 	@Override
 	public List<AssetResponse> getAllAssetByLocationAndState(String location) {
 		List<Asset> assets = assetRepository.findAssetByLocationAndState(location);
+		if (assets.isEmpty()) {
+			throw new ResourceNotFoundException("No asset found in this location");
+		}
+		return assets.stream().map(AssetResponse::build).collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<AssetResponse> searchAssetByLocationAndState(String location,String content) {
+		List<Asset> assets = assetRepository.searchAssetByLocationAndState(location,content);
 		if (assets.isEmpty()) {
 			throw new ResourceNotFoundException("No asset found in this location");
 		}
