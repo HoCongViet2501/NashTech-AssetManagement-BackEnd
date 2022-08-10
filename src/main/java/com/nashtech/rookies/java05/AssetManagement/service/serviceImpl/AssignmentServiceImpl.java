@@ -136,6 +136,9 @@ public class AssignmentServiceImpl implements AssignmentService {
 		if (!assignmentOptional.isPresent()) {
 			throw new ResourceCheckException("Not found assignment");
 		}
+		if (!assignmentOptional.get().isStatus()) {
+			throw new ForbiddenException("Assignment already disable");
+		}
 		Optional<Asset> asset = assetRepository.findById(assignmentRequest.getAsset());
 		if (!asset.isPresent()) {
 			throw new ResourceCheckException("Asset not found " + assignmentRequest.getAsset());
