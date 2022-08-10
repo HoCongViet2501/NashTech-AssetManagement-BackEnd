@@ -59,5 +59,15 @@ public class ReturnController {
     public List<ReturningResponse> searchReturning(@PathVariable String location, @PathVariable String content) {
         return this.returnService.search(location, content);
     }
+    
+    @PostMapping("/{assId}/{requestBy}")
+    @Operation(summary = "Create new request for returning asset")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Create new request for returning asset successfully"),
+            @ApiResponse(responseCode = "400", description = "Some field not correct"),
+    })
+    public ResponseEntity<Object> createUserRequestReturningAsset(@PathVariable int assId, @PathVariable String requestBy) {
+        return this.returnService.createNewReturningAsset(assId, requestBy);
+    }
 
 }

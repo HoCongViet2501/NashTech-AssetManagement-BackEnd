@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.response.ReturningResponse;
 import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
+import com.nashtech.rookies.java05.AssetManagement.model.entity.Asset;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Assignment;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Returning;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
@@ -22,68 +23,79 @@ import com.nashtech.rookies.java05.AssetManagement.service.ReturnService;
 @Service
 public class ReturnServiceImpl implements ReturnService {
 
-    @Autowired
-    private ReturnRepository returnRepository;
+	@Autowired
+	private ReturnRepository returnRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Autowired
-    private AssignmentRepository assignmentRepository;
+	@Autowired
+	private AssignmentRepository assignmentRepository;
 
-    @Override
-    public ResponseEntity<Object> createNewReturningAsset(int assId, String requestBy) {
-        User requestUser = userRepository.findByUserName(requestBy)
-                .orElseThrow(() -> new ResourceNotFoundException("Username " + requestBy + " Not Founded"));
-        Assignment assignment = assignmentRepository.findById(Long.valueOf(assId))
-                .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+	@Override
+	public ResponseEntity<Object> createNewReturningAsset(int assId, String requestBy) {
+		User requestUser = userRepository.findByUserName(requestBy)
+				.orElseThrow(() -> new ResourceNotFoundException("Username " + requestBy + " Not Founded"));
+		Assignment assignment = assignmentRepository.findById(Long.valueOf(assId))
+				.orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
 
-        Returning newReturn = Returning.builder().isDelete(false).requestBy(requestUser).assignment(assignment)
-                .state("Waiting for returning").build();
-        if (assignment.isHasReturning()) {
-            throw new ForbiddenException("Assignment has been a request for returning");
-        }
+		Returning newReturn = Returning.builder().isDelete(false).requestBy(requestUser).assignment(assignment)
+				.state("Waiting for returning").build();
+		if (assignment.isHasReturning()) {
+			throw new ForbiddenException("Assignment has been a request for returning");
+		}
 
-        assignment.setHasReturning(true);
-        assignmentRepository.save(assignment);
-        this.returnRepository.save(newReturn);
+		assignment.setHasReturning(true);
+		assignmentRepository.save(assignment);
+		this.returnRepository.save(newReturn);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
 
-    @Override
+	@Override
     public ResponseEntity<Object> updateStatusReturning(int returnId) {
-        // TODO Auto-generated method stub
+    	
+//    	Returning updateReturn = returnRepository.findById(returnId).get();
+//    	if(updateReturn == null){
+//            throw new ResourceNotFoundException("Returns not exists");
+//        }
+//    	
+//    	Assignment assignment = assignmentRepository.findById(updateReturn.getAssignment().getId()).get();
+//    	Asset asset = assignment.getAsset();
+//    	if (assignment.isHasReturning()) {
+//			throw new ForbiddenException("Assignment has been a request for returning");
+//		}
+    	
         return null;
     }
 
-    @Override
-    public ResponseEntity<Object> deleteReturning(int returnId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public ResponseEntity<Object> deleteReturning(int returnId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public List<ReturningResponse> getAllReturning(String location) {
-        List<Returning> returnLists = this.returnRepository.getAllReturning(location);
+	@Override
+	public List<ReturningResponse> getAllReturning(String location) {
+		List<Returning> returnLists = this.returnRepository.getAllReturning(location);
 
-        if (returnLists.isEmpty()) {
-            throw new ResourceNotFoundException("No request for returning found in location: " + location);
-        }
+		if (returnLists.isEmpty()) {
+			throw new ResourceNotFoundException("No request for returning found in location: " + location);
+		}
 
-        return returnLists.stream().map(ReturningResponse::buildFromModel).collect(Collectors.toList());
-    }
+		return returnLists.stream().map(ReturningResponse::buildFromModel).collect(Collectors.toList());
+	}
 
-    @Override
-    public List<ReturningResponse> search(String location, String content) {
-        List<Returning> returnLists = this.returnRepository.search(location, content);
+	@Override
+	public List<ReturningResponse> search(String location, String content) {
+		List<Returning> returnLists = this.returnRepository.search(location, content);
 
-        if (returnLists.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    "No request for returning found in location: " + location + " With " + content);
-        }
+		if (returnLists.isEmpty()) {
+			throw new ResourceNotFoundException(
+					"No request for returning found in location: " + location + " With " + content);
+		}
 
-        return returnLists.stream().map(ReturningResponse::buildFromModel).collect(Collectors.toList());
-    }
+		return returnLists.stream().map(ReturningResponse::buildFromModel).collect(Collectors.toList());
+	}
 
 }
