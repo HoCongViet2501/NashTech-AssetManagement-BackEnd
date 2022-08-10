@@ -153,9 +153,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		assignment.setUser(user.get());
 		assignment.setAssignedDate(assignmentRequest.getAssignedDate());
 		assignment.setNote(assignmentRequest.getNote());
-		if (assignment.isStatus() == false) {
-			throw new ForbiddenException("Assignment already disable");
-		}
+		assignment.setStatus(true);
 		assignmentRepository.save(assignment);
 		UserResponse userResponse = MappingData.mapping(user.get(), UserResponse.class);
 		userResponse
@@ -233,10 +231,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 		}
 		return assets.stream().map(AssetResponse::build).collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public List<AssetResponse> searchAssetByLocationAndState(String location,String content) {
-		List<Asset> assets = assetRepository.searchAssetByLocationAndState(location,content);
+	public List<AssetResponse> searchAssetByLocationAndState(String location, String content) {
+		List<Asset> assets = assetRepository.searchAssetByLocationAndState(location, content);
 		if (assets.isEmpty()) {
 			throw new ResourceNotFoundException("No asset found in this location");
 		}
