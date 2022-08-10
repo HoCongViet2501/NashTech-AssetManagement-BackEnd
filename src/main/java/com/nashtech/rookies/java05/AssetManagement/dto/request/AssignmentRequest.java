@@ -21,5 +21,7 @@ public class AssignmentRequest {
 	private String state;
 
 	private boolean status;
+	
+//	private boolean hasReturning;
 
 }

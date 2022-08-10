@@ -21,4 +21,6 @@ public class AssignmentResponse {
 	private String note;
 
 	private boolean status;
+	
+//	private boolean hasReturning;
 }
