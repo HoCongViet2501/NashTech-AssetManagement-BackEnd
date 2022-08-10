@@ -46,6 +46,12 @@ public class ReturnController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "cancel request for returning")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cancel success"),
+            @ApiResponse(responseCode = "400", description = "Not found returning"),
+            @ApiResponse(responseCode = "403", description = "Returning is disable")
+    })
     public ResponseEntity<Object> deleteRequestReturnAsset(@PathVariable int id) {
         return this.returnService.deleteReturning(id);
     }

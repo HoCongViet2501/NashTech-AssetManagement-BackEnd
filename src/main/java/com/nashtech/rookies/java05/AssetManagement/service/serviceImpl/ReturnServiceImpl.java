@@ -3,6 +3,7 @@ package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -59,8 +60,22 @@ public class ReturnServiceImpl implements ReturnService {
 
     @Override
     public ResponseEntity<Object> deleteReturning(int returnId) {
-        // TODO Auto-generated method stub
-        return null;
+        Returning returning = this.returnRepository.findById(Long.valueOf(returnId)).orElseThrow(() ->
+                new ResourceCheckException("Not Found Returning"));
+
+         if (returning.isDelete()){
+             throw new ForbiddenException("Returning is disable");
+         }
+
+        Assignment assignment = this.assignmentRepository.getById(returning.getAssignment().getId());
+        assignment.setHasReturning(false);
+        assignment.setState("Accepted");
+        assignmentRepository.save(assignment);
+
+        returning.setDelete(true);
+        returnRepository.save(returning);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
