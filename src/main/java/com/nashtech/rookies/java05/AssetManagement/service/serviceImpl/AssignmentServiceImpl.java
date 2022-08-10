@@ -142,6 +142,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		}
 
 		Optional<User> user = userRepository.findById(assignmentRequest.getUser());
+		
 		if (!user.isPresent()) {
 			throw new ResourceCheckException("User not found ");
 		}
@@ -153,8 +154,9 @@ public class AssignmentServiceImpl implements AssignmentService {
 		assignment.setUser(user.get());
 		assignment.setAssignedDate(assignmentRequest.getAssignedDate());
 		assignment.setNote(assignmentRequest.getNote());
-		assignment.setStatus(true);
+		assignment.setStatus(assignmentOptional.get().isStatus());
 		assignmentRepository.save(assignment);
+		
 		UserResponse userResponse = MappingData.mapping(user.get(), UserResponse.class);
 		userResponse
 				.setInformationResponse(MappingData.mapping(user.get().getInformation(), InformationResponse.class));
