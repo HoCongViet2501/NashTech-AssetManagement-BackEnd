@@ -61,7 +61,7 @@ public class ReturnServiceImpl implements ReturnService {
     
     @Override
     public ResponseEntity<Object> updateStatusReturning(int returnId) {
-        // TODO Auto-generated method stub
+    	
         return null;
     }
     
@@ -91,7 +91,8 @@ public class ReturnServiceImpl implements ReturnService {
         List<Returning> returnLists = this.returnRepository.getAllReturning(getUserLocationFromSecurity());
         
         if (returnLists.isEmpty()) {
-            throw new ResourceNotFoundException("No request for returning found in location: " + getUserLocationFromSecurity());
+            throw new ResourceNotFoundException(
+                    "No request for returning found in location: " + getUserLocationFromSecurity());
         }
         
         return returnLists.stream().map(ReturningResponse::buildFromModel).collect(Collectors.toList());
