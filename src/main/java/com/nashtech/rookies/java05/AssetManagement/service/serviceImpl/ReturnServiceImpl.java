@@ -109,6 +109,11 @@ public class ReturnServiceImpl implements ReturnService {
                 () -> new ResourceNotFoundException("not.found.returning.have.id." + returnId));
         User acceptedBy = this.userRepository.findUserById(acceptedById).orElseThrow(
                 () -> new ResourceNotFoundException("not.found.user.have.id." + acceptedById));
+
+        if (returning.getState().equals("Completed")) {
+            throw new ForbiddenException("This returning has been completed");
+        }
+
         returning.setState("Completed");
         returning.setAcceptedBy(acceptedBy);
         returning.setReturnedDate(new SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.now().toString()));
