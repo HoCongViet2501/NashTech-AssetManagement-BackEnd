@@ -28,9 +28,9 @@
 //    private AuthenticationServiceImpl authenticationService;
 //    private UserRepository userRepository;
 //    private AuthenticationManager authenticationManager;
-//    
+//
 //    private JwtProvider jwtProvider;
-//    
+//
 //    @BeforeEach
 //    public void setUp() {
 //        userRepository = mock(UserRepository.class);
@@ -38,7 +38,7 @@
 //        jwtProvider = mock(JwtProvider.class);
 //        authenticationService = new AuthenticationServiceImpl(userRepository, authenticationManager, jwtProvider);
 //    }
-//    
+//
 //    @Test
 //    public void givenValidUsernameAndPassword_shouldLoginSuccess_thenReturnUserAndToken() {
 //        User user = new User();
@@ -47,7 +47,7 @@
 //        user.setRole(role);
 //        user.setUserName("viet");
 //        Authentication authentication = mock(Authentication.class);
-//        
+//
 //        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("viet", eq("123456"))))
 //                .thenReturn(authentication);
 //        when(userRepository.findByUserName("viet")).thenReturn(Optional.of(user));
@@ -58,7 +58,7 @@
 //        expect.put("token", token);
 //        assertThat(authenticationService.login("viet", eq("123456"))).isEqualTo(expect);
 //    }
-//    
+//
 //    @Test
 //    public void givenNewUserAndNewPassword_shouldChangePasswordForNewUser() {
 //        User user = new User();
@@ -67,7 +67,7 @@
 //        user.setId("SD1000");
 //        user.setRole(role);
 //        authenticationService = mock(AuthenticationServiceImpl.class);
-//        
+//
 //        when(userRepository.getById("SD1000")).thenReturn(user);
 //        assertThat(user.getRole().getName()).isEqualTo(UserRole.ADMIN);
 //        user.setStatus(UserStatus.ACTIVE);
@@ -76,14 +76,14 @@
 //        authenticationService.changePasswordNewUser("SD1000", "1234567");
 //        verify(authenticationService).changePasswordNewUser("SD1000", "1234567");
 //    }
-//    
+//
 //    @Test
 //    public void givenAlreadyUserLogin_shouldLogoutSuccess() {
 //        SecurityContextLogoutHandler securityContextLogoutHandler = mock(SecurityContextLogoutHandler.class);
 //        HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
 //        HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
 //        authenticationService = mock(AuthenticationServiceImpl.class);
-//        
+//
 //        securityContextLogoutHandler.setClearAuthentication(true);
 //        securityContextLogoutHandler.logout(httpServletRequest, httpServletResponse, null);
 //        verify(securityContextLogoutHandler).logout(httpServletRequest, httpServletResponse, null);

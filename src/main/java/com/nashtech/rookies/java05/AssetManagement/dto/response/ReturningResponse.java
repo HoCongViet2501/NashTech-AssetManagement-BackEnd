@@ -23,7 +23,7 @@ public class ReturningResponse {
     private Date assignedDate;
     private String requestBy;
     private String acceptedBy;
-
+    
     /**
      * @param id
      * @param assetCode
@@ -35,7 +35,7 @@ public class ReturningResponse {
      * @param acceptedBy
      */
     public ReturningResponse(Long id, String assetCode, String assetName, Date returnDate, String state,
-            Date assignedDate, String requestBy, String acceptedBy) {
+                             Date assignedDate, String requestBy, String acceptedBy) {
         this.id = id;
         this.assetCode = assetCode;
         this.assetName = assetName;
@@ -45,15 +45,15 @@ public class ReturningResponse {
         this.requestBy = requestBy;
         this.acceptedBy = acceptedBy;
     }
-
+    
     public static ReturningResponse buildFromModel(Returning returning) {
         String assetCode = returning.getAssignment().getAsset().getId();
         String assetName = returning.getAssignment().getAsset().getName();
         String acceptedBy = returning.getAcceptedBy() == null ? "" : returning.getAcceptedBy().getUserName();
-
+        
         return new ReturningResponse(returning.getId(), assetCode, assetName, returning.getReturnedDate(),
                 returning.getState(), returning.getAssignment().getAssignedDate(),
                 returning.getRequestBy().getUserName(), acceptedBy);
     }
-
+    
 }
