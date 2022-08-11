@@ -30,64 +30,63 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequestMapping("/api/assignment")
 public class AssignmentController {
-
-	@Autowired
-	AssignmentService assignmentService;
-
-	@Operation(summary = "create new assignment")
-	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping("/createAssign/{assignedby}")
-	AssignmentResponse createAssignment(@PathVariable String assignedby,
-			@Valid @RequestBody AssignmentRequest assignmentRequest) {
-		return assignmentService.createAssignment(assignmentRequest, assignedby);
-	}
-
-	@GetMapping("/getAll/{location}")
-	public List<AssignmentDetailResponse> getAllAssignment(@PathVariable String location) {
-		return assignmentService.getAllAssignmentByLocation(location);
-	}
-
-	@PutMapping("/edit/{id}")
-	AssignmentResponse editAssignment(@PathVariable Long id, @Valid @RequestBody AssignmentRequest assignmentRequest) {
-		return assignmentService.editAssignment(assignmentRequest, id);
-	}
-
-	@GetMapping("/search/{location}/{content}")
-	public List<AssignmentDetailResponse> searchAssignment(@PathVariable String location,
-			@PathVariable String content) {
-		return assignmentService.searchAssignment(content, location);
-	}
-
-	@DeleteMapping("/disable/{id}")
-	public ResponseEntity<?> disableUser(@PathVariable Long id) {
-		return this.assignmentService.deleteAssignment(id);
-	}
-
-	// @GetMapping("/getAssignment/{id}")
-	// public AssignmentResponse getAssignmentById(@PathVariable Long id) {
-	// 	return assignmentService.getAssignment(id);
-	// }
-
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Get assignment by id Success"),
-			@ApiResponse(responseCode = "404", description = "Not Found"),
-			@ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
-	})
-	@Operation(summary = "get assignment by id", description = "get assignment by id")
-	@ResponseStatus(HttpStatus.OK)
-	@GetMapping("/getAssignment/{id}")
-	public AssignmentDetailResponse getAssignmentById(@PathVariable Long id) {
-		return assignmentService.getAssignment(id);
-	}
-	
-	@GetMapping("/getAsset/{location}")
-	  public List<AssetResponse> getAllAsset(@PathVariable String location) {
-	    return assignmentService.getAllAssetByLocationAndState(location);
-	  }
-	
-	@GetMapping("/searchAsset/{location}/{content}")
-	public List<AssetResponse> searchAsset(@PathVariable String location,
-			@PathVariable String content) {
-		return assignmentService.searchAssetByLocationAndState(location,content);
-	}
+    
+    @Autowired
+    AssignmentService assignmentService;
+    
+    @Operation(summary = "create new assignment")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/createAssignment")
+    AssignmentResponse createAssignment( @Valid @RequestBody AssignmentRequest assignmentRequest) {
+        return assignmentService.createAssignment(assignmentRequest);
+    }
+    
+    @GetMapping("/getAll/{location}")
+    public List<AssignmentDetailResponse> getAllAssignment(@PathVariable String location) {
+        return assignmentService.getAllAssignmentByLocation(location);
+    }
+    
+    @PutMapping("/edit/{id}")
+    AssignmentResponse editAssignment(@PathVariable Long id, @Valid @RequestBody AssignmentRequest assignmentRequest) {
+        return assignmentService.editAssignment(assignmentRequest, id);
+    }
+    
+    @GetMapping("/search/{location}/{content}")
+    public List<AssignmentDetailResponse> searchAssignment(@PathVariable String location,
+                                                           @PathVariable String content) {
+        return assignmentService.searchAssignment(content, location);
+    }
+    
+    @DeleteMapping("/disable/{id}")
+    public ResponseEntity<?> disableUser(@PathVariable Long id) {
+        return this.assignmentService.deleteAssignment(id);
+    }
+    
+    // @GetMapping("/getAssignment/{id}")
+    // public AssignmentResponse getAssignmentById(@PathVariable Long id) {
+    // 	return assignmentService.getAssignment(id);
+    // }
+    
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get assignment by id Success"),
+            @ApiResponse(responseCode = "404", description = "Not Found"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+    })
+    @Operation(summary = "get assignment by id", description = "get assignment by id")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/getAssignment/{id}")
+    public AssignmentDetailResponse getAssignmentById(@PathVariable Long id) {
+        return assignmentService.getAssignment(id);
+    }
+    
+    @GetMapping("/getAsset/{location}")
+    public List<AssetResponse> getAllAsset(@PathVariable String location) {
+        return assignmentService.getAllAssetByLocationAndState(location);
+    }
+    
+    @GetMapping("/searchAsset/{location}/{content}")
+    public List<AssetResponse> searchAsset(@PathVariable String location,
+                                           @PathVariable String content) {
+        return assignmentService.searchAssetByLocationAndState(location, content);
+    }
 }
