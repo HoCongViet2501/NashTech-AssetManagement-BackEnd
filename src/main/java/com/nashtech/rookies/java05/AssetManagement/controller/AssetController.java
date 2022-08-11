@@ -30,12 +30,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/api/asset")
 public class AssetController {
     private final AssetService assetService;
-
+    
     @Autowired
     public AssetController(AssetService assetService) {
         this.assetService = assetService;
     }
-
+    
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Create Success"),
             @ApiResponse(responseCode = "404", description = "Not Found"),
@@ -44,10 +44,10 @@ public class AssetController {
     @Operation(summary = "create new asset")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
-    AssetResponse createAsset(@Valid @RequestBody AssetRequest assetRequest){
+    AssetResponse createAsset(@Valid @RequestBody AssetRequest assetRequest) {
         return this.assetService.createAsset(assetRequest);
     }
-
+    
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Update Success"),
             @ApiResponse(responseCode = "404", description = "Not Found"),
@@ -56,10 +56,10 @@ public class AssetController {
     @Operation(summary = "update asset")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
-    AssetResponse updateAsset(@Valid @RequestBody AssetRequest assetRequest, @PathVariable String id){
+    AssetResponse updateAsset(@Valid @RequestBody AssetRequest assetRequest, @PathVariable String id) {
         return this.assetService.updateAsset(assetRequest, id);
     }
-
+    
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Delete Success"),
             @ApiResponse(responseCode = "404", description = "Not Found"),
@@ -68,27 +68,27 @@ public class AssetController {
     @Operation(summary = "delete asset")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("{id}")
-    Boolean deleteAsset(@PathVariable String id){
+    Boolean deleteAsset(@PathVariable String id) {
         return this.assetService.deleteAsset(id);
     }
-
-
-  @GetMapping("/getAll/{location}")
-  public List<AssetResponse> getAllAsset(@PathVariable String location) {
-    return assetService.getAllAssetByLocation(location);
-  }
-
-  @GetMapping("/search/{location}/{content}")
-  public List<AssetResponse> searchAsset(@PathVariable String location,@PathVariable String content) {
-    return assetService.searchAsset(content, location);
-  }
-
+    
+    
+    @GetMapping("/getAll")
+    public List<AssetResponse> getAllAsset() {
+        return assetService.getAllAssetByLocation();
+    }
+    
+    @GetMapping("/search/{content}")
+    public List<AssetResponse> getAllAsset(@PathVariable String content) {
+        return assetService.searchAsset(content);
+    }
+    
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    AssetResponse getEmployeeById(@PathVariable("id") String id){
+    AssetResponse getEmployeeById(@PathVariable("id") String id) {
         return this.assetService.getAssetById(id);
     }
-
+    
     @GetMapping("/check/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Check asset can disable or not")

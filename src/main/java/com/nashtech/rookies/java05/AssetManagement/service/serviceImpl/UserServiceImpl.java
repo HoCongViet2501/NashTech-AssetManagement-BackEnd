@@ -19,6 +19,7 @@ import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentReposito
 import com.nashtech.rookies.java05.AssetManagement.repository.InformationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.RoleRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
+import com.nashtech.rookies.java05.AssetManagement.security.UserPrincipal;
 import com.nashtech.rookies.java05.AssetManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
     
     public static int calculateAge(LocalDate birthDate) {
         LocalDate currentDate = LocalDate.now();
-        if ((birthDate != null) && (currentDate != null)) {
+        if (birthDate != null) {
             return Period.between(birthDate, currentDate).getYears();
         } else {
             return 0;
@@ -129,10 +130,6 @@ public class UserServiceImpl implements UserService {
         return s.trim().replaceAll("\\s+", " ");
     }
     
-    public String generteUsername(String firstName) {
-        
-        return null;
-    }
     
     @Override
     public UserResponse createUser(SignupRequest signupRequest) {
@@ -206,8 +203,8 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public List<UserDetailResponse> getAllUserSameLocation(String location) {
-        List<Information> lists = this.informationRepository.findUserByLocationAndNotInactive(location);
+    public List<UserDetailResponse> getAllUserSameLocation() {
+        List<Information> lists = this.informationRepository.findUserByLocationAndNotInactive(getUserLocationFromSecurity());
         if (lists.isEmpty()) {
             throw new ResourceNotFoundException("No User Founded");
         }
@@ -223,8 +220,8 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public List<UserDetailResponse> searchUser(String content, String location) {
-        List<Information> lists = this.informationRepository.searchUser(content, location);
+    public List<UserDetailResponse> searchUser(String content) {
+        List<Information> lists = this.informationRepository.searchUser(content, getUserLocationFromSecurity());
         if (lists.isEmpty()) {
             throw new ResourceNotFoundException("No User Founded");
         }
@@ -320,4 +317,10 @@ public class UserServiceImpl implements UserService {
         this.userRepository.save(user);
     }
     
+    public String getUserLocationFromSecurity() {
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = this.userRepository.findUserById(userPrincipal.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("not.found.user.have.id." + userPrincipal.getId()));
+        return user.getInformation().getLocation();
+    }
 }

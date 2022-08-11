@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface AssetService {
-  AssetResponse createAsset(AssetRequest assetRequest);
-
-  public Authentication getAuthentication();
-
-  AssetResponse updateAsset(AssetRequest assetRequest, String id);
-
-  boolean deleteAsset(String id);
-
-  public List<AssetResponse> getAllAssetByLocation(String location);
-
-  public List<AssetResponse> searchAsset(String content, String location);
-
-  AssetResponse getAssetById(String id);
-
-  boolean checkAssetHistory(String id);
+    AssetResponse createAsset(AssetRequest assetRequest);
+    
+    Authentication getAuthentication();
+    
+    AssetResponse updateAsset(AssetRequest assetRequest, String id);
+    
+    boolean deleteAsset(String id);
+    
+    List<AssetResponse> getAllAssetByLocation();
+    
+    List<AssetResponse> searchAsset(String content);
+    
+    AssetResponse getAssetById(String id);
+    
+    boolean checkAssetHistory(String id);
 
   List<AssetHistoryInterface> getAssetHistory(String assetId);
 }
