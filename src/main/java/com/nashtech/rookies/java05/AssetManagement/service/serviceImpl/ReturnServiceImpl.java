@@ -55,17 +55,6 @@ public class ReturnServiceImpl implements ReturnService {
 	@Override
     public ResponseEntity<Object> updateStatusReturning(int returnId) {
     	
-//    	Returning updateReturn = returnRepository.findById(returnId).get();
-//    	if(updateReturn == null){
-//            throw new ResourceNotFoundException("Returns not exists");
-//        }
-//    	
-//    	Assignment assignment = assignmentRepository.findById(updateReturn.getAssignment().getId()).get();
-//    	Asset asset = assignment.getAsset();
-//    	if (assignment.isHasReturning()) {
-//			throw new ForbiddenException("Assignment has been a request for returning");
-//		}
-    	
         return null;
     }
 
