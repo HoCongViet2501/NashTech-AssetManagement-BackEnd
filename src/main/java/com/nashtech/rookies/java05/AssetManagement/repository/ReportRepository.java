@@ -10,10 +10,14 @@ import java.util.List;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Asset, String> {
-    @Query(value = "SELECT c.id, c.name, a.state, count(a.id) " +
-            "FROM assets a " +
-            "INNER JOIN categories c ON c.id = a.category_id " +
-            "GROUP BY c.id, a.category_id, a.state, c.name " +
-            "ORDER BY c.name ASC ", nativeQuery = true)
+    @Query(value = "select c.name, " +
+            "count(1) as total, " +
+            "count(1) filter (where a.state='Assigned') as assigned, " +
+            "count(1) filter (where a.state='Available') as available, " +
+            "count(1) filter (where a.state='Not available') as notAvailable, " +
+            "count(1) filter (where a.state='Waiting for recycling') as waitingForRecycling, " +
+            "count(1) filter (where a.state='Recycled') as recycled " +
+            "from assets a inner join categories c on a.category_id  = c.id " +
+            "group by c.name ", nativeQuery = true)
     List<ReportInterface> findAssetByCategoryAndState();
 }
