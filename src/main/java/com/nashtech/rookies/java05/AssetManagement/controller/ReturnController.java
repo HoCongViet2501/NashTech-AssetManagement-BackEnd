@@ -41,36 +41,16 @@ public class ReturnController {
         return this.returnService.updateStatusReturning(id);
     }
     
-    @Operation(summary = "delete returning by id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "delete returning successfully"),
-            @ApiResponse(responseCode = "404", description = "not found returning"),
-            @ApiResponse(responseCode = "403", description = "access denied , wrong role"),
-    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteRequestReturnAsset(@PathVariable int id) {
         return this.returnService.deleteReturning(id);
     }
     
-    @Operation(summary = "get list asset of returning by location")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "get list returning successfully"),
-            @ApiResponse(responseCode = "404", description = "not found asset of returning"),
-            @ApiResponse(responseCode = "403", description = "access denied , wrong role"),
-            @ApiResponse(responseCode = "400", description = "bad request,Some field not correct")
-    })
     @GetMapping("/{location}")
     public List<ReturningResponse> getAllReturningAsset(@PathVariable String location) {
         return this.returnService.getAllReturning(location);
     }
     
-    @Operation(summary = "searching for returning by location and content")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "founded returning successfully"),
-            @ApiResponse(responseCode = "404", description = "not found returning"),
-            @ApiResponse(responseCode = "403", description = "access denied , wrong role"),
-            @ApiResponse(responseCode = "400", description = "bad request,Some field not correct")
-    })
     @GetMapping("/search/{location}/{content}")
     public List<ReturningResponse> searchReturning(@PathVariable String location, @PathVariable String content) {
         return this.returnService.search(location, content);
@@ -83,9 +63,9 @@ public class ReturnController {
             @ApiResponse(responseCode = "403", description = "access denied , wrong role"),
             @ApiResponse(responseCode = "400", description = "bad request,Some field not correct")
     })
-    @PatchMapping("/{id}")
-    public ResponseEntity<ReturningResponse> updateStateReturning(@PathVariable long id) throws ParseException {
-        ReturningResponse returningResponse = this.returnService.updateStateReturning(id);
+    @PatchMapping("/{id}/{acceptedById}")
+    public ResponseEntity<ReturningResponse> updateStateReturning(@PathVariable long id, @PathVariable String acceptedById) throws ParseException {
+        ReturningResponse returningResponse = this.returnService.updateStateReturning(id, acceptedById);
         return ResponseEntity.ok().body(returningResponse);
     }
     
