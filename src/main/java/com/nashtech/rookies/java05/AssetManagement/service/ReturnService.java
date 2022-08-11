@@ -10,7 +10,7 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.ReturningRespons
 
 @Service
 public interface ReturnService {
-    ResponseEntity<Object> createNewReturningAsset(int assId, String requestBy);
+    ResponseEntity<Object> createNewReturningAsset(int assignmentId);
     
     ResponseEntity<Object> updateStatusReturning(int returnId);
     
@@ -20,6 +20,6 @@ public interface ReturnService {
     
     List<ReturningResponse> search(String location, String content);
     
-    ReturningResponse updateStateReturning(long returnId,String acceptedById) throws ParseException;
+    ReturningResponse updateStateReturning(long returnId) throws ParseException;
     
 }

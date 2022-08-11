@@ -20,14 +20,14 @@ public class ReturnController {
     @Autowired
     private ReturnService returnService;
     
-    @PostMapping("/{assId}/{requestBy}")
+    @PostMapping("/{assignmentId}")
     @Operation(summary = "Create new request for returning asset")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Create new request for returning asset successfully"),
             @ApiResponse(responseCode = "400", description = "Some field not correct"),
     })
-    public ResponseEntity<Object> createRequestReturningAsset(@PathVariable int assId, @PathVariable String requestBy) {
-        return this.returnService.createNewReturningAsset(assId, requestBy);
+    public ResponseEntity<Object> createRequestReturningAsset(@PathVariable int assignmentId) {
+        return this.returnService.createNewReturningAsset(assignmentId);
     }
     
     @PutMapping("/{id}")
@@ -67,11 +67,11 @@ public class ReturnController {
             @ApiResponse(responseCode = "200", description = "update returning successfully"),
             @ApiResponse(responseCode = "404", description = "not found returning"),
             @ApiResponse(responseCode = "403", description = "access denied , wrong role"),
-            @ApiResponse(responseCode = "400", description = "bad request,Some field not correct")
+            @ApiResponse(responseCode = "500", description = "logic checked errors")
     })
-    @PatchMapping("/{id}/{acceptedById}")
-    public ResponseEntity<ReturningResponse> updateStateReturning(@PathVariable long id, @PathVariable String acceptedById) throws ParseException {
-        ReturningResponse returningResponse = this.returnService.updateStateReturning(id, acceptedById);
+    @PatchMapping("/{id}")
+    public ResponseEntity<ReturningResponse> updateStateReturning(@PathVariable long id) throws ParseException {
+        ReturningResponse returningResponse = this.returnService.updateStateReturning(id);
         return ResponseEntity.ok().body(returningResponse);
     }
     

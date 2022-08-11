@@ -6,9 +6,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.nashtech.rookies.java05.AssetManagement.exception.InvalidException;
+import com.nashtech.rookies.java05.AssetManagement.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.rookies.java05.AssetManagement.dto.response.ReturningResponse;
@@ -36,10 +39,11 @@ public class ReturnServiceImpl implements ReturnService {
     private AssignmentRepository assignmentRepository;
     
     @Override
-    public ResponseEntity<Object> createNewReturningAsset(int assId, String requestBy) {
-        User requestUser = userRepository.findByUserName(requestBy)
-                .orElseThrow(() -> new ResourceNotFoundException("Username " + requestBy + " Not Founded"));
-        Assignment assignment = assignmentRepository.findById((long) assId)
+    public ResponseEntity<Object> createNewReturningAsset(int assignmentId) {
+        String userName = getUserFromSecurity().getUsername();
+        User requestUser = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new ResourceNotFoundException("Username " + userName + " Not Founded"));
+        Assignment assignment = assignmentRepository.findById((long) assignmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
         
         Returning newReturn = Returning.builder().isDelete(false).requestBy(requestUser).assignment(assignment)
@@ -63,7 +67,7 @@ public class ReturnServiceImpl implements ReturnService {
     
     @Override
     public ResponseEntity<Object> deleteReturning(int returnId) {
-        Returning returning = this.returnRepository.findById(Long.valueOf(returnId)).orElseThrow(() ->
+        Returning returning = this.returnRepository.findById((long) returnId).orElseThrow(() ->
                 new ResourceCheckException("Not Found Returning"));
 
          if (returning.isDelete()){
@@ -72,14 +76,13 @@ public class ReturnServiceImpl implements ReturnService {
          if ("Completed".equals(returning.getState())){
              throw new ForbiddenException("Returning is completed");
          }
-
         Assignment assignment = this.assignmentRepository.getById(returning.getAssignment().getId());
         assignment.setHasReturning(false);
         assignmentRepository.save(assignment);
-
+        
         returning.setDelete(true);
         returnRepository.save(returning);
-
+        
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     
@@ -107,16 +110,20 @@ public class ReturnServiceImpl implements ReturnService {
     }
     
     @Override
-    public ReturningResponse updateStateReturning(long returnId, String acceptedById) throws ParseException {
+    public ReturningResponse updateStateReturning(long returnId) throws ParseException {
         Returning returning = this.returnRepository.findById(returnId).orElseThrow(
                 () -> new ResourceNotFoundException("not.found.returning.have.id." + returnId));
-        User acceptedBy = this.userRepository.findUserById(acceptedById).orElseThrow(
-                () -> new ResourceNotFoundException("not.found.user.have.id." + acceptedById));
-
+        
         if (returning.getState().equals("Completed")) {
-            throw new ForbiddenException("This returning has been completed");
+            throw new InvalidException("this.returning.has.been.completed");
+        } else if (returning.isDelete()) {
+            throw new InvalidException("this.returning.have.status.deleted");
         }
-
+        
+        UserPrincipal userPrincipal = getUserFromSecurity();
+        User acceptedBy = this.userRepository.findUserById(userPrincipal.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("not.found.user.have.id." + userPrincipal.getId()));
+        
         returning.setState("Completed");
         returning.setAcceptedBy(acceptedBy);
         returning.setReturnedDate(new SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.now().toString()));
@@ -125,5 +132,8 @@ public class ReturnServiceImpl implements ReturnService {
         return ReturningResponse.buildFromModel(returning);
     }
     
+    public UserPrincipal getUserFromSecurity() {
+        return (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
     
 }
