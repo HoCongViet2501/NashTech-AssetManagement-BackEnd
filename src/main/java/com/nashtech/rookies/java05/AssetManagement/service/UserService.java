@@ -12,20 +12,20 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
 
 @Service
 public interface UserService {
-
-	public UserResponse createUser(SignupRequest signupRequest);
-
-	public List<UserDetailResponse> getAllUserSameLocation(String location);
-
-	public List<UserDetailResponse> searchUser(String content, String location);
-
-	public boolean checkUserIsAvailable(String staffCode);
-
-	public ResponseEntity<Object> disableUser(String staffCode);
-
-	public UserResponse editUserInformation(String id, SignupRequest signupRequest);
-
-	public List<UserDetailResponse> getUserInformationById(String id);
-
-	public void changePassword(ChangePasswordRequest changePasswordRequest);
+    
+    UserResponse createUser(SignupRequest signupRequest);
+    
+    List<UserDetailResponse> getAllUserSameLocation();
+    
+    List<UserDetailResponse> searchUser(String content);
+    
+    boolean checkUserIsAvailable(String staffCode);
+    
+    ResponseEntity<Object> disableUser(String staffCode);
+    
+    UserResponse editUserInformation(String id, SignupRequest signupRequest);
+    
+    List<UserDetailResponse> getUserInformationById(String id);
+    
+    void changePassword(ChangePasswordRequest changePasswordRequest);
 }

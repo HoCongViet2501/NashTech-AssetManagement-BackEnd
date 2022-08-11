@@ -25,11 +25,11 @@ public interface AssignmentService {
     
     ResponseEntity<?> deleteAssignment(Long id);
     
-    List<AssignmentDetailResponse> getAllAssignmentByLocation(String location);
+    List<AssignmentDetailResponse> getAllAssignmentByLocation();
     
-    List<AssignmentDetailResponse> searchAssignment(String content, String location);
+    List<AssignmentDetailResponse> searchAssignment(String content);
     
-    List<AssetResponse> getAllAssetByLocationAndState(String location);
+    List<AssetResponse> getAllAssetByLocationAndState();
     
-    List<AssetResponse> searchAssetByLocationAndState(String location, String content);
+    List<AssetResponse> searchAssetByLocationAndState(String content);
 }

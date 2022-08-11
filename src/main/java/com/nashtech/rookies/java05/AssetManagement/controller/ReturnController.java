@@ -52,14 +52,14 @@ public class ReturnController {
         return this.returnService.deleteReturning(id);
     }
     
-    @GetMapping("/{location}")
-    public List<ReturningResponse> getAllReturningAsset(@PathVariable String location) {
-        return this.returnService.getAllReturning(location);
+    @GetMapping
+    public List<ReturningResponse> getAllReturningAsset() {
+        return this.returnService.getAllReturning();
     }
     
-    @GetMapping("/search/{location}/{content}")
-    public List<ReturningResponse> searchReturning(@PathVariable String location, @PathVariable String content) {
-        return this.returnService.search(location, content);
+    @GetMapping("/search/{content}")
+    public List<ReturningResponse> searchReturning(@PathVariable String content) {
+        return this.returnService.search( content);
     }
     
     @Operation(summary = "update state for returning")

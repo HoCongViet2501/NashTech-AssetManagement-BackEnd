@@ -17,4 +17,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 
 	@Query(value = "select u.* from users u where u.username = :username and u.status = :status", nativeQuery = true)
 	Optional<User> findByUserNameAndStatus(@Param("username") String username, @Param("status") String status);
+	
 }

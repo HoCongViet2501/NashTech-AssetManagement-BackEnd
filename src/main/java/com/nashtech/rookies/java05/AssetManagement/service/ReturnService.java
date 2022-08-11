@@ -16,9 +16,9 @@ public interface ReturnService {
     
     ResponseEntity<Object> deleteReturning(int returnId);
     
-    List<ReturningResponse> getAllReturning(String location);
+    List<ReturningResponse> getAllReturning();
     
-    List<ReturningResponse> search(String location, String content);
+    List<ReturningResponse> search( String content);
     
     ReturningResponse updateStateReturning(long returnId) throws ParseException;
     

@@ -41,9 +41,9 @@ public class AssignmentController {
         return assignmentService.createAssignment(assignmentRequest);
     }
     
-    @GetMapping("/getAll/{location}")
-    public List<AssignmentDetailResponse> getAllAssignment(@PathVariable String location) {
-        return assignmentService.getAllAssignmentByLocation(location);
+    @GetMapping("/getAll")
+    public List<AssignmentDetailResponse> getAllAssignment() {
+        return assignmentService.getAllAssignmentByLocation();
     }
     
     @PutMapping("/edit/{id}")
@@ -51,10 +51,9 @@ public class AssignmentController {
         return assignmentService.editAssignment(assignmentRequest, id);
     }
     
-    @GetMapping("/search/{location}/{content}")
-    public List<AssignmentDetailResponse> searchAssignment(@PathVariable String location,
-                                                           @PathVariable String content) {
-        return assignmentService.searchAssignment(content, location);
+    @GetMapping("/search/{content}")
+    public List<AssignmentDetailResponse> searchAssignment(@PathVariable String content) {
+        return assignmentService.searchAssignment(content);
     }
     
     @DeleteMapping("/disable/{id}")
@@ -62,10 +61,6 @@ public class AssignmentController {
         return this.assignmentService.deleteAssignment(id);
     }
     
-    // @GetMapping("/getAssignment/{id}")
-    // public AssignmentResponse getAssignmentById(@PathVariable Long id) {
-    // 	return assignmentService.getAssignment(id);
-    // }
     
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Get assignment by id Success"),
@@ -79,14 +74,13 @@ public class AssignmentController {
         return assignmentService.getAssignment(id);
     }
     
-    @GetMapping("/getAsset/{location}")
-    public List<AssetResponse> getAllAsset(@PathVariable String location) {
-        return assignmentService.getAllAssetByLocationAndState(location);
+    @GetMapping("/getAsset")
+    public List<AssetResponse> getAllAsset() {
+        return assignmentService.getAllAssetByLocationAndState();
     }
     
-    @GetMapping("/searchAsset/{location}/{content}")
-    public List<AssetResponse> searchAsset(@PathVariable String location,
-                                           @PathVariable String content) {
-        return assignmentService.searchAssetByLocationAndState(location, content);
+    @GetMapping("/searchAsset/{content}")
+    public List<AssetResponse> searchAsset(@PathVariable String content) {
+        return assignmentService.searchAssetByLocationAndState(content);
     }
 }

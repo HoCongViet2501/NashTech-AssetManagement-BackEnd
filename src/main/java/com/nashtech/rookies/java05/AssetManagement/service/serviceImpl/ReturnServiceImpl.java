@@ -85,23 +85,23 @@ public class ReturnServiceImpl implements ReturnService {
     }
     
     @Override
-    public List<ReturningResponse> getAllReturning(String location) {
-        List<Returning> returnLists = this.returnRepository.getAllReturning(location);
+    public List<ReturningResponse> getAllReturning() {
+        List<Returning> returnLists = this.returnRepository.getAllReturning(getUserLocationFromSecurity());
         
         if (returnLists.isEmpty()) {
-            throw new ResourceNotFoundException("No request for returning found in location: " + location);
+            throw new ResourceNotFoundException("No request for returning found in location: " + getUserLocationFromSecurity());
         }
         
         return returnLists.stream().map(ReturningResponse::buildFromModel).collect(Collectors.toList());
     }
     
     @Override
-    public List<ReturningResponse> search(String location, String content) {
-        List<Returning> returnLists = this.returnRepository.search(location, content);
+    public List<ReturningResponse> search(String content) {
+        List<Returning> returnLists = this.returnRepository.search(getUserLocationFromSecurity(), content);
         
         if (returnLists.isEmpty()) {
             throw new ResourceNotFoundException(
-                    "No request for returning found in location: " + location + " With " + content);
+                    "No request for returning found in location: " + getUserLocationFromSecurity() + " With " + content);
         }
         
         return returnLists.stream().map(ReturningResponse::buildFromModel).collect(Collectors.toList());
@@ -134,4 +134,9 @@ public class ReturnServiceImpl implements ReturnService {
         return (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
     
+    public String getUserLocationFromSecurity() {
+        User user = this.userRepository.findUserById(getUserFromSecurity().getId()).orElseThrow(
+                () -> new ResourceNotFoundException("not.found.user.have.id." + getUserFromSecurity().getId()));
+        return user.getInformation().getLocation();
+    }
 }

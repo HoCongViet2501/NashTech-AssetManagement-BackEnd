@@ -129,20 +129,20 @@ public class AssignmentServiceImpl implements AssignmentService {
         Assignment assignment = MappingData.mapping(assignmentRequest, Assignment.class);
         
         Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
-        if (!assignmentOptional.isPresent()) {
+        if (assignmentOptional.isEmpty()) {
             throw new ResourceCheckException("Not found assignment");
         }
         if (!assignmentOptional.get().isStatus()) {
             throw new ForbiddenException("Assignment already disable");
         }
         Optional<Asset> asset = assetRepository.findById(assignmentRequest.getAsset());
-        if (!asset.isPresent()) {
+        if (asset.isEmpty()) {
             throw new ResourceCheckException("Asset not found " + assignmentRequest.getAsset());
         }
         
         Optional<User> user = userRepository.findById(assignmentRequest.getUser());
         
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new ResourceCheckException("User not found ");
         }
         
@@ -182,15 +182,12 @@ public class AssignmentServiceImpl implements AssignmentService {
     public ResponseEntity<?> deleteAssignment(Long id) {
         Assignment assignment = assignmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceCheckException("Not found assignment id :" + id));
-        if (assignment.isStatus() == false) {
+        if (!assignment.isStatus()) {
             throw new ForbiddenException("Assignment already disable");
         }
         if (!assignment.getState().equalsIgnoreCase("Waiting for acceptance")
                 && !assignment.getState().equalsIgnoreCase("Declined")) {
             throw new ForbiddenException("Assignment cannot disable");
-        }
-        if (assignment.isStatus() == false) {
-            throw new ForbiddenException("Assignment already disable");
         }
         assignment.setStatus(false);
         assignment.getAsset().setState("Available");
@@ -200,8 +197,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
     
     @Override
-    public List<AssignmentDetailResponse> getAllAssignmentByLocation(String location) {
-        List<Assignment> assignment = assignmentRepository.getAllAssignmentByLocation(location);
+    public List<AssignmentDetailResponse> getAllAssignmentByLocation() {
+        List<Assignment> assignment = assignmentRepository.getAllAssignmentByLocation(getUserLocationFromSecurity());
         if (assignment.isEmpty()) {
             throw new ResourceCheckException("No asset found in this location");
         }
@@ -209,8 +206,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
     
     @Override
-    public List<AssignmentDetailResponse> searchAssignment(String content, String location) {
-        List<Assignment> assignment = assignmentRepository.searchUser(content, location);
+    public List<AssignmentDetailResponse> searchAssignment(String content) {
+        List<Assignment> assignment = assignmentRepository.searchUser(content, getUserLocationFromSecurity());
         if (assignment.isEmpty()) {
             throw new ResourceCheckException("No asset found in this location");
         }
@@ -225,8 +222,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
     
     @Override
-    public List<AssetResponse> getAllAssetByLocationAndState(String location) {
-        List<Asset> assets = assetRepository.findAssetByLocationAndState(location);
+    public List<AssetResponse> getAllAssetByLocationAndState() {
+        List<Asset> assets = assetRepository.findAssetByLocationAndState(getUserLocationFromSecurity());
         if (assets.isEmpty()) {
             throw new ResourceNotFoundException("No asset found in this location");
         }
@@ -234,8 +231,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
     
     @Override
-    public List<AssetResponse> searchAssetByLocationAndState(String location, String content) {
-        List<Asset> assets = assetRepository.searchAssetByLocationAndState(location, content);
+    public List<AssetResponse> searchAssetByLocationAndState(String content) {
+        List<Asset> assets = assetRepository.searchAssetByLocationAndState(getUserLocationFromSecurity(), content);
         if (assets.isEmpty()) {
             throw new ResourceNotFoundException("No asset found in this location");
         }
@@ -244,5 +241,11 @@ public class AssignmentServiceImpl implements AssignmentService {
     
     public UserPrincipal getUserFromSecurity() {
         return (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+    
+    public String getUserLocationFromSecurity() {
+        User user = this.userRepository.findUserById(getUserFromSecurity().getId()).orElseThrow(
+                () -> new ResourceNotFoundException("not.found.user.have.id." + getUserFromSecurity().getId()));
+        return user.getInformation().getLocation();
     }
 }

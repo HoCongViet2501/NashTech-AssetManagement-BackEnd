@@ -47,16 +47,16 @@ public class UserController {
 		return userService.createUser(signUpRequest);
 	}
 
-	@GetMapping("/getAll/{location}")
+	@GetMapping("/getAll")
 	@Operation(summary = "Get all user same location")
-	public List<UserDetailResponse> getAllUser(@PathVariable String location) {
-		return this.userService.getAllUserSameLocation(location);
+	public List<UserDetailResponse> getAllUser() {
+		return this.userService.getAllUserSameLocation();
 	}
 
-	@GetMapping("/search/{location}/{content}")
+	@GetMapping("/search/{content}")
 	@Operation(summary = "Search user by content")
-	public List<UserDetailResponse> searchUser(@PathVariable String location, @PathVariable String content) {
-		return this.userService.searchUser(content, location);
+	public List<UserDetailResponse> searchUser(@PathVariable String content) {
+		return this.userService.searchUser(content);
 	}
 
 	@GetMapping("/check/{staffCode}")
