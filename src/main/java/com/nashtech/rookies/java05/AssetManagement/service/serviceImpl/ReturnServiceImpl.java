@@ -69,7 +69,6 @@ public class ReturnServiceImpl implements ReturnService {
 
         Assignment assignment = this.assignmentRepository.getById(returning.getAssignment().getId());
         assignment.setHasReturning(false);
-        assignment.setState("Accepted");
         assignmentRepository.save(assignment);
 
         returning.setDelete(true);
