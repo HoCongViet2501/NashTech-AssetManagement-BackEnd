@@ -1,5 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -9,14 +10,16 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.ReturningRespons
 
 @Service
 public interface ReturnService {
-    public ResponseEntity<Object> createNewReturningAsset(int assId, String requestBy);
-
-    public ResponseEntity<Object> updateStatusReturning(int returnId);
-
-    public ResponseEntity<Object> deleteReturning(int returnId);
-
-    public List<ReturningResponse> getAllReturning(String location);
-
-    public List<ReturningResponse> search(String location,String content);
-
+    ResponseEntity<Object> createNewReturningAsset(int assId, String requestBy);
+    
+    ResponseEntity<Object> updateStatusReturning(int returnId);
+    
+    ResponseEntity<Object> deleteReturning(int returnId);
+    
+    List<ReturningResponse> getAllReturning(String location);
+    
+    List<ReturningResponse> search(String location, String content);
+    
+    ReturningResponse updateStateReturning(long returnId) throws ParseException;
+    
 }
