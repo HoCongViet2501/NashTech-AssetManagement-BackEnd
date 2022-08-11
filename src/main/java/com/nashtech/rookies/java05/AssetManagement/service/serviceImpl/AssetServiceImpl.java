@@ -1,8 +1,10 @@
 package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.nashtech.rookies.java05.AssetManagement.model.interfaces.AssetHistoryInterface;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -157,5 +159,13 @@ public class AssetServiceImpl implements AssetService {
         List<Assignment> assignments = this.assignmentRepository.findAssignmentByAsset(asset.getId());
 
         return assignments.isEmpty();
+    }
+
+    @Override
+    public List<AssetHistoryInterface> getAssetHistory(String assetId) {
+        List<AssetHistoryInterface> history = this.assetRepository.getAssetHistory(assetId);
+
+
+        return history;
     }
 }
