@@ -83,7 +83,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 	}
 
 	@Override
-	public AssignmentResponse createAssignment(AssignmentRequest assignmentRequest, String username) {
+	public AssignmentDetailResponse createAssignment(AssignmentRequest assignmentRequest, String username) {
 		Assignment assignment = MappingData.mapping(assignmentRequest, Assignment.class);
 
 		User creator = userRepository.findByUserNameAndStatus(username, "ACTIVE")
@@ -95,37 +95,51 @@ public class AssignmentServiceImpl implements AssignmentService {
 		Asset asset = assetRepository.findByIdAndState(assignmentRequest.getAsset(), "Available")
 				.orElseThrow(() -> new ResourceCheckException("Not found asset: " + assignmentRequest.getAsset()));
 
-		assignment.setCreator(creator);
 		assignment.setUser(user);
+		assignment.setCreator(creator);
 		assignment.setAsset(asset);
 		assignment.setState("Waiting for acceptance");
 		assignment.setHasReturning(false);
 		assignment.setStatus(true);
-		assignmentRepository.save(assignment);
-
-		UserResponse userResponse = MappingData.mapping(user, UserResponse.class);
-		userResponse.setInformationResponse(MappingData.mapping(user.getInformation(), InformationResponse.class));
-
-		UserResponse userCreateResponse = MappingData.mapping(creator, UserResponse.class);
-		userCreateResponse
-				.setInformationResponse(MappingData.mapping(creator.getInformation(), InformationResponse.class));
-
-		AssignmentResponse assignmentResponse = new AssignmentResponse();
-		assignmentResponse.setId(assignment.getId());
-		assignmentResponse.setAssetResponse(MappingData.mapping(asset, AssetResponse.class));
-
-		assignmentResponse.setUser(userResponse);
-
-		assignmentResponse.setCreateUser(userCreateResponse);
-
-		assignmentResponse.setAssignedDate(assignment.getAssignedDate());
-		assignmentResponse.setState(assignment.getState());
-		assignmentResponse.setNote(assignment.getNote());
-
-		asset.setState("Not available");
+		Assignment saveAssignment = assignmentRepository.save(assignment);
+		AssignmentDetailResponse assignmentDetailResponse;
+		
+		assignmentDetailResponse= MappingData.mapping(saveAssignment, AssignmentDetailResponse.class);
+		asset.setState("Assigned");
 		assetRepository.save(asset);
 
-		return assignmentResponse;
+		return assignmentDetailResponse;
+//		assignment.setCreator(creator);
+//		assignment.setUser(user);
+//		assignment.setAsset(asset);
+//		assignment.setState("Waiting for acceptance");
+//		assignment.setHasReturning(false);
+//		assignment.setStatus(true);
+//		assignmentRepository.save(assignment);
+//
+//		UserResponse userResponse = MappingData.mapping(user, UserResponse.class);
+//		userResponse.setInformationResponse(MappingData.mapping(user.getInformation(), InformationResponse.class));
+//
+//		UserResponse userCreateResponse = MappingData.mapping(creator, UserResponse.class);
+//		userCreateResponse
+//				.setInformationResponse(MappingData.mapping(creator.getInformation(), InformationResponse.class));
+//
+//		AssignmentResponse assignmentResponse = new AssignmentResponse();
+//		assignmentResponse.setId(assignment.getId());
+//		assignmentResponse.setAssetResponse(MappingData.mapping(asset, AssetResponse.class));
+//
+//		assignmentResponse.setUser(userResponse);
+//
+//		assignmentResponse.setCreateUser(userCreateResponse);
+//
+//		assignmentResponse.setAssignedDate(assignment.getAssignedDate());
+//		assignmentResponse.setState(assignment.getState());
+//		assignmentResponse.setNote(assignment.getNote());
+//
+//		asset.setState("Not available");
+//		assetRepository.save(asset);
+//
+//		return assignmentResponse;
 	}
 
 	@Override
@@ -145,7 +159,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		}
 
 		Optional<User> user = userRepository.findById(assignmentRequest.getUser());
-		
+
 		if (!user.isPresent()) {
 			throw new ResourceCheckException("User not found ");
 		}
@@ -159,7 +173,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		assignment.setNote(assignmentRequest.getNote());
 		assignment.setStatus(assignmentOptional.get().isStatus());
 		assignmentRepository.save(assignment);
-		
+
 		UserResponse userResponse = MappingData.mapping(user.get(), UserResponse.class);
 		userResponse
 				.setInformationResponse(MappingData.mapping(user.get().getInformation(), InformationResponse.class));

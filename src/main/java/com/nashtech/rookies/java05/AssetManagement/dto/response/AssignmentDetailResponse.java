@@ -6,21 +6,23 @@ import com.nashtech.rookies.java05.AssetManagement.model.entity.Assignment;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class AssignmentDetailResponse {
 	private Long id;
 
-	private String assetCode;
+	private String assetId;
 
 	private String assetName;
 
-	private String assignedToId;
+	private String userId;
 
-	private String assignedTo;
+	private String userName;
 
-	private String assignedBy;
+	private String creatorName;
 
 	private Date assignedDate;
 
@@ -30,11 +32,17 @@ public class AssignmentDetailResponse {
 
 	private boolean status;
 
-	private String specification;
+	private String assetSpecification;
 
 	private boolean hasReturning;
+	
+	private String fullName;
+	
+	
 
 	public static AssignmentDetailResponse buildFromAssignment(Assignment assignment) {
+		String fullName = assignment.getUser().getInformation().getFirstName() + " " 
+						+ assignment.getUser().getInformation().getLastName();
 		return new AssignmentDetailResponse(
 				assignment.getId(),
 				assignment.getAsset().getId(),
@@ -47,7 +55,9 @@ public class AssignmentDetailResponse {
 				assignment.getNote(),
 				assignment.isStatus(),
 				assignment.getAsset().getSpecification(),
-				assignment.isHasReturning());
+				assignment.isHasReturning(),
+				fullName
+				);
 	}
 
 }

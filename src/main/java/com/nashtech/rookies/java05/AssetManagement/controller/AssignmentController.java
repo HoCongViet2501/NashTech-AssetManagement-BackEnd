@@ -38,7 +38,7 @@ public class AssignmentController {
 	@Operation(summary = "create new assignment")
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/createAssign/{assignedby}")
-	AssignmentResponse createAssignment(@PathVariable String assignedby,
+	AssignmentDetailResponse createAssignment(@PathVariable String assignedby,
 			@Valid @RequestBody AssignmentRequest assignmentRequest) {
 		return assignmentService.createAssignment(assignmentRequest, assignedby);
 	}
