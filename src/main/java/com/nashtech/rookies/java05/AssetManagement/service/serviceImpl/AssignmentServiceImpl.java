@@ -103,47 +103,16 @@ public class AssignmentServiceImpl implements AssignmentService {
 		assignment.setStatus(true);
 		Assignment saveAssignment = assignmentRepository.save(assignment);
 		AssignmentDetailResponse assignmentDetailResponse;
-		
-		assignmentDetailResponse= MappingData.mapping(saveAssignment, AssignmentDetailResponse.class);
+
+		assignmentDetailResponse = MappingData.mapping(saveAssignment, AssignmentDetailResponse.class);
 		asset.setState("Assigned");
 		assetRepository.save(asset);
 
 		return assignmentDetailResponse;
-//		assignment.setCreator(creator);
-//		assignment.setUser(user);
-//		assignment.setAsset(asset);
-//		assignment.setState("Waiting for acceptance");
-//		assignment.setHasReturning(false);
-//		assignment.setStatus(true);
-//		assignmentRepository.save(assignment);
-//
-//		UserResponse userResponse = MappingData.mapping(user, UserResponse.class);
-//		userResponse.setInformationResponse(MappingData.mapping(user.getInformation(), InformationResponse.class));
-//
-//		UserResponse userCreateResponse = MappingData.mapping(creator, UserResponse.class);
-//		userCreateResponse
-//				.setInformationResponse(MappingData.mapping(creator.getInformation(), InformationResponse.class));
-//
-//		AssignmentResponse assignmentResponse = new AssignmentResponse();
-//		assignmentResponse.setId(assignment.getId());
-//		assignmentResponse.setAssetResponse(MappingData.mapping(asset, AssetResponse.class));
-//
-//		assignmentResponse.setUser(userResponse);
-//
-//		assignmentResponse.setCreateUser(userCreateResponse);
-//
-//		assignmentResponse.setAssignedDate(assignment.getAssignedDate());
-//		assignmentResponse.setState(assignment.getState());
-//		assignmentResponse.setNote(assignment.getNote());
-//
-//		asset.setState("Not available");
-//		assetRepository.save(asset);
-//
-//		return assignmentResponse;
 	}
 
 	@Override
-	public AssignmentResponse editAssignment(AssignmentRequest assignmentRequest, Long id) {
+	public AssignmentDetailResponse editAssignment(AssignmentRequest assignmentRequest, Long id) {
 		Assignment assignment = MappingData.mapping(assignmentRequest, Assignment.class);
 
 		Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
@@ -163,37 +132,24 @@ public class AssignmentServiceImpl implements AssignmentService {
 		if (!user.isPresent()) {
 			throw new ResourceCheckException("User not found ");
 		}
-
+		
 		assignment.setId(assignmentOptional.get().getId());
 		assignment.setState(assignmentOptional.get().getState());
 		assignment.setCreator(assignmentOptional.get().getCreator());
+		assignment.setStatus(assignmentOptional.get().isStatus());
+		
+		
 		assignment.setAsset(asset.get());
 		assignment.setUser(user.get());
 		assignment.setAssignedDate(assignmentRequest.getAssignedDate());
 		assignment.setNote(assignmentRequest.getNote());
-		assignment.setStatus(assignmentOptional.get().isStatus());
-		assignmentRepository.save(assignment);
 
-		UserResponse userResponse = MappingData.mapping(user.get(), UserResponse.class);
-		userResponse
-				.setInformationResponse(MappingData.mapping(user.get().getInformation(), InformationResponse.class));
+		Assignment saveAssignment = assignmentRepository.save(assignment);
 
-		AssignmentResponse assignmentResponse = new AssignmentResponse();
+		AssignmentDetailResponse AssignmentDetailResponse = MappingData.mapping(saveAssignment,
+				AssignmentDetailResponse.class);
 
-		assignmentResponse.setId(assignment.getId());
-		assignmentResponse.setAssetResponse(MappingData.mapping(asset.get(), AssetResponse.class));
-
-		assignmentResponse
-				.setCreateUser(MappingData.mapping(assignmentOptional.get().getCreator(), UserResponse.class));
-		assignmentResponse.getCreateUser().setInformationResponse(
-				MappingData.mapping(assignmentOptional.get().getCreator().getInformation(), InformationResponse.class));
-
-		assignmentResponse.setUser(userResponse);
-		assignmentResponse.setAssignedDate(assignment.getAssignedDate());
-		assignmentResponse.setState(assignment.getState());
-		assignmentResponse.setNote(assignment.getNote());
-
-		return assignmentResponse;
+		return AssignmentDetailResponse;
 	}
 
 	@Override

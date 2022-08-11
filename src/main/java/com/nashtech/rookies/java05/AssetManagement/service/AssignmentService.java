@@ -19,7 +19,7 @@ public interface AssignmentService {
 
 	AssignmentDetailResponse createAssignment(AssignmentRequest assignmentRequest, String userName);
 
-	AssignmentResponse editAssignment(AssignmentRequest assignmentRequest, Long id);
+	AssignmentDetailResponse editAssignment(AssignmentRequest assignmentRequest, Long id);
 
 	AssignmentDetailResponse getAssignment(Long id);
 

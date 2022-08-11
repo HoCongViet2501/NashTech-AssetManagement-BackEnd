@@ -49,7 +49,7 @@ public class AssignmentController {
 	}
 
 	@PutMapping("/edit/{id}")
-	AssignmentResponse editAssignment(@PathVariable Long id, @Valid @RequestBody AssignmentRequest assignmentRequest) {
+	AssignmentDetailResponse editAssignment(@PathVariable Long id, @Valid @RequestBody AssignmentRequest assignmentRequest) {
 		return assignmentService.editAssignment(assignmentRequest, id);
 	}
 
