@@ -1,6 +1,7 @@
 package com.nashtech.rookies.java05.AssetManagement.repository;
 
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Asset;
+import com.nashtech.rookies.java05.AssetManagement.model.interfaces.AssetHistoryInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +32,12 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
 			+ "where (lower(a.name) like lower(concat('%', :content,'%')) or lower(a.id) like lower(concat('%', :content,'%'))) "
 			+ "and i.location = :location and a.state = 'Available'", nativeQuery = true)
 	public List<Asset> searchAssetByLocationAndState(@Param("location")String location,@Param("content") String content);
+
+	@Query(value = "SELECT a.assigned_date as assignedDate, r.request_by as requestBy, r.accepted_by as acceptedBy, r.returned_date as returnedDate " +
+			"FROM returnings r, assignments a " +
+			"INNER JOIN assets a2 ON a.asset_id = :assetId " +
+			"WHERE a.asset_id = :assetId AND r.state = 'Completed' AND r.is_delete = false  AND a.status = false AND  r.assignment_id = a.id " +
+			"GROUP BY a.assigned_date , r.request_by , r.accepted_by , r.returned_date " +
+			"ORDER BY r.returned_date ASC", nativeQuery = true)
+	List<AssetHistoryInterface> getAssetHistory(@Param("assetId") String assetId);
 }

@@ -69,6 +69,9 @@ public class ReturnServiceImpl implements ReturnService {
          if (returning.isDelete()){
              throw new ForbiddenException("Returning is disable");
          }
+         if ("Completed".equals(returning.getState())){
+             throw new ForbiddenException("Returning is completed");
+         }
 
         Assignment assignment = this.assignmentRepository.getById(returning.getAssignment().getId());
         assignment.setHasReturning(false);

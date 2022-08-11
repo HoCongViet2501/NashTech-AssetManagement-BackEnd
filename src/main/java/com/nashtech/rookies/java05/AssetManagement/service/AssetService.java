@@ -5,6 +5,7 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.AssetResponse;
 
 import java.util.List;
 
+import com.nashtech.rookies.java05.AssetManagement.model.interfaces.AssetHistoryInterface;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -25,4 +26,6 @@ public interface AssetService {
   AssetResponse getAssetById(String id);
 
   boolean checkAssetHistory(String id);
+
+  List<AssetHistoryInterface> getAssetHistory(String assetId);
 }

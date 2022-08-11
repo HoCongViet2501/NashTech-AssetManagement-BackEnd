@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.nashtech.rookies.java05.AssetManagement.model.interfaces.AssetHistoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,5 +94,12 @@ public class AssetController {
     @Operation(summary = "Check asset can disable or not")
     public ResponseEntity<Boolean> checkAssetHistory(@PathVariable String id) {
         return ResponseEntity.ok().body(this.assetService.checkAssetHistory(id));
+    }
+
+    @GetMapping("/history/{assetId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get asset history list by Id")
+    public List<AssetHistoryInterface> getAssetHistory(@PathVariable String assetId) {
+        return this.assetService.getAssetHistory(assetId);
     }
 }
