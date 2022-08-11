@@ -20,6 +20,6 @@ public interface ReturnService {
     
     List<ReturningResponse> search(String location, String content);
     
-    ReturningResponse updateStateReturning(long returnId) throws ParseException;
+    ReturningResponse updateStateReturning(long returnId,String acceptedById) throws ParseException;
     
 }

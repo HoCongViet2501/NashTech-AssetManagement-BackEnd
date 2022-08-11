@@ -104,10 +104,13 @@ public class ReturnServiceImpl implements ReturnService {
     }
     
     @Override
-    public ReturningResponse updateStateReturning(long returnId) throws ParseException {
+    public ReturningResponse updateStateReturning(long returnId, String acceptedById) throws ParseException {
         Returning returning = this.returnRepository.findById(returnId).orElseThrow(
                 () -> new ResourceNotFoundException("not.found.returning.have.id." + returnId));
+        User acceptedBy = this.userRepository.findUserById(acceptedById).orElseThrow(
+                () -> new ResourceNotFoundException("not.found.user.have.id." + acceptedById));
         returning.setState("Completed");
+        returning.setAcceptedBy(acceptedBy);
         returning.setReturnedDate(new SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.now().toString()));
         returning.getAssignment().setStatus(false);
         this.returnRepository.save(returning);
