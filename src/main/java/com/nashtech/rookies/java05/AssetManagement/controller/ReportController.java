@@ -1,7 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.controller;
 
 import com.nashtech.rookies.java05.AssetManagement.model.interfaces.ReportInterface;
-import com.nashtech.rookies.java05.AssetManagement.service.CategoryService;
 import com.nashtech.rookies.java05.AssetManagement.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +15,10 @@ import java.util.List;
 @RequestMapping("/api/report")
 public class ReportController {
     private final ReportService reportService;
-    private final CategoryService categoryService;
 
     @Autowired
-    public ReportController(ReportService reportService, CategoryService categoryService) {
+    public ReportController(ReportService reportService) {
         this.reportService = reportService;
-        this.categoryService = categoryService;
     }
 
     @GetMapping()

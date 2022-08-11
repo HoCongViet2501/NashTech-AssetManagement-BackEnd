@@ -2,7 +2,6 @@ package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 
 import com.nashtech.rookies.java05.AssetManagement.generator.ReportExcelExport;
 import com.nashtech.rookies.java05.AssetManagement.model.interfaces.ReportInterface;
-import com.nashtech.rookies.java05.AssetManagement.repository.CategoryRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.ReportRepository;
 import com.nashtech.rookies.java05.AssetManagement.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +17,10 @@ import java.util.List;
 @Service
 public class ReportServiceImpl implements ReportService {
     private ReportRepository reportRepository;
-    private CategoryRepository categoryRepository;
 
     @Autowired
-    public ReportServiceImpl(ReportRepository reportRepository, CategoryRepository categoryRepository) {
+    public ReportServiceImpl(ReportRepository reportRepository) {
         this.reportRepository = reportRepository;
-        this.categoryRepository = categoryRepository;
     }
 
     @Override
