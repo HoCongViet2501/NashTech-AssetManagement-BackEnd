@@ -1,6 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.generator;
 
-import com.nashtech.rookies.java05.AssetManagement.dto.response.ReportResponse;
+import com.nashtech.rookies.java05.AssetManagement.model.interfaces.ReportInterface;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.util.List;
 
 public class ReportExcelExport {
-    List<ReportResponse> listReport;
+    List<ReportInterface> listReport;
     private XSSFWorkbook xssfWorkbook;
     private XSSFSheet xssfSheet;
 
-    public ReportExcelExport(List<ReportResponse> listReport) {
+    public ReportExcelExport(List<ReportInterface> listReport) {
         this.listReport = listReport;
         xssfWorkbook = new XSSFWorkbook();
     }
@@ -61,7 +61,7 @@ public class ReportExcelExport {
         XSSFFont font = xssfWorkbook.createFont();
         font.setFontHeight(14);
         style.setFont(font);
-        for (ReportResponse record: listReport) {
+        for (ReportInterface record: listReport) {
             Row row = xssfSheet.createRow(rowCount++);
             int columnCount = 0;
             createCell(row, columnCount++, record.getName(), style);

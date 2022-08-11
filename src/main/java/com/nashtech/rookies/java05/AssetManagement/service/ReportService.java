@@ -1,6 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.service;
 
-import com.nashtech.rookies.java05.AssetManagement.dto.response.ReportResponse;
+import com.nashtech.rookies.java05.AssetManagement.model.interfaces.ReportInterface;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -9,6 +9,6 @@ import java.util.List;
 
 @Service
 public interface ReportService {
-    List<ReportResponse> getReportListFinal();
+    List<ReportInterface> getReportListFinal();
     void exportReport(HttpServletResponse response) throws IOException;
 }

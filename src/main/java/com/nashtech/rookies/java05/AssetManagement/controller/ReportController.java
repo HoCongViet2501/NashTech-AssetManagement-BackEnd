@@ -1,6 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.controller;
 
-import com.nashtech.rookies.java05.AssetManagement.dto.response.ReportResponse;
+import com.nashtech.rookies.java05.AssetManagement.model.interfaces.ReportInterface;
 import com.nashtech.rookies.java05.AssetManagement.service.CategoryService;
 import com.nashtech.rookies.java05.AssetManagement.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class ReportController {
     }
 
     @GetMapping()
-    public List<ReportResponse> getReportList() {
+    public List<ReportInterface> getReportList() {
         return this.reportService.getReportListFinal();
     }
 
