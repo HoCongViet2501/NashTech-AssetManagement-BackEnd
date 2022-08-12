@@ -82,11 +82,11 @@ public class AssignmentServiceImpl implements AssignmentService {
     public AssignmentResponse createAssignment(AssignmentRequest assignmentRequest) {
         Assignment assignment = MappingData.mapping(assignmentRequest, Assignment.class);
         
-        User creator = userRepository.findByUserNameAndStatus(getUserFromSecurity().getUsername(), "ACTIVE")
+        User creator = userRepository.findByUserNameAndStatus(getUserFromSecurity().getId(), "ACTIVE")
                 .orElseThrow(() -> new ResourceCheckException("Not found username: " + getUserFromSecurity().getUsername()));
         
-        User user = userRepository.findByUserNameAndStatus(assignmentRequest.getUser(), "ACTIVE")
-                .orElseThrow(() -> new ResourceCheckException("Not found username: " + assignmentRequest.getUser()));
+        User user = userRepository.findByUserNameAndStatus(assignmentRequest.getUserId(), "ACTIVE")
+                .orElseThrow(() -> new ResourceCheckException("Not found username: " + assignmentRequest.getUserId()));
         
         Asset asset = assetRepository.findByIdAndState(assignmentRequest.getAsset(), "Available")
                 .orElseThrow(() -> new ResourceCheckException("Not found asset: " + assignmentRequest.getAsset()));
@@ -140,7 +140,7 @@ public class AssignmentServiceImpl implements AssignmentService {
             throw new ResourceCheckException("Asset not found " + assignmentRequest.getAsset());
         }
         
-        Optional<User> user = userRepository.findById(assignmentRequest.getUser());
+        Optional<User> user = userRepository.findById(assignmentRequest.getUserId());
         
         if (user.isEmpty()) {
             throw new ResourceCheckException("User not found ");
