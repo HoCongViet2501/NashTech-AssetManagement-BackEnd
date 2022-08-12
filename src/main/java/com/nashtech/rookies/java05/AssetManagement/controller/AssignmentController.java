@@ -37,7 +37,7 @@ public class AssignmentController {
     @Operation(summary = "create new assignment")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
-    AssignmentResponse createAssignment( @Valid @RequestBody AssignmentRequest assignmentRequest) {
+    AssignmentDetailResponse createAssignment( @Valid @RequestBody AssignmentRequest assignmentRequest) {
         return assignmentService.createAssignment(assignmentRequest);
     }
     
@@ -47,7 +47,7 @@ public class AssignmentController {
     }
     
     @PutMapping("/edit/{id}")
-    AssignmentResponse editAssignment(@PathVariable Long id, @Valid @RequestBody AssignmentRequest assignmentRequest) {
+    AssignmentDetailResponse editAssignment(@PathVariable Long id, @Valid @RequestBody AssignmentRequest assignmentRequest) {
         return assignmentService.editAssignment(assignmentRequest, id);
     }
     

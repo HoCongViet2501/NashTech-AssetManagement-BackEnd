@@ -17,9 +17,9 @@ public interface AssignmentService {
     
     AssignmentStaffResponse updateStateAssignment(long id, String status);
     
-    AssignmentResponse createAssignment(AssignmentRequest assignmentRequest);
+    AssignmentDetailResponse createAssignment(AssignmentRequest assignmentRequest);
     
-    AssignmentResponse editAssignment(AssignmentRequest assignmentRequest, Long id);
+    AssignmentDetailResponse editAssignment(AssignmentRequest assignmentRequest, Long id);
     
     AssignmentDetailResponse getAssignment(Long id);
     

@@ -11,7 +11,7 @@ public class AssignmentRequest {
 
 	private String asset;
 
-	private String userId;
+	private String user;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date assignedDate;
