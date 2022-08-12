@@ -33,11 +33,10 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
 			+ "and i.location = :location and a.state = 'Available'", nativeQuery = true)
 	public List<Asset> searchAssetByLocationAndState(@Param("location")String location,@Param("content") String content);
 
-	@Query(value = "SELECT a.assigned_date as assignedDate, r.request_by as requestBy, r.accepted_by as acceptedBy, r.returned_date as returnedDate " +
-			"FROM returnings r, assignments a " +
-			"INNER JOIN assets a2 ON a.asset_id = :assetId " +
-			"WHERE a.asset_id = :assetId AND r.state = 'Completed' AND r.is_delete = false  AND a.status = false AND  r.assignment_id = a.id " +
-			"GROUP BY a.assigned_date , r.request_by , r.accepted_by , r.returned_date " +
+	@Query(value = "SELECT a.assigned_date as assignedDate, u.username as requestBy, u2.username as acceptedBy, r.returned_date as returnedDate " +
+			"FROM returnings r, assignments a , users u , users u2 " +
+			"WHERE a.asset_id = :assetId AND r.state = 'Completed' AND r.is_delete = false  AND a.status = false AND  r.assignment_id = a.id AND u.id = r.request_by AND  u2.id = r.accepted_by " +
+			"GROUP BY a.assigned_date , u.username , u2.username , r.returned_date " +
 			"ORDER BY r.returned_date ASC", nativeQuery = true)
 	List<AssetHistoryInterface> getAssetHistory(@Param("assetId") String assetId);
 }
