@@ -118,7 +118,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignmentResponse.setState(assignment.getState());
         assignmentResponse.setNote(assignment.getNote());
         
-        asset.setState("Not available");
+        asset.setState("Assigned");
         assetRepository.save(asset);
         
         return assignmentResponse;
