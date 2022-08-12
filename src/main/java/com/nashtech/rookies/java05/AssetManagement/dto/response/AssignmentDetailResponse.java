@@ -34,7 +34,11 @@ public class AssignmentDetailResponse {
 
 	private boolean hasReturning;
 
+	private String fullName;
+
 	public static AssignmentDetailResponse buildFromAssignment(Assignment assignment) {
+		String fullName = assignment.getUser().getInformation().getFirstName() + " "
+				+ assignment.getUser().getInformation().getLastName();
 		return new AssignmentDetailResponse(
 				assignment.getId(),
 				assignment.getAsset().getId(),
@@ -47,7 +51,8 @@ public class AssignmentDetailResponse {
 				assignment.getNote(),
 				assignment.isStatus(),
 				assignment.getAsset().getSpecification(),
-				assignment.isHasReturning());
+				assignment.isHasReturning(),
+				fullName);
 	}
 
 }
