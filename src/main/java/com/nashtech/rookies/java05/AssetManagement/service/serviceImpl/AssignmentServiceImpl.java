@@ -1,7 +1,6 @@
 package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,11 +79,11 @@ public class AssignmentServiceImpl implements AssignmentService {
 	}
 
 	@Override
-	public AssignmentDetailResponse createAssignment(AssignmentRequest assignmentRequest, String username) {
+	public AssignmentDetailResponse createAssignment(AssignmentRequest assignmentRequest, String id) {
 		Assignment assignment = MappingData.mapping(assignmentRequest, Assignment.class);
 
-		User creator = userRepository.findByUserNameAndStatus(username, "ACTIVE")
-				.orElseThrow(() -> new ResourceCheckException("Not found username: " + username));
+		User creator = userRepository.findByUserNameAndStatus(id, "ACTIVE")
+				.orElseThrow(() -> new ResourceCheckException("Not found username: " + id));
 
 		User user = userRepository.findByUserNameAndStatus(assignmentRequest.getUser(), "ACTIVE")
 				.orElseThrow(() -> new ResourceCheckException("Not found username: " + assignmentRequest.getUser()));

@@ -8,7 +8,6 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
 import com.nashtech.rookies.java05.AssetManagement.exception.PasswordException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckDateException;
-import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
 import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Assignment;
@@ -272,28 +271,31 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponse editUserInformation(String id, SignupRequest signupRequest) {
+		Information information = MappingData.mapping(signupRequest, Information.class);
 
-		checkDate(signupRequest);
 
-		User user = userRepository.findById(id).orElseThrow(
-				() -> new ResourceCheckException("Not found user:" +id ));
+		User userOptional = userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Cant find user with id: " + id));
 
-		if (user.getStatus() == UserStatus.INACTIVE) {
+		if (userOptional.getStatus() == UserStatus.INACTIVE) {
 			throw new ForbiddenException("User has already disabled");
 		}
 
+		Information informationOptional = informationRepository.findByUserId(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Cant find user with id: " + id));
+
+		information.setId(informationOptional.getId());
+
+		User user = MappingData.mapping(userOptional, User.class);
 		Role role = roleRepository.findById(signupRequest.getRole())
 				.orElseThrow(() -> new ResourceNotFoundException("Not.found.role"));
 		user.setRole(role);
+
+		information.setFirstName(informationOptional.getFirstName());
+		information.setLastName(informationOptional.getLastName());
+		information.setLocation(informationOptional.getLocation());
+
 		User saveUser = userRepository.save(user);
-
-		Information oldInformation = informationRepository.findByUserId(id)
-				.orElseThrow(() -> new ResourceCheckException("Not found userInformation"));
-
-		Information information = MappingData.mapping(signupRequest, Information.class);
-		information.setFirstName(oldInformation.getFirstName());
-		information.setLastName(oldInformation.getLastName());
-		information.setLocation(oldInformation.getLocation());
 		information.setUser(saveUser);
 		Information saveInformation = informationRepository.save(information);
 		InformationResponse informationResponse = MappingData.mapping(saveInformation, InformationResponse.class);
