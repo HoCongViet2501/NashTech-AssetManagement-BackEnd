@@ -129,7 +129,9 @@ public class ReturnServiceImpl implements ReturnService {
         returning.setAcceptedBy(acceptedBy);
         returning.setReturnedDate(new SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.now().toString()));
         returning.getAssignment().setStatus(false);
+        returning.getAssignment().getAsset().setState("Available");
         this.returnRepository.save(returning);
+
         return ReturningResponse.buildFromModel(returning);
     }
     
