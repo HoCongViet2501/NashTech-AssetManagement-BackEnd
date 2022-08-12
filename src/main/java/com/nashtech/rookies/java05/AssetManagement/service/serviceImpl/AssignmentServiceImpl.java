@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import com.nashtech.rookies.java05.AssetManagement.dto.request.AssignmentRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssetResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentDetailResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentStaffResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
@@ -95,6 +92,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		Asset asset = assetRepository.findByIdAndState(assignmentRequest.getAsset(), "Available")
 				.orElseThrow(() -> new ResourceCheckException("Not found asset: " + assignmentRequest.getAsset()));
 
+		
 		assignment.setUser(user);
 		assignment.setCreator(creator);
 		assignment.setAsset(asset);
@@ -115,34 +113,22 @@ public class AssignmentServiceImpl implements AssignmentService {
 	public AssignmentDetailResponse editAssignment(AssignmentRequest assignmentRequest, Long id) {
 		Assignment assignment = MappingData.mapping(assignmentRequest, Assignment.class);
 
-		Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
-		if (!assignmentOptional.isPresent()) {
-			throw new ResourceCheckException("Not found assignment");
-		}
-		if (!assignmentOptional.get().isStatus()) {
+		Assignment oldAssignment = assignmentRepository.findById(id)
+				.orElseThrow(() -> new ResourceCheckException("Assignment not found " + assignmentRequest.getAsset()));
+
+		if (!oldAssignment.isStatus()) {
 			throw new ForbiddenException("Assignment already disable");
 		}
-		Optional<Asset> asset = assetRepository.findById(assignmentRequest.getAsset());
-		if (!asset.isPresent()) {
-			throw new ResourceCheckException("Asset not found " + assignmentRequest.getAsset());
-		}
 
-		Optional<User> user = userRepository.findById(assignmentRequest.getUser());
+		Asset asset = assetRepository.findById(assignmentRequest.getAsset())
+				.orElseThrow(() -> new ResourceCheckException("Asset not found " + assignmentRequest.getAsset()));
 
-		if (!user.isPresent()) {
-			throw new ResourceCheckException("User not found ");
-		}
-		
-		assignment.setId(assignmentOptional.get().getId());
-		assignment.setState(assignmentOptional.get().getState());
-		assignment.setCreator(assignmentOptional.get().getCreator());
-		assignment.setStatus(assignmentOptional.get().isStatus());
-		
-		
-		assignment.setAsset(asset.get());
-		assignment.setUser(user.get());
-		assignment.setAssignedDate(assignmentRequest.getAssignedDate());
-		assignment.setNote(assignmentRequest.getNote());
+		User user = userRepository.findById(assignmentRequest.getUser())
+				.orElseThrow(() -> new ResourceCheckException("User not found " + assignmentRequest.getAsset()));
+
+		assignment = MappingData.mapping(oldAssignment, Assignment.class);
+		assignment.setAsset(asset);
+		assignment.setUser(user);
 
 		Assignment saveAssignment = assignmentRepository.save(assignment);
 
