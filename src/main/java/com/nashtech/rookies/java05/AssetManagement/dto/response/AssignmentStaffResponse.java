@@ -33,6 +33,8 @@ public class AssignmentStaffResponse {
 
     private boolean status;
 
+    private boolean hasReturning;
+
     public static AssignmentStaffResponse build(Assignment assignment) {
         return new AssignmentStaffResponse(assignment.getId(),
                 assignment.getAsset().getId(),
@@ -43,6 +45,7 @@ public class AssignmentStaffResponse {
                 assignment.getAssignedDate(),
                 assignment.getNote(),
                 assignment.getState(),
-                assignment.isStatus());
+                assignment.isStatus(),
+                assignment.isHasReturning());
     }
 }
