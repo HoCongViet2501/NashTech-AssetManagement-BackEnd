@@ -166,29 +166,33 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public AssignmentDetailResponse editAssignment(AssignmentRequest assignmentRequest, Long id) {
-        // Assignment assignment = MappingData.mapping(assignmentRequest,
-        // Assignment.class);
-
         Assignment oldAssignment = assignmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceCheckException("Assignment not found "));
 
         if (!oldAssignment.isStatus()) {
             throw new ForbiddenException("Assignment already disable");
         }
-
+        
+        Asset oldAsset = assetRepository.findById(oldAssignment.getAsset().getId())
+                .orElseThrow(() -> new ResourceCheckException("Asset not found " + assignmentRequest.getAsset()));
         Asset asset = assetRepository.findById(assignmentRequest.getAsset())
                 .orElseThrow(() -> new ResourceCheckException("Asset not found " + assignmentRequest.getAsset()));
-
         User user = userRepository.findById(assignmentRequest.getUser())
                 .orElseThrow(() -> new ResourceCheckException("User not found " + assignmentRequest.getUser()));
 
         Assignment assignment = MappingData.mapping(oldAssignment, Assignment.class);
         assignment.setAsset(asset);
         assignment.setUser(user);
-
+        assignment.setStatus(oldAssignment.isStatus());
         Assignment saveAssignment = assignmentRepository.save(assignment);
-        return AssignmentDetailResponse.buildFromAssignment(saveAssignment);
 
+        oldAsset.setState("Available");
+        assetRepository.save(oldAsset);
+
+        asset.setState("Assigned");
+        assetRepository.save(asset);
+
+        return AssignmentDetailResponse.buildFromAssignment(saveAssignment);
     }
 
     @Override
