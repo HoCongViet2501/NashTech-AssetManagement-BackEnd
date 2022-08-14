@@ -16,6 +16,7 @@ import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentDetail
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentStaffResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckException;
@@ -23,6 +24,7 @@ import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundExc
 import com.nashtech.rookies.java05.AssetManagement.mapper.MappingData;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Asset;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.Assignment;
+import com.nashtech.rookies.java05.AssetManagement.model.entity.Information;
 import com.nashtech.rookies.java05.AssetManagement.model.entity.User;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
@@ -254,6 +256,24 @@ public class AssignmentServiceImpl implements AssignmentService {
             throw new ResourceNotFoundException("No asset found in this location");
         }
         return assets.stream().map(AssetResponse::build).collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<UserDetailResponse> getAllUserByLocationAndStatus() {
+        List<Information> lists = informationRepository.findUserByLocationAndStatus(getUserLocationFromSecurity());
+        if (lists.isEmpty()) {
+            throw new ResourceNotFoundException("No User Founded");
+        }
+        return lists.stream().map(UserDetailResponse::buildFromInfo).collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<UserDetailResponse> searchUserByLocationAndStatus(String content) {
+        List<Information> lists = this.informationRepository.searchUserAndStatus(content, getUserLocationFromSecurity());
+        if (lists.isEmpty()) {
+            throw new ResourceNotFoundException("No User Founded");
+        }
+        return lists.stream().map(UserDetailResponse::buildFromInfo).collect(Collectors.toList());
     }
 
     public UserPrincipal getUserFromSecurity() {
