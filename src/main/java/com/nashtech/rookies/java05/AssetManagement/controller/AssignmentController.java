@@ -21,6 +21,7 @@ import com.nashtech.rookies.java05.AssetManagement.dto.request.AssignmentRequest
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssetResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentResponse;
+import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
 import com.nashtech.rookies.java05.AssetManagement.service.AssignmentService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,5 +83,15 @@ public class AssignmentController {
     @GetMapping("/searchAsset/{content}")
     public List<AssetResponse> searchAsset(@PathVariable String content) {
         return assignmentService.searchAssetByLocationAndState(content);
+    }
+    
+    @GetMapping("/getUser")
+    public List<UserDetailResponse> getAllUser() {
+        return assignmentService.getAllUserByLocationAndStatus();
+    }
+    
+    @GetMapping("/searchUser/{content}")
+    public List<UserDetailResponse> searchUser(@PathVariable String content) {
+        return assignmentService.searchUserByLocationAndStatus(content);
     }
 }

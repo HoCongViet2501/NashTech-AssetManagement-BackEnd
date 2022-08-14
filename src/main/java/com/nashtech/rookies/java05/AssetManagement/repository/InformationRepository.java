@@ -40,4 +40,16 @@ public interface InformationRepository extends JpaRepository<Information, Long> 
 	Optional<Information> findByUsername(@Param("username")String username);
 	
 	
+	@Query(value = "select i.id, i.date_birth , i.first_name, i.gender, i.last_name, i.joined_date , i.user_id, i.location  from information i "
+			+ "inner join users u  on u.id = i.user_id "
+			+ "where i.location = :location and u.status = 'ACTIVE'", nativeQuery = true)
+	public List<Information> findUserByLocationAndStatus(@Param("location") String location);
+	
+	@Query(value = "select * from information i "
+			+ "join users u on u.id = i.user_id "
+			+ "where (lower(i.first_name) like lower(concat('%', :content,'%')) or lower(i.last_name) like lower(concat('%', :content,'%'))  or  lower(i.user_id) like lower(concat('%', :content,'%'))) "
+			+ "and i.location  = :location and u.status = 'ACTIVE'", nativeQuery = true)
+	public List<Information> searchUserAndStatus(@Param("content") String content, @Param("location") String location);
+	
+	
 }
