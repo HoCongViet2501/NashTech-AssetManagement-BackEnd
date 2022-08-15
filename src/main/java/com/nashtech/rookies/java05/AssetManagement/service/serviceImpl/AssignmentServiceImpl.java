@@ -1,10 +1,8 @@
 package com.nashtech.rookies.java05.AssetManagement.service.serviceImpl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.nashtech.rookies.java05.AssetManagement.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,11 +11,8 @@ import org.springframework.stereotype.Service;
 import com.nashtech.rookies.java05.AssetManagement.dto.request.AssignmentRequest;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssetResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentDetailResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.AssignmentStaffResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.response.InformationResponse;
 import com.nashtech.rookies.java05.AssetManagement.dto.response.UserDetailResponse;
-import com.nashtech.rookies.java05.AssetManagement.dto.response.UserResponse;
 import com.nashtech.rookies.java05.AssetManagement.exception.ForbiddenException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceCheckException;
 import com.nashtech.rookies.java05.AssetManagement.exception.ResourceNotFoundException;
@@ -30,6 +25,7 @@ import com.nashtech.rookies.java05.AssetManagement.repository.AssetRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.AssignmentRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.InformationRepository;
 import com.nashtech.rookies.java05.AssetManagement.repository.UserRepository;
+import com.nashtech.rookies.java05.AssetManagement.security.UserPrincipal;
 import com.nashtech.rookies.java05.AssetManagement.service.AssignmentService;
 
 @Service
@@ -80,66 +76,6 @@ public class AssignmentServiceImpl implements AssignmentService {
         return AssignmentStaffResponse.build(assignment);
     }
 
-    // @Override
-    // public AssignmentResponse createAssignment(AssignmentRequest
-    // assignmentRequest) {
-    // Assignment assignment = MappingData.mapping(assignmentRequest,
-    // Assignment.class);
-
-    // User creator =
-    // userRepository.findByUserNameAndStatus(getUserFromSecurity().getId(),
-    // "ACTIVE")
-    // .orElseThrow(() -> new ResourceCheckException("Not found username: " +
-    // getUserFromSecurity().getUsername()));
-
-    // User user =
-    // userRepository.findByUserNameAndStatus(assignmentRequest.getUserId(),
-    // "ACTIVE")
-    // .orElseThrow(() -> new ResourceCheckException("Not found username: " +
-    // assignmentRequest.getUserId()));
-
-    // Asset asset = assetRepository.findByIdAndState(assignmentRequest.getAsset(),
-    // "Available")
-    // .orElseThrow(() -> new ResourceCheckException("Not found asset: " +
-    // assignmentRequest.getAsset()));
-
-    // assignment.setCreator(creator);
-    // assignment.setUser(user);
-    // assignment.setAsset(asset);
-    // assignment.setState("Waiting for acceptance");
-    // assignment.setHasReturning(false);
-    // assignment.setStatus(true);
-    // assignmentRepository.save(assignment);
-
-    // UserResponse userResponse = MappingData.mapping(user, UserResponse.class);
-    // userResponse.setInformationResponse(MappingData.mapping(user.getInformation(),
-    // InformationResponse.class));
-
-    // UserResponse userCreateResponse = MappingData.mapping(creator,
-    // UserResponse.class);
-    // userCreateResponse
-    // .setInformationResponse(MappingData.mapping(creator.getInformation(),
-    // InformationResponse.class));
-
-    // AssignmentResponse assignmentResponse = new AssignmentResponse();
-    // assignmentResponse.setId(assignment.getId());
-    // assignmentResponse.setAssetResponse(MappingData.mapping(asset,
-    // AssetResponse.class));
-
-    // assignmentResponse.setUser(userResponse);
-
-    // assignmentResponse.setCreateUser(userCreateResponse);
-
-    // assignmentResponse.setAssignedDate(assignment.getAssignedDate());
-    // assignmentResponse.setState(assignment.getState());
-    // assignmentResponse.setNote(assignment.getNote());
-
-    // asset.setState("Assigned");
-    // assetRepository.save(asset);
-
-    // return assignmentResponse;
-    // }
-
     @Override
     public AssignmentDetailResponse createAssignment(AssignmentRequest assignmentRequest) {
         Assignment assignment = MappingData.mapping(assignmentRequest, Assignment.class);
@@ -186,6 +122,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignment.setAsset(asset);
         assignment.setUser(user);
         assignment.setStatus(oldAssignment.isStatus());
+        assignment.setAssignedDate(oldAssignment.getAssignedDate());
         Assignment saveAssignment = assignmentRepository.save(assignment);
 
         oldAsset.setState("Available");
