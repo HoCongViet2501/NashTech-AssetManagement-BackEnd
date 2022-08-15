@@ -122,7 +122,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignment.setAsset(asset);
         assignment.setUser(user);
         assignment.setStatus(oldAssignment.isStatus());
-        assignment.setAssignedDate(oldAssignment.getAssignedDate());
+        assignment.setAssignedDate(assignmentRequest.getAssignedDate());
         Assignment saveAssignment = assignmentRepository.save(assignment);
 
         oldAsset.setState("Available");
